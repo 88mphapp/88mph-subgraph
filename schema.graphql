@@ -1,5 +1,12 @@
+type DPoolList @entity {
+  id: ID!
+  pools: [DPool!]! @derivedFrom(field: "poolList")
+}
+
 type DPool @entity {
   id: ID!
+  poolList: DPoolList!
+  address: String!
   moneyMarket: String!
   stablecoin: String!
   users: [User!]! @derivedFrom(field: "pools")
@@ -9,11 +16,12 @@ type DPool @entity {
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
   totalInterestPaid: BigDecimal!
-  oneYearInterestRate: BigDecimal!
-  deficit: BigDecimal!
   blocktime: BigDecimal!
   UIRMultiplier: BigDecimal!
   MinDepositPeriod: BigInt!
+  "Values that need to be updated every block"
+  oneYearInterestRate: BigDecimal!
+  deficit: BigDecimal!
 }
 
 type User @entity {
