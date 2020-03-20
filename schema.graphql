@@ -1,6 +1,7 @@
 type DPoolList @entity {
   id: ID!
   pools: [DPool!]!
+  numPools: BigInt!
 }
 
 type DPool @entity {
@@ -9,9 +10,17 @@ type DPool @entity {
   moneyMarket: String!
   stablecoin: String!
   users: [User!]! @derivedFrom(field: "pools")
+  numUsers: BigInt!
+  numActiveUsers: BigInt!
   deposits: [Deposit!]! @derivedFrom(field: "pool")
+  numDeposits: BigInt!
+  numActiveDeposits: BigInt!
   sponsors: [Sponsor!]! @derivedFrom(field: "pools")
+  numSponsors: BigInt!
+  numActiveSponsors: BigInt!
   sponsorDeposits: [SponsorDeposit!]! @derivedFrom(field: "pool")
+  numSponsorDeposits: BigInt!
+  numActiveSponsorDeposits: BigInt!
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
   totalInterestPaid: BigDecimal!
@@ -27,7 +36,10 @@ type User @entity {
   id: ID!
   address: String!
   pools: [DPool!]!
+  numPools: BigInt!
   deposits: [Deposit!]! @derivedFrom(field: "user")
+  numDeposits: BigInt!
+  numActiveDeposits: BigInt!
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
   totalInterestEarned: BigDecimal!
@@ -47,7 +59,10 @@ type Sponsor @entity {
   id: ID!
   address: String!
   pools: [DPool!]!
+  numPools: BigInt!
   deposits: [SponsorDeposit!]! @derivedFrom(field: "sponsor")
+  numDeposits: BigInt!
+  numActiveDeposits: BigInt!
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
 }
