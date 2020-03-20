@@ -15,6 +15,7 @@ let NEGONE_DEC = BigDecimal.fromString("-1")
 let ZERO_INT = BigInt.fromI32(0)
 let YEAR = BigInt.fromI32(31556952) // One year in seconds
 let PRECISION = new BigDecimal(tenPow(18))
+let DELIMITER = "---"
 
 function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1)
@@ -103,7 +104,7 @@ export function handleEDeposit(event: EDeposit): void {
   let user = getUser(event.params.sender, pool)
 
   // Create new Deposit entity
-  let deposit = new Deposit(`${pool.address}---${user.address}---${event.params.depositID}`)
+  let deposit = new Deposit(pool.address + DELIMITER + user.address + DELIMITER + event.params.depositID.toString())
   deposit.user = user.id
   deposit.pool = pool.id
   deposit.amount = normalize(event.params.amount)
@@ -125,8 +126,11 @@ export function handleEDeposit(event: EDeposit): void {
     let pools = user.pools
     pools.push(pool.id)
     user.pools = pools
-    user.save()
   }
+  user.totalActiveDeposit = user.totalActiveDeposit.plus(deposit.amount)
+  user.totalHistoricalDeposit = user.totalHistoricalDeposit.plus(deposit.amount)
+  user.totalInterestEarned = user.totalInterestEarned.plus(deposit.interestEarned)
+  user.save()
 }
 
 export function handleESponsorDeposit(event: ESponsorDeposit): void {
@@ -135,7 +139,7 @@ export function handleESponsorDeposit(event: ESponsorDeposit): void {
   let sponsor = getSponsor(event.params.sender, pool)
 
   // Create new SponsorDeposit entity
-  let deposit = new SponsorDeposit(`${pool.address}---${sponsor.address}---${event.params.depositID}`)
+  let deposit = new SponsorDeposit(pool.address + DELIMITER + sponsor.address + DELIMITER + event.params.depositID.toString())
   deposit.sponsor = sponsor.id
   deposit.pool = pool.id
   deposit.amount = normalize(event.params.amount)
@@ -156,15 +160,17 @@ export function handleESponsorDeposit(event: ESponsorDeposit): void {
     let pools = sponsor.pools
     pools.push(pool.id)
     sponsor.pools = pools
-    sponsor.save()
   }
+  sponsor.totalActiveDeposit = sponsor.totalActiveDeposit.plus(deposit.amount)
+  sponsor.totalHistoricalDeposit = sponsor.totalHistoricalDeposit.plus(deposit.amount)
+  sponsor.save()
 }
 
 export function handleEWithdraw(event: EWithdraw): void {
   let pool = getPool(event)
   let poolContract = DInterest.bind(event.address)
   let user = getUser(event.params.sender, pool)
-  let deposit = Deposit.load(`${pool.address}---${user.address}---${event.params.depositID}`)
+  let deposit = Deposit.load(pool.address + DELIMITER + user.address + DELIMITER + event.params.depositID.toString())
 
   // Set Deposit entity to inactive
   deposit.active = false
@@ -185,7 +191,7 @@ export function handleESponsorWithdraw(event: ESponsorWithdraw): void {
   let pool = getPool(event)
   let poolContract = DInterest.bind(event.address)
   let sponsor = getSponsor(event.params.sender, pool)
-  let deposit = SponsorDeposit.load(`${pool.address}---${sponsor.address}---${event.params.depositID}`)
+  let deposit = SponsorDeposit.load(pool.address + DELIMITER + sponsor.address + DELIMITER + event.params.depositID.toString())
 
   // Set SponsorDeposit entity to inactive
   deposit.active = false
