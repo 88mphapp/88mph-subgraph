@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal, EthereumEvent, Address, EthereumBlock } from "@graphprotocol/graph-ts"
+import { BigInt, BigDecimal, EthereumEvent, Address, EthereumBlock, log } from "@graphprotocol/graph-ts"
 import {
   DInterest,
   EDeposit,
@@ -32,6 +32,7 @@ function getPoolList(): DPoolList {
   let poolList = DPoolList.load(DPOOLLIST_ID)
   if (poolList == null) {
     poolList = new DPoolList(DPOOLLIST_ID)
+    poolList.pools = new Array<string>()
     poolList.save()
   }
   return poolList as DPoolList
@@ -44,7 +45,6 @@ function getPool(event: EthereumEvent): DPool {
   if (pool == null) {
     let poolContract = DInterest.bind(event.address)
     pool = new DPool(event.address.toHex())
-    pool.poolList = DPOOLLIST_ID
     pool.address = event.address.toHex()
     pool.moneyMarket = poolContract.moneyMarket().toHex()
     pool.stablecoin = poolContract.stablecoin().toHex()
@@ -57,6 +57,11 @@ function getPool(event: EthereumEvent): DPool {
     pool.UIRMultiplier = normalize(poolContract.UIRMultiplier())
     pool.MinDepositPeriod = poolContract.MinDepositPeriod()
     pool.save()
+
+    let pools = poolList.pools
+    pools.push(pool.id)
+    poolList.pools = pools
+    poolList.save()
   }
   return pool as DPool
 }
@@ -198,6 +203,7 @@ export function handleESponsorWithdraw(event: ESponsorWithdraw): void {
 
 export function handleBlock(block: EthereumBlock): void {
   let poolList = getPoolList()
+
   poolList.pools.forEach(poolID => {
     // Update DPool statistics
     let pool = DPool.load(poolID)

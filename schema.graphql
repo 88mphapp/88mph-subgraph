@@ -1,11 +1,10 @@
 type DPoolList @entity {
   id: ID!
-  pools: [DPool!]! @derivedFrom(field: "poolList")
+  pools: [DPool!]!
 }
 
 type DPool @entity {
   id: ID!
-  poolList: DPoolList!
   address: String!
   moneyMarket: String!
   stablecoin: String!
