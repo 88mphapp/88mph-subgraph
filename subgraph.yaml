@@ -1,16 +1,16 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: Contract
+    name: DInterest
     network: mainnet
     source:
       address: "0x9b226970cdeAdA0026aEd50D02E4A0dD37C92b6F"
-      abi: Contract
+      abi: DInterest
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.2
+      apiVersion: 0.0.3
       language: wasm/assemblyscript
       entities:
         - EDeposit
@@ -18,8 +18,8 @@ dataSources:
         - ESponsorWithdraw
         - EWithdraw
       abis:
-        - name: Contract
-          file: ./abis/Contract.json
+        - name: DInterest
+          file: ./abis/DInterest.json
       eventHandlers:
         - event: EDeposit(indexed address,uint256,uint256,uint256,uint256)
           handler: handleEDeposit

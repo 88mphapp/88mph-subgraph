@@ -1,6 +1,6 @@
 {
   "name": "88mph",
-  "license": "UNLICENSED",
+  "license": "GPL-3.0-or-above",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",

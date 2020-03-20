@@ -1,6 +1,56 @@
-type ExampleEntity @entity {
+type DPool @entity {
   id: ID!
-  count: BigInt!
-  sender: Bytes! # address
-  depositID: BigInt! # uint256
+  moneyMarket: String!
+  stablecoin: String!
+  users: [User!]! @derivedFrom(field: "pools")
+  deposits: [Deposit!]! @derivedFrom(field: "pool")
+  sponsors: [Sponsor!]! @derivedFrom(field: "pools")
+  sponsorDeposits: [SponsorDeposit!]! @derivedFrom(field: "pool")
+  totalActiveDeposit: BigDecimal!
+  totalHistoricalDeposit: BigDecimal!
+  totalInterestPaid: BigDecimal!
+  oneYearInterestRate: BigDecimal!
+  deficit: BigDecimal!
+  blocktime: BigDecimal!
+  UIRMultiplier: BigDecimal!
+  MinDepositPeriod: BigInt!
+}
+
+type User @entity {
+  id: ID!
+  address: String!
+  pools: [DPool!]!
+  deposits: [Deposit!]! @derivedFrom(field: "user")
+  totalActiveDeposit: BigDecimal!
+  totalHistoricalDeposit: BigDecimal!
+  totalInterestEarned: BigDecimal!
+}
+
+type Deposit @entity {
+  id: ID!
+  user: User!
+  pool: DPool!
+  amount: BigDecimal!
+  maturationTimestamp: BigInt!
+  active: Boolean!
+  interestEarned: BigDecimal!
+}
+
+type Sponsor @entity {
+  id: ID!
+  address: String!
+  pools: [DPool!]!
+  deposits: [SponsorDeposit!]! @derivedFrom(field: "sponsor")
+  totalActiveDeposit: BigDecimal!
+  totalHistoricalDeposit: BigDecimal!
+}
+
+type SponsorDeposit @entity {
+  id: ID!
+  sponsor: Sponsor!
+  pool: DPool!
+  amount: BigDecimal!
+  maturationTimestamp: BigInt!
+  active: Boolean!
+  data: String!
 }
