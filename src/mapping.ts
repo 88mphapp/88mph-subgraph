@@ -133,6 +133,7 @@ export function handleEDeposit(event: EDeposit): void {
   deposit.amount = normalize(event.params.amount)
   deposit.maturationTimestamp = event.params.maturationTimestamp
   deposit.active = true
+  deposit.depositTimestamp = BigInt.fromI32(Date.now() / 1000 as i32)
   deposit.interestEarned = normalize(event.params.upfrontInterestAmount)
   deposit.save()
 
@@ -177,6 +178,7 @@ export function handleESponsorDeposit(event: ESponsorDeposit): void {
   deposit.amount = normalize(event.params.amount)
   deposit.maturationTimestamp = event.params.maturationTimestamp
   deposit.active = true
+  deposit.depositTimestamp = BigInt.fromI32(Date.now() / 1000 as i32)
   deposit.data = event.params.data
   deposit.save()
 
