@@ -47,6 +47,7 @@ type User @entity {
 
 type Deposit @entity {
   id: ID!
+  idx: BigInt!
   user: User!
   pool: DPool!
   amount: BigDecimal!
@@ -70,6 +71,7 @@ type Sponsor @entity {
 
 type SponsorDeposit @entity {
   id: ID!
+  idx: BigInt!
   sponsor: Sponsor!
   pool: DPool!
   amount: BigDecimal!

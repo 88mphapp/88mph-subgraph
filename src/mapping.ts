@@ -128,6 +128,7 @@ export function handleEDeposit(event: EDeposit): void {
 
   // Create new Deposit entity
   let deposit = new Deposit(pool.address + DELIMITER + user.address + DELIMITER + event.params.depositID.toString())
+  deposit.idx = event.params.depositID
   deposit.user = user.id
   deposit.pool = pool.id
   deposit.amount = normalize(event.params.amount)
@@ -173,6 +174,7 @@ export function handleESponsorDeposit(event: ESponsorDeposit): void {
 
   // Create new SponsorDeposit entity
   let deposit = new SponsorDeposit(pool.address + DELIMITER + sponsor.address + DELIMITER + event.params.depositID.toString())
+  deposit.idx = event.params.depositID
   deposit.sponsor = sponsor.id
   deposit.pool = pool.id
   deposit.amount = normalize(event.params.amount)
