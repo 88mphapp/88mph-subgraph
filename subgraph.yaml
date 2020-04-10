@@ -34,7 +34,7 @@ dataSources:
         - handler: handleBlock
       file: ./src/mapping.ts
   - kind: ethereum/contract
-    name: DInterestV2Compound
+    name: DInterestV2Aave
     network: mainnet
     source:
       address: "0xC99d4F7273514148B91518f6e7B4BbcCB4F04A27"
@@ -65,7 +65,7 @@ dataSources:
         - handler: handleBlock
       file: ./src/mappingV2.ts
   - kind: ethereum/contract
-    name: DInterestV2Aave
+    name: DInterestV2Compound
     network: mainnet
     source:
       address: "0xeBcE73ED303eB97fA8060F276083444B9bBe63c1"
