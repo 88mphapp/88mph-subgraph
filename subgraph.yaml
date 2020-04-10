@@ -37,9 +37,9 @@ dataSources:
     name: DInterestV2Aave
     network: mainnet
     source:
-      address: "0xC99d4F7273514148B91518f6e7B4BbcCB4F04A27"
+      address: "0xdf907B483C7e7402555BCb1D8d3878AC3a38F07B"
       abi: DInterestV2
-      startBlock: 9829400
+      startBlock: 9842233
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.3
