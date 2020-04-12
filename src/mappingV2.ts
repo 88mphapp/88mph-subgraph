@@ -36,6 +36,10 @@ function getPoolList(): DPoolList {
     poolList = new DPoolList(DPOOLLIST_ID)
     poolList.pools = new Array<string>()
     poolList.numPools = ZERO_INT
+    poolList.numUsers = ZERO_INT
+    poolList.numActiveUsers = ZERO_INT
+    poolList.numSponsors = ZERO_INT
+    poolList.numActiveSponsors = ZERO_INT
     poolList.save()
   }
   return poolList as DPoolList
@@ -52,11 +56,9 @@ function getPool(event: EthereumEvent): DPool {
     pool.moneyMarket = poolContract.moneyMarket().toHex()
     pool.stablecoin = poolContract.stablecoin().toHex()
     pool.numUsers = ZERO_INT
-    pool.numActiveUsers = ZERO_INT
     pool.numDeposits = ZERO_INT
     pool.numActiveDeposits = ZERO_INT
     pool.numSponsors = ZERO_INT
-    pool.numActiveSponsors = ZERO_INT
     pool.numSponsorDeposits = ZERO_INT
     pool.numActiveSponsorDeposits = ZERO_INT
     pool.totalActiveDeposit = ZERO_DEC
@@ -96,6 +98,10 @@ function getUser(address: Address, pool: DPool): User {
 
     pool.numUsers = pool.numUsers.plus(ONE_INT)
     pool.save()
+
+    let poolList = getPoolList()
+    poolList.numUsers = poolList.numUsers.plus(ONE_INT)
+    poolList.save()
   }
   return user as User
 }
@@ -117,6 +123,10 @@ function getSponsor(address: Address, pool: DPool): Sponsor {
 
     pool.numSponsors = pool.numSponsors.plus(ONE_INT)
     pool.save()
+
+    let poolList = getPoolList()
+    poolList.numSponsors = poolList.numSponsors.plus(ONE_INT)
+    poolList.save()
   }
   return sponsor as Sponsor
 }
@@ -141,7 +151,9 @@ export function handleEDeposit(event: EDeposit): void {
   // Update DPool statistics
   if (user.numActiveDeposits.equals(ZERO_INT)) {
     // User has become active
-    pool.numActiveUsers = pool.numActiveUsers.plus(ONE_INT)
+    let poolList = getPoolList()
+    poolList.numActiveUsers = poolList.numActiveUsers.plus(ONE_INT)
+    poolList.save()
   }
   pool.numDeposits = pool.numDeposits.plus(ONE_INT)
   pool.numActiveDeposits = pool.numActiveDeposits.plus(ONE_INT)
@@ -158,6 +170,8 @@ export function handleEDeposit(event: EDeposit): void {
     pools.push(pool.id)
     user.pools = pools
     user.numPools = user.numPools.plus(ONE_INT)
+    pool.numUsers = pool.numUsers.plus(ONE_INT)
+    pool.save()
   }
   user.numDeposits = user.numDeposits.plus(ONE_INT)
   user.numActiveDeposits = user.numActiveDeposits.plus(ONE_INT)
@@ -187,7 +201,9 @@ export function handleESponsorDeposit(event: ESponsorDeposit): void {
   // Update DPool statistics
   if (sponsor.numActiveDeposits.equals(ZERO_INT)) {
     // Sponsor has become active
-    pool.numActiveSponsors = pool.numActiveSponsors.plus(ONE_INT)
+    let poolList = getPoolList()
+    poolList.numActiveSponsors = poolList.numActiveSponsors.plus(ONE_INT)
+    poolList.save()
   }
   pool.numSponsorDeposits = pool.numSponsorDeposits.plus(ONE_INT)
   pool.numActiveSponsorDeposits = pool.numActiveSponsorDeposits.plus(ONE_INT)
@@ -203,6 +219,8 @@ export function handleESponsorDeposit(event: ESponsorDeposit): void {
     pools.push(pool.id)
     sponsor.pools = pools
     sponsor.numPools = sponsor.numPools.plus(ONE_INT)
+    pool.numSponsors = pool.numSponsors.plus(ONE_INT)
+    pool.save()
   }
   sponsor.numDeposits = sponsor.numDeposits.plus(ONE_INT)
   sponsor.numActiveDeposits = sponsor.numActiveDeposits.plus(ONE_INT)
@@ -229,7 +247,9 @@ export function handleEWithdraw(event: EWithdraw): void {
   // Update DPool statistics
   if (user.numActiveDeposits.equals(ZERO_INT)) {
     // User has become inactive
-    pool.numActiveUsers = pool.numActiveUsers.minus(ONE_INT)
+    let poolList = getPoolList()
+    poolList.numActiveUsers = poolList.numActiveUsers.minus(ONE_INT)
+    poolList.save()
   }
   pool.numActiveDeposits = pool.numActiveDeposits.minus(ONE_INT)
   pool.totalActiveDeposit = pool.totalActiveDeposit.minus(deposit.amount)
@@ -255,7 +275,9 @@ export function handleESponsorWithdraw(event: ESponsorWithdraw): void {
   // Update DPool statistics
   if (sponsor.numActiveDeposits.equals(ZERO_INT)) {
     // Sponsor has become inactive
-    pool.numActiveSponsors = pool.numActiveSponsors.minus(ONE_INT)
+    let poolList = getPoolList()
+    poolList.numActiveSponsors = poolList.numActiveSponsors.minus(ONE_INT)
+    poolList.save()
   }
   pool.numActiveSponsorDeposits = pool.numActiveSponsorDeposits.minus(ONE_INT)
   pool.totalActiveDeposit = pool.totalActiveDeposit.minus(deposit.amount)

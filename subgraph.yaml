@@ -60,7 +60,7 @@ dataSources:
         - event: ESponsorWithdraw(indexed address,uint256)
           handler: handleESponsorWithdraw
         - event: EWithdraw(indexed address,uint256,bool)
-          handler: handleEWithdrawV2
+          handler: handleEWithdraw
       blockHandlers:
         - handler: handleBlock
       file: ./src/mappingV2.ts
@@ -91,7 +91,7 @@ dataSources:
         - event: ESponsorWithdraw(indexed address,uint256)
           handler: handleESponsorWithdraw
         - event: EWithdraw(indexed address,uint256,bool)
-          handler: handleEWithdrawV2
+          handler: handleEWithdraw
       blockHandlers:
         - handler: handleBlock
       file: ./src/mappingV2.ts
