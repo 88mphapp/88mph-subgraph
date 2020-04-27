@@ -2,6 +2,10 @@ type DPoolList @entity {
   id: ID!
   pools: [DPool!]!
   numPools: BigInt!
+  numUsers: BigInt!
+  numActiveUsers: BigInt!
+  numSponsors: BigInt!
+  numActiveSponsors: BigInt!
 }
 
 type DPool @entity {
@@ -11,13 +15,11 @@ type DPool @entity {
   stablecoin: String!
   users: [User!]! @derivedFrom(field: "pools")
   numUsers: BigInt!
-  numActiveUsers: BigInt!
   deposits: [Deposit!]! @derivedFrom(field: "pool")
   numDeposits: BigInt!
   numActiveDeposits: BigInt!
   sponsors: [Sponsor!]! @derivedFrom(field: "pools")
   numSponsors: BigInt!
-  numActiveSponsors: BigInt!
   sponsorDeposits: [SponsorDeposit!]! @derivedFrom(field: "pool")
   numSponsorDeposits: BigInt!
   numActiveSponsorDeposits: BigInt!

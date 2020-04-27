@@ -1,11 +1,11 @@
 import { BigInt, BigDecimal, EthereumEvent, Address, EthereumBlock, log } from "@graphprotocol/graph-ts"
 import {
-  DInterest,
+  DInterestV2 as DInterest,
   EDeposit,
   ESponsorDeposit,
   ESponsorWithdraw,
   EWithdraw
-} from "../generated/DInterest/DInterest"
+} from "../generated/DInterestV2Aave/DInterestV2"
 import { DPoolList, DPool, User, Deposit, Sponsor, SponsorDeposit } from "../generated/schema"
 
 let DPOOLLIST_ID = "0";
