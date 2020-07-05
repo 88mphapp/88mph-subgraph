@@ -4,8 +4,7 @@ type DPoolList @entity {
   numPools: BigInt!
   numUsers: BigInt!
   numActiveUsers: BigInt!
-  numSponsors: BigInt!
-  numActiveSponsors: BigInt!
+  numFunders: BigInt!
 }
 
 type DPool @entity {
@@ -18,20 +17,20 @@ type DPool @entity {
   deposits: [Deposit!]! @derivedFrom(field: "pool")
   numDeposits: BigInt!
   numActiveDeposits: BigInt!
-  sponsors: [Sponsor!]! @derivedFrom(field: "pools")
-  numSponsors: BigInt!
-  sponsorDeposits: [SponsorDeposit!]! @derivedFrom(field: "pool")
-  numSponsorDeposits: BigInt!
-  numActiveSponsorDeposits: BigInt!
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
   totalInterestPaid: BigDecimal!
+  funders: [Funder!]! @derivedFrom(field: "pools")
+  numFunders: BigInt!
+  fundings: [Funding!]! @derivedFrom(field: "pool")
+  numFundings: BigInt!
   blocktime: BigDecimal!
   UIRMultiplier: BigDecimal!
   MinDepositPeriod: BigInt!
   "Values that need to be updated every block"
   oneYearInterestRate: BigDecimal!
-  deficit: BigDecimal!
+  surplus: BigDecimal!
+  moneyMarketIncomeIndex: BigInt!
 }
 
 type User @entity {
@@ -49,7 +48,7 @@ type User @entity {
 
 type Deposit @entity {
   id: ID!
-  idx: BigInt!
+  nftID: BigInt!
   user: User!
   pool: DPool!
   amount: BigDecimal!
@@ -57,28 +56,29 @@ type Deposit @entity {
   active: Boolean!
   depositTimestamp: BigInt!
   interestEarned: BigDecimal!
+  fundingID: BigInt!
 }
 
-type Sponsor @entity {
+type Funder @entity {
   id: ID!
   address: String!
   pools: [DPool!]!
   numPools: BigInt!
-  deposits: [SponsorDeposit!]! @derivedFrom(field: "sponsor")
-  numDeposits: BigInt!
-  numActiveDeposits: BigInt!
-  totalActiveDeposit: BigDecimal!
-  totalHistoricalDeposit: BigDecimal!
+  fundings: [Funding!]! @derivedFrom(field: "funder")
+  numFundings: BigInt!
+  totalInterestEarned: BigDecimal!
 }
 
-type SponsorDeposit @entity {
+type Funding @entity {
   id: ID!
-  idx: BigInt!
-  sponsor: Sponsor!
+  nftID: BigInt!
+  funder: Funder!
   pool: DPool!
-  amount: BigDecimal!
-  maturationTimestamp: BigInt!
-  active: Boolean!
-  depositTimestamp: BigInt!
-  data: String!
+  fromDepositID: BigInt!
+  toDepositID: BigInt!
+  recordedFundedDepositAmount: BigDecimal!
+  recordedMoneyMarketIncomeIndex: BigInt!
+  initialFundedDepositAmount: BigDecimal!
+  fundedDeficitAmount: BigDecimal!
+  totalInterestEarned: BigDecimal!
 }

@@ -11,9 +11,36 @@
         "name": "_MinDepositPeriod",
         "type": "uint256"
       },
-      { "internalType": "address", "name": "_moneyMarket", "type": "address" },
-      { "internalType": "address", "name": "_stablecoin", "type": "address" },
-      { "internalType": "address", "name": "_feeModel", "type": "address" }
+      {
+        "internalType": "uint256",
+        "name": "_MaxDepositAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_moneyMarket",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_stablecoin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_feeModel",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_depositNFT",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_fundingNFT",
+        "type": "address"
+      }
     ],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -29,7 +56,7 @@
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "depositID",
         "type": "uint256"
@@ -66,31 +93,19 @@
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
-        "name": "depositID",
+        "name": "fundingID",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "amount",
+        "name": "deficitAmount",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "maturationTimestamp",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "data",
-        "type": "string"
       }
     ],
-    "name": "ESponsorDeposit",
+    "name": "EFund",
     "type": "event"
   },
   {
@@ -103,29 +118,22 @@
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "uint256",
         "name": "depositID",
         "type": "uint256"
-      }
-    ],
-    "name": "ESponsorWithdraw",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
+      },
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "fundingID",
+        "type": "uint256"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "depositID",
-        "type": "uint256"
+        "internalType": "bool",
+        "name": "early",
+        "type": "bool"
       }
     ],
     "name": "EWithdraw",
@@ -134,8 +142,29 @@
   {
     "constant": true,
     "inputs": [],
+    "name": "MaxDepositAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
     "name": "MinDepositPeriod",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -144,7 +173,13 @@
     "constant": true,
     "inputs": [],
     "name": "UIRMultiplier",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -153,7 +188,13 @@
     "constant": true,
     "inputs": [],
     "name": "blocktime",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -180,21 +221,13 @@
     "type": "function"
   },
   {
-    "constant": true,
-    "inputs": [],
-    "name": "deficit",
-    "outputs": [
-      { "internalType": "bool", "name": "isNegative", "type": "bool" },
-      { "internalType": "uint256", "name": "deficitAmount", "type": "uint256" }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "constant": false,
     "inputs": [
-      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "maturationTimestamp",
@@ -209,10 +242,255 @@
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "depositIsFunded",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "depositNFT",
+    "outputs": [
+      {
+        "internalType": "contract NFT",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "depositsLength",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "depositID",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fundingID",
+        "type": "uint256"
+      }
+    ],
+    "name": "earlyWithdraw",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "feeModel",
     "outputs": [
-      { "internalType": "contract FeeModel", "name": "", "type": "address" }
+      {
+        "internalType": "contract FeeModel",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "fundAll",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "toDepositID",
+        "type": "uint256"
+      }
+    ],
+    "name": "fundMultiple",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "fundingListLength",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "fundingNFT",
+    "outputs": [
+      {
+        "internalType": "contract NFT",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "depositID",
+        "type": "uint256"
+      }
+    ],
+    "name": "getDeposit",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maturationTimestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "initialDeficit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "initialmoneyMarketIncomeIndex",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "active",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "finalSurplusIsNegative",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "finalSurplusAmount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DInterest.Deposit",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "fundingID",
+        "type": "uint256"
+      }
+    ],
+    "name": "getFunding",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "fromDepositID",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "toDepositID",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "recordedFundedDepositAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "recordedMoneyMarketIncomeIndex",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DInterest.Funding",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "latestFundedDepositID",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
     "payable": false,
     "stateMutability": "view",
@@ -223,10 +501,29 @@
     "inputs": [],
     "name": "moneyMarket",
     "outputs": [
-      { "internalType": "contract IMoneyMarket", "name": "", "type": "address" }
+      {
+        "internalType": "contract IMoneyMarket",
+        "name": "",
+        "type": "address"
+      }
     ],
     "payable": false,
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "moneyMarketIncomeIndex",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -256,57 +553,34 @@
         "internalType": "uint256[]",
         "name": "depositIDList",
         "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "fundingIDList",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "multiEarlyWithdraw",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "depositIDList",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "fundingIDList",
+        "type": "uint256[]"
       }
     ],
     "name": "multiWithdraw",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      { "internalType": "uint256", "name": "amount", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "maturationTimestamp",
-        "type": "uint256"
-      },
-      { "internalType": "string", "name": "data", "type": "string" }
-    ],
-    "name": "sponsorDeposit",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256", "name": "", "type": "uint256" }
-    ],
-    "name": "sponsorDeposits",
-    "outputs": [
-      { "internalType": "uint256", "name": "amount", "type": "uint256" },
-      {
-        "internalType": "uint256",
-        "name": "maturationTimestamp",
-        "type": "uint256"
-      },
-      { "internalType": "bool", "name": "active", "type": "bool" }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      { "internalType": "uint256", "name": "depositID", "type": "uint256" }
-    ],
-    "name": "sponsorWithdraw",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -318,7 +592,7 @@
     "name": "stablecoin",
     "outputs": [
       {
-        "internalType": "contract ERC20Detailed",
+        "internalType": "contract ERC20",
         "name": "",
         "type": "address"
       }
@@ -328,29 +602,76 @@
     "type": "function"
   },
   {
+    "constant": false,
+    "inputs": [],
+    "name": "surplus",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isNegative",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "surplusAmount",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "depositID",
+        "type": "uint256"
+      }
+    ],
+    "name": "surplusOfDeposit",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "isNegative",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "surplusAmount",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "constant": true,
     "inputs": [],
     "name": "totalDeposit",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256", "name": "", "type": "uint256" }
-    ],
-    "name": "userDeposits",
+    "inputs": [],
+    "name": "unfundedUserDepositAmount",
     "outputs": [
-      { "internalType": "uint256", "name": "amount", "type": "uint256" },
       {
         "internalType": "uint256",
-        "name": "maturationTimestamp",
+        "name": "",
         "type": "uint256"
-      },
-      { "internalType": "bool", "name": "active", "type": "bool" }
+      }
     ],
     "payable": false,
     "stateMutability": "view",
@@ -359,7 +680,16 @@
   {
     "constant": false,
     "inputs": [
-      { "internalType": "uint256", "name": "depositID", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "depositID",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fundingID",
+        "type": "uint256"
+      }
     ],
     "name": "withdraw",
     "outputs": [],
