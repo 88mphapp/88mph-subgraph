@@ -11,87 +11,73 @@ dataSources:
       startBlock: 9706580
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.3
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - EDeposit
-        - ESponsorDeposit
-        - ESponsorWithdraw
-        - EWithdraw
+        - DPoolList
+        - DPool
+        - User
+        - Deposit
+        - Funder
+        - Funding
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
       eventHandlers:
-        - event: EDeposit(indexed address,uint256,uint256,uint256,uint256)
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
-        - event: ESponsorDeposit(indexed address,uint256,uint256,uint256,string)
-          handler: handleESponsorDeposit
-        - event: ESponsorWithdraw(indexed address,uint256)
-          handler: handleESponsorWithdraw
-        - event: EWithdraw(indexed address,uint256)
+        - event: EWithdraw(indexed address,indexed uint256,indexed uint256,bool,uint256)
           handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint256,uint256,uint256)
+          handler: handleEFund
       blockHandlers:
         - handler: handleBlock
-      file: ./src/mapping.ts
+      file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: DInterestV2Aave
+    name: Rewards
     network: mainnet
     source:
-      address: "0xdf907B483C7e7402555BCb1D8d3878AC3a38F07B"
-      abi: DInterestV2
-      startBlock: 9842233
+      address: "0x9b226970cdeAdA0026aEd50D02E4A0dD37C92b6F"
+      abi: Rewards
+      startBlock: 9706580
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.3
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - EDeposit
-        - ESponsorDeposit
-        - ESponsorWithdraw
-        - EWithdraw
+        - MPHHolder
+        - MPH
       abis:
-        - name: DInterestV2
-          file: ./abis/DInterestV2.json
+        - name: Rewards
+          file: ./abis/Rewards.json
       eventHandlers:
-        - event: EDeposit(indexed address,uint256,uint256,uint256,uint256)
-          handler: handleEDeposit
-        - event: ESponsorDeposit(indexed address,uint256,uint256,uint256,string)
-          handler: handleESponsorDeposit
-        - event: ESponsorWithdraw(indexed address,uint256)
-          handler: handleESponsorWithdraw
-        - event: EWithdraw(indexed address,uint256,bool)
-          handler: handleEWithdraw
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/mappingV2.ts
+        - event: RewardAdded(uint256)
+          handler: handleRewardAdded
+        - event: Staked(indexed address,uint256)
+          handler: handleStaked
+        - event: Withdrawn(indexed address,uint256)
+          handler: handleWithdrawn
+        - event: RewardPaid(indexed address,uint256)
+          handler: handleRewardPaid
+      file: ./src/Rewards.ts
   - kind: ethereum/contract
-    name: DInterestV2Compound
+    name: MPHToken
     network: mainnet
     source:
-      address: "0xeBcE73ED303eB97fA8060F276083444B9bBe63c1"
-      abi: DInterestV2
-      startBlock: 9829437
+      address: "0x9b226970cdeAdA0026aEd50D02E4A0dD37C92b6F"
+      abi: MPHToken
+      startBlock: 9706580
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.3
+      apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-        - EDeposit
-        - ESponsorDeposit
-        - ESponsorWithdraw
-        - EWithdraw
+        - MPHHolder
+        - MPH
       abis:
-        - name: DInterestV2
-          file: ./abis/DInterestV2.json
+        - name: MPHToken
+          file: ./abis/MPHToken.json
       eventHandlers:
-        - event: EDeposit(indexed address,uint256,uint256,uint256,uint256)
-          handler: handleEDeposit
-        - event: ESponsorDeposit(indexed address,uint256,uint256,uint256,string)
-          handler: handleESponsorDeposit
-        - event: ESponsorWithdraw(indexed address,uint256)
-          handler: handleESponsorWithdraw
-        - event: EWithdraw(indexed address,uint256,bool)
-          handler: handleEWithdraw
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/mappingV2.ts
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/MPHToken.ts

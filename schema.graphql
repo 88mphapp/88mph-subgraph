@@ -4,8 +4,7 @@ type DPoolList @entity {
   numPools: BigInt!
   numUsers: BigInt!
   numActiveUsers: BigInt!
-  numSponsors: BigInt!
-  numActiveSponsors: BigInt!
+  numFunders: BigInt!
 }
 
 type DPool @entity {
@@ -13,25 +12,27 @@ type DPool @entity {
   address: String!
   moneyMarket: String!
   stablecoin: String!
+  interestModel: String!
   users: [User!]! @derivedFrom(field: "pools")
   numUsers: BigInt!
   deposits: [Deposit!]! @derivedFrom(field: "pool")
   numDeposits: BigInt!
   numActiveDeposits: BigInt!
-  sponsors: [Sponsor!]! @derivedFrom(field: "pools")
-  numSponsors: BigInt!
-  sponsorDeposits: [SponsorDeposit!]! @derivedFrom(field: "pool")
-  numSponsorDeposits: BigInt!
-  numActiveSponsorDeposits: BigInt!
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
   totalInterestPaid: BigDecimal!
+  funders: [Funder!]! @derivedFrom(field: "pools")
+  numFunders: BigInt!
+  fundings: [Funding!]! @derivedFrom(field: "pool")
+  numFundings: BigInt!
   blocktime: BigDecimal!
-  UIRMultiplier: BigDecimal!
   MinDepositPeriod: BigInt!
-  "Values that need to be updated every block"
+  MaxDepositPeriod: BigInt!
+  MinDepositAmount: BigInt!
+  MaxDepositAmount: BigInt!
   oneYearInterestRate: BigDecimal!
-  deficit: BigDecimal!
+  surplus: BigDecimal!
+  moneyMarketIncomeIndex: BigInt!
 }
 
 type User @entity {
@@ -45,11 +46,13 @@ type User @entity {
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
   totalInterestEarned: BigDecimal!
+  totalMPHEarned: BigDecimal!
+  totalMPHPaidBack: BigDecimal!
 }
 
 type Deposit @entity {
   id: ID!
-  idx: BigInt!
+  nftID: BigInt!
   user: User!
   pool: DPool!
   amount: BigDecimal!
@@ -57,28 +60,49 @@ type Deposit @entity {
   active: Boolean!
   depositTimestamp: BigInt!
   interestEarned: BigDecimal!
+  fundingID: BigInt!
+  mintMPHAmount: BigDecimal!
+  takeBackMPHAmount: BigDecimal!
 }
 
-type Sponsor @entity {
+type Funder @entity {
   id: ID!
   address: String!
   pools: [DPool!]!
   numPools: BigInt!
-  deposits: [SponsorDeposit!]! @derivedFrom(field: "sponsor")
-  numDeposits: BigInt!
-  numActiveDeposits: BigInt!
-  totalActiveDeposit: BigDecimal!
-  totalHistoricalDeposit: BigDecimal!
+  fundings: [Funding!]! @derivedFrom(field: "funder")
+  numFundings: BigInt!
+  totalInterestEarned: BigDecimal!
+  totalMPHEarned: BigDecimal!
 }
 
-type SponsorDeposit @entity {
+type Funding @entity {
   id: ID!
-  idx: BigInt!
-  sponsor: Sponsor!
+  nftID: BigInt!
+  funder: Funder!
   pool: DPool!
-  amount: BigDecimal!
-  maturationTimestamp: BigInt!
-  active: Boolean!
-  depositTimestamp: BigInt!
-  data: String!
+  fromDepositID: BigInt!
+  toDepositID: BigInt!
+  recordedFundedDepositAmount: BigDecimal!
+  recordedMoneyMarketIncomeIndex: BigInt!
+  initialFundedDepositAmount: BigDecimal!
+  fundedDeficitAmount: BigDecimal!
+  totalInterestEarned: BigDecimal!
+  mintMPHAmount: BigDecimal!
+}
+
+type MPHHolder @entity {
+  id: ID!
+  address: String!
+  mphBalance: BigDecimal!
+  stakedMPHBalance: BigDecimal!
+  totalHistoricalReward: BigDecimal!
+}
+
+type MPH @entity {
+  id: ID!
+  totalSupply: BigDecimal!
+  totalStakedMPHBalance: BigDecimal!
+  totalHistoricalReward: BigDecimal!
+  rewardPerMPHPerSecond: BigDecimal!
 }
