@@ -12,6 +12,7 @@ type DPool @entity {
   address: String!
   moneyMarket: String!
   stablecoin: String!
+  interestModel: String!
   users: [User!]! @derivedFrom(field: "pools")
   numUsers: BigInt!
   deposits: [Deposit!]! @derivedFrom(field: "pool")
@@ -25,9 +26,10 @@ type DPool @entity {
   fundings: [Funding!]! @derivedFrom(field: "pool")
   numFundings: BigInt!
   blocktime: BigDecimal!
-  UIRMultiplier: BigDecimal!
   MinDepositPeriod: BigInt!
-  "Values that need to be updated every block"
+  MaxDepositPeriod: BigInt!
+  MinDepositAmount: BigInt!
+  MaxDepositAmount: BigInt!
   oneYearInterestRate: BigDecimal!
   surplus: BigDecimal!
   moneyMarketIncomeIndex: BigInt!
@@ -44,6 +46,8 @@ type User @entity {
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
   totalInterestEarned: BigDecimal!
+  totalMPHEarned: BigDecimal!
+  totalMPHPaidBack: BigDecimal!
 }
 
 type Deposit @entity {
@@ -57,6 +61,8 @@ type Deposit @entity {
   depositTimestamp: BigInt!
   interestEarned: BigDecimal!
   fundingID: BigInt!
+  mintMPHAmount: BigDecimal!
+  takeBackMPHAmount: BigDecimal!
 }
 
 type Funder @entity {
@@ -67,6 +73,7 @@ type Funder @entity {
   fundings: [Funding!]! @derivedFrom(field: "funder")
   numFundings: BigInt!
   totalInterestEarned: BigDecimal!
+  totalMPHEarned: BigDecimal!
 }
 
 type Funding @entity {
@@ -81,4 +88,21 @@ type Funding @entity {
   initialFundedDepositAmount: BigDecimal!
   fundedDeficitAmount: BigDecimal!
   totalInterestEarned: BigDecimal!
+  mintMPHAmount: BigDecimal!
+}
+
+type MPHHolder @entity {
+  id: ID!
+  address: String!
+  mphBalance: BigDecimal!
+  stakedMPHBalance: BigDecimal!
+  totalHistoricalReward: BigDecimal!
+}
+
+type MPH @entity {
+  id: ID!
+  totalSupply: BigDecimal!
+  totalStakedMPHBalance: BigDecimal!
+  totalHistoricalReward: BigDecimal!
+  rewardPerMPHPerSecond: BigDecimal!
 }

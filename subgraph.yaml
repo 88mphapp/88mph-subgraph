@@ -18,17 +18,66 @@ dataSources:
         - DPool
         - User
         - Deposit
+        - Funder
         - Funding
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
       eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256)
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed uint256,bool)
+        - event: EWithdraw(indexed address,indexed uint256,indexed uint256,bool,uint256)
           handler: handleEWithdraw
-        - event: EFund(indexed address,indexed uint256,uint256)
+        - event: EFund(indexed address,indexed uint256,uint256,uint256)
           handler: handleEFund
       blockHandlers:
         - handler: handleBlock
-      file: ./src/mapping.ts
+      file: ./src/DInterest.ts
+  - kind: ethereum/contract
+    name: Rewards
+    network: mainnet
+    source:
+      address: "0x9b226970cdeAdA0026aEd50D02E4A0dD37C92b6F"
+      abi: Rewards
+      startBlock: 9706580
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - MPHHolder
+        - MPH
+      abis:
+        - name: Rewards
+          file: ./abis/Rewards.json
+      eventHandlers:
+        - event: RewardAdded(uint256)
+          handler: handleRewardAdded
+        - event: Staked(indexed address,uint256)
+          handler: handleStaked
+        - event: Withdrawn(indexed address,uint256)
+          handler: handleWithdrawn
+        - event: RewardPaid(indexed address,uint256)
+          handler: handleRewardPaid
+      file: ./src/Rewards.ts
+  - kind: ethereum/contract
+    name: MPHToken
+    network: mainnet
+    source:
+      address: "0x9b226970cdeAdA0026aEd50D02E4A0dD37C92b6F"
+      abi: MPHToken
+      startBlock: 9706580
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - MPHHolder
+        - MPH
+      abis:
+        - name: MPHToken
+          file: ./abis/MPHToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/MPHToken.ts

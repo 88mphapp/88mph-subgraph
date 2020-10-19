@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal, Address, log, ethereum } from "@graphprotocol/graph-ts"
+import { BigInt, BigDecimal, Address, ethereum } from "@graphprotocol/graph-ts"
 import {
   DInterest,
   EDeposit,
@@ -53,6 +53,7 @@ function getPool(event: ethereum.Event): DPool {
     pool.address = event.address.toHex()
     pool.moneyMarket = poolContract.moneyMarket().toHex()
     pool.stablecoin = poolContract.stablecoin().toHex()
+    pool.interestModel = poolContract.interestModel().toHex()
     pool.numUsers = ZERO_INT
     pool.numDeposits = ZERO_INT
     pool.numActiveDeposits = ZERO_INT
@@ -60,12 +61,14 @@ function getPool(event: ethereum.Event): DPool {
     pool.totalHistoricalDeposit = ZERO_DEC
     pool.numFundings = ZERO_INT
     pool.totalInterestPaid = ZERO_DEC
-    pool.oneYearInterestRate = normalize(poolContract.calculateUpfrontInterestRate(YEAR))
+    pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(ONE_INT, YEAR))
     pool.surplus = ZERO_DEC
     pool.moneyMarketIncomeIndex = ZERO_INT
     pool.blocktime = normalize(poolContract.blocktime())
-    pool.UIRMultiplier = normalize(poolContract.UIRMultiplier())
     pool.MinDepositPeriod = poolContract.MinDepositPeriod()
+    pool.MaxDepositPeriod = poolContract.MaxDepositPeriod()
+    pool.MinDepositAmount = poolContract.MinDepositAmount()
+    pool.MaxDepositAmount = poolContract.MaxDepositAmount()
     pool.save()
 
     let pools = poolList.pools
@@ -91,6 +94,8 @@ function getUser(address: Address, pool: DPool): User {
     user.totalActiveDeposit = ZERO_DEC
     user.totalHistoricalDeposit = ZERO_DEC
     user.totalInterestEarned = ZERO_DEC
+    user.totalMPHEarned = ZERO_DEC
+    user.totalMPHPaidBack = ZERO_DEC
     user.save()
 
     pool.numUsers = pool.numUsers.plus(ONE_INT)
@@ -114,6 +119,7 @@ function getFunder(address: Address, pool: DPool): Funder {
     user.numPools = ZERO_INT
     user.numFundings = ZERO_INT
     user.totalInterestEarned = ZERO_DEC
+    user.totalMPHEarned = ZERO_DEC
     user.save()
 
     pool.numFunders = pool.numFunders.plus(ONE_INT)
@@ -140,8 +146,10 @@ export function handleEDeposit(event: EDeposit): void {
   deposit.maturationTimestamp = event.params.maturationTimestamp
   deposit.active = true
   deposit.depositTimestamp = event.block.timestamp
-  deposit.interestEarned = normalize(event.params.upfrontInterestAmount)
+  deposit.interestEarned = normalize(event.params.interestAmount)
   deposit.fundingID = ZERO_INT
+  deposit.mintMPHAmount = normalize(event.params.mintMPHAmount)
+  deposit.takeBackMPHAmount = ZERO_DEC
   deposit.save()
 
   // Update DPool statistics
@@ -174,6 +182,7 @@ export function handleEDeposit(event: EDeposit): void {
   user.totalActiveDeposit = user.totalActiveDeposit.plus(deposit.amount)
   user.totalHistoricalDeposit = user.totalHistoricalDeposit.plus(deposit.amount)
   user.totalInterestEarned = user.totalInterestEarned.plus(deposit.interestEarned)
+  user.totalMPHEarned = user.totalMPHEarned.plus(deposit.mintMPHAmount)
   user.save()
 }
 
@@ -185,11 +194,13 @@ export function handleEWithdraw(event: EWithdraw): void {
 
   // Set Deposit entity to inactive
   deposit.active = false
+  deposit.takeBackMPHAmount = normalize(event.params.takeBackMPHAmount)
   deposit.save()
 
   // Update User statistics
   user.numActiveDeposits = user.numActiveDeposits.minus(ONE_INT)
   user.totalActiveDeposit = user.totalActiveDeposit.minus(deposit.amount)
+  user.totalMPHPaidBack = user.totalMPHPaidBack.plus(deposit.takeBackMPHAmount)
   user.save()
 
   // Update DPool statistics
@@ -241,6 +252,7 @@ export function handleEFund(event: EFund): void {
   funding.initialFundedDepositAmount = normalize(fundingObj.recordedFundedDepositAmount)
   funding.fundedDeficitAmount = normalize(event.params.deficitAmount)
   funding.totalInterestEarned = ZERO_DEC
+  funding.mintMPHAmount = normalize(event.params.mintMPHAmount)
   funding.save()
 
   // Update DPool statistics
@@ -250,6 +262,7 @@ export function handleEFund(event: EFund): void {
 
   // Update Funder
   funder.numFundings = funder.numFundings.plus(ONE_INT)
+  funder.totalMPHEarned = funder.totalMPHEarned.plus(funding.mintMPHAmount)
   funder.save()
 
   // Update funded Deposits
@@ -267,7 +280,7 @@ export function handleBlock(block: ethereum.Block): void {
     // Update DPool statistics
     let pool = DPool.load(poolID)
     let poolContract = DInterest.bind(Address.fromString(pool.address))
-    pool.oneYearInterestRate = normalize(poolContract.calculateUpfrontInterestRate(YEAR))
+    pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(ONE_INT, YEAR))
     let surplusResult = poolContract.surplus()
     pool.surplus = normalize(surplusResult.value1).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC)
     pool.moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
