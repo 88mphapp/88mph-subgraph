@@ -25,7 +25,6 @@ type DPool @entity {
   numFunders: BigInt!
   fundings: [Funding!]! @derivedFrom(field: "pool")
   numFundings: BigInt!
-  blocktime: BigDecimal!
   MinDepositPeriod: BigInt!
   MaxDepositPeriod: BigInt!
   MinDepositAmount: BigInt!

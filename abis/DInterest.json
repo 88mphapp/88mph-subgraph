@@ -2,24 +2,31 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_MinDepositPeriod",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_MaxDepositPeriod",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_MinDepositAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_MaxDepositAmount",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "MinDepositPeriod",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "MaxDepositPeriod",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "MinDepositAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "MaxDepositAmount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DInterest.DepositLimit",
+        "name": "_depositLimit",
+        "type": "tuple"
       },
       {
         "internalType": "address",
@@ -39,6 +46,11 @@
       {
         "internalType": "address",
         "name": "_interestModel",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_interestOracle",
         "type": "address"
       },
       {
@@ -290,21 +302,6 @@
     "constant": true,
     "inputs": [],
     "name": "MinDepositPeriod",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "blocktime",
     "outputs": [
       {
         "internalType": "uint256",
@@ -626,6 +623,21 @@
   {
     "constant": true,
     "inputs": [],
+    "name": "interestOracle",
+    "outputs": [
+      {
+        "internalType": "contract IInterestOracle",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
     "name": "isOwner",
     "outputs": [
       {
@@ -807,6 +819,21 @@
       }
     ],
     "name": "setInterestModel",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newValue",
+        "type": "address"
+      }
+    ],
+    "name": "setInterestOracle",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",

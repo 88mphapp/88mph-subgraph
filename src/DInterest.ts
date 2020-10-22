@@ -64,7 +64,6 @@ function getPool(event: ethereum.Event): DPool {
     pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(ONE_INT, YEAR))
     pool.surplus = ZERO_DEC
     pool.moneyMarketIncomeIndex = ZERO_INT
-    pool.blocktime = normalize(poolContract.blocktime())
     pool.MinDepositPeriod = poolContract.MinDepositPeriod()
     pool.MaxDepositPeriod = poolContract.MaxDepositPeriod()
     pool.MinDepositAmount = poolContract.MinDepositAmount()
@@ -164,7 +163,6 @@ export function handleEDeposit(event: EDeposit): void {
   pool.totalActiveDeposit = pool.totalActiveDeposit.plus(deposit.amount)
   pool.totalHistoricalDeposit = pool.totalHistoricalDeposit.plus(deposit.amount)
   pool.totalInterestPaid = pool.totalInterestPaid.plus(deposit.interestEarned)
-  pool.blocktime = normalize(poolContract.blocktime())
   pool.save()
 
   // Update User
@@ -212,7 +210,6 @@ export function handleEWithdraw(event: EWithdraw): void {
   }
   pool.numActiveDeposits = pool.numActiveDeposits.minus(ONE_INT)
   pool.totalActiveDeposit = pool.totalActiveDeposit.minus(deposit.amount)
-  pool.blocktime = normalize(poolContract.blocktime())
   pool.save()
 
   let fundingID = event.params.fundingID
@@ -257,7 +254,6 @@ export function handleEFund(event: EFund): void {
 
   // Update DPool statistics
   pool.numFundings = pool.numFundings.plus(ONE_INT)
-  pool.blocktime = normalize(poolContract.blocktime())
   pool.save()
 
   // Update Funder
