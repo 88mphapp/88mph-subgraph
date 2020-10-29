@@ -54,6 +54,7 @@ type UserTotalDeposit @entity {
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
   totalInterestEarned: BigDecimal!
+  totalHistoricalInterestEarned: BigDecimal!
 }
 
 type Deposit @entity {

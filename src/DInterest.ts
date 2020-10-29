@@ -188,10 +188,12 @@ export function handleEDeposit(event: EDeposit): void {
     userTotalDepositEntity.totalActiveDeposit = ZERO_DEC
     userTotalDepositEntity.totalHistoricalDeposit = ZERO_DEC
     userTotalDepositEntity.totalInterestEarned = ZERO_DEC
+    userTotalDepositEntity.totalHistoricalInterestEarned = ZERO_DEC
   }
   userTotalDepositEntity.totalActiveDeposit = userTotalDepositEntity.totalActiveDeposit.plus(deposit.amount)
   userTotalDepositEntity.totalHistoricalDeposit = userTotalDepositEntity.totalHistoricalDeposit.plus(deposit.amount)
   userTotalDepositEntity.totalInterestEarned = userTotalDepositEntity.totalInterestEarned.plus(deposit.interestEarned)
+  userTotalDepositEntity.totalHistoricalInterestEarned = userTotalDepositEntity.totalHistoricalInterestEarned.plus(deposit.interestEarned)
   userTotalDepositEntity.save()
 }
 
@@ -215,6 +217,7 @@ export function handleEWithdraw(event: EWithdraw): void {
   let userTotalDepositID = user.id + DELIMITER + pool.id
   let userTotalDepositEntity = UserTotalDeposit.load(userTotalDepositID)
   userTotalDepositEntity.totalActiveDeposit = userTotalDepositEntity.totalActiveDeposit.minus(deposit.amount)
+  userTotalDepositEntity.totalInterestEarned = userTotalDepositEntity.totalInterestEarned.minus(deposit.interestEarned)
   userTotalDepositEntity.save()
 
   // Update DPool statistics
