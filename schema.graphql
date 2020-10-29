@@ -42,11 +42,18 @@ type User @entity {
   deposits: [Deposit!]! @derivedFrom(field: "user")
   numDeposits: BigInt!
   numActiveDeposits: BigInt!
+  totalDeposits: [UserTotalDeposit!]! @derivedFrom(field: "user")
+  totalMPHEarned: BigDecimal!
+  totalMPHPaidBack: BigDecimal!
+}
+
+type UserTotalDeposit @entity {
+  id: ID!
+  user: User!
+  pool: DPool!
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
   totalInterestEarned: BigDecimal!
-  totalMPHEarned: BigDecimal!
-  totalMPHPaidBack: BigDecimal!
 }
 
 type Deposit @entity {

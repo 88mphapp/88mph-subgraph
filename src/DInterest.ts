@@ -5,7 +5,7 @@ import {
   EWithdraw,
   EFund
 } from "../generated/DInterest/DInterest"
-import { DPoolList, DPool, User, Deposit, Funder, Funding } from "../generated/schema"
+import { DPoolList, DPool, User, Deposit, Funder, Funding, UserTotalDeposit } from "../generated/schema"
 
 let DPOOLLIST_ID = "0";
 let ZERO_DEC = BigDecimal.fromString("0")
@@ -90,9 +90,7 @@ function getUser(address: Address, pool: DPool): User {
     user.numPools = ZERO_INT
     user.numDeposits = ZERO_INT
     user.numActiveDeposits = ZERO_INT
-    user.totalActiveDeposit = ZERO_DEC
-    user.totalHistoricalDeposit = ZERO_DEC
-    user.totalInterestEarned = ZERO_DEC
+    user.totalDeposits = new Array<string>(0)
     user.totalMPHEarned = ZERO_DEC
     user.totalMPHPaidBack = ZERO_DEC
     user.save()
@@ -133,7 +131,6 @@ function getFunder(address: Address, pool: DPool): Funder {
 
 export function handleEDeposit(event: EDeposit): void {
   let pool = getPool(event)
-  let poolContract = DInterest.bind(event.address)
   let user = getUser(event.params.sender, pool)
 
   // Create new Deposit entity
@@ -177,11 +174,25 @@ export function handleEDeposit(event: EDeposit): void {
   }
   user.numDeposits = user.numDeposits.plus(ONE_INT)
   user.numActiveDeposits = user.numActiveDeposits.plus(ONE_INT)
-  user.totalActiveDeposit = user.totalActiveDeposit.plus(deposit.amount)
-  user.totalHistoricalDeposit = user.totalHistoricalDeposit.plus(deposit.amount)
-  user.totalInterestEarned = user.totalInterestEarned.plus(deposit.interestEarned)
   user.totalMPHEarned = user.totalMPHEarned.plus(deposit.mintMPHAmount)
   user.save()
+
+  // Update UserTotalDeposit
+  let userTotalDepositID = user.id + DELIMITER + pool.id
+  let userTotalDepositEntity = UserTotalDeposit.load(userTotalDepositID)
+  if (userTotalDepositEntity == null) {
+    // Initialize UserTotalDeposits entity
+    let userTotalDepositEntity = new UserTotalDeposit(userTotalDepositID)
+    userTotalDepositEntity.user = user.id
+    userTotalDepositEntity.pool = pool.id
+    userTotalDepositEntity.totalActiveDeposit = ZERO_DEC
+    userTotalDepositEntity.totalHistoricalDeposit = ZERO_DEC
+    userTotalDepositEntity.totalInterestEarned = ZERO_DEC
+  }
+  userTotalDepositEntity.totalActiveDeposit = userTotalDepositEntity.totalActiveDeposit.plus(deposit.amount)
+  userTotalDepositEntity.totalHistoricalDeposit = userTotalDepositEntity.totalHistoricalDeposit.plus(deposit.amount)
+  userTotalDepositEntity.totalInterestEarned = userTotalDepositEntity.totalInterestEarned.plus(deposit.interestEarned)
+  userTotalDepositEntity.save()
 }
 
 export function handleEWithdraw(event: EWithdraw): void {
@@ -197,9 +208,14 @@ export function handleEWithdraw(event: EWithdraw): void {
 
   // Update User statistics
   user.numActiveDeposits = user.numActiveDeposits.minus(ONE_INT)
-  user.totalActiveDeposit = user.totalActiveDeposit.minus(deposit.amount)
   user.totalMPHPaidBack = user.totalMPHPaidBack.plus(deposit.takeBackMPHAmount)
   user.save()
+
+  // Update UserTotalDeposit
+  let userTotalDepositID = user.id + DELIMITER + pool.id
+  let userTotalDepositEntity = UserTotalDeposit.load(userTotalDepositID)
+  userTotalDepositEntity.totalActiveDeposit = userTotalDepositEntity.totalActiveDeposit.minus(deposit.amount)
+  userTotalDepositEntity.save()
 
   // Update DPool statistics
   if (user.numActiveDeposits.equals(ZERO_INT)) {
