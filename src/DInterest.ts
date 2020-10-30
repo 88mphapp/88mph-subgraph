@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal, Address, ethereum } from "@graphprotocol/graph-ts"
+import { BigInt, BigDecimal, Address, ethereum, log } from "@graphprotocol/graph-ts"
 import {
   DInterest,
   EDeposit,
@@ -17,6 +17,14 @@ let YEAR = BigInt.fromI32(31556952) // One year in seconds
 let PRECISION = new BigDecimal(tenPow(18))
 let DELIMITER = "---"
 
+let POOL_ADDRESSES = new Array<string>(0)
+POOL_ADDRESSES.push("0xb23ccbcf22d2e6096046493ae65eda2590923347"); // cUSDC
+POOL_ADDRESSES.push("0x6ba0251940e6c22c1ff5270198a134e3779b2f93"); // aUSDC
+POOL_ADDRESSES.push("0xf44afba5a8f55d54d4509db4bac51a9961b7aa05"); // cUNI
+POOL_ADDRESSES.push("0xda6602774ef3bd0a79103bad6777d06a638d8402"); // yyCRV
+POOL_ADDRESSES.push("0x998290144d13c05fcea2890a9f9e2f433c27ce9d"); // ycrvSBTC
+
+
 function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1)
   for (let i = 0; i < exponent; i++) {
@@ -32,9 +40,37 @@ function normalize(i: BigInt): BigDecimal {
 function getPoolList(): DPoolList {
   let poolList = DPoolList.load(DPOOLLIST_ID)
   if (poolList == null) {
+    // Initialize DPool entities
+    POOL_ADDRESSES.forEach(poolAddress => {
+      let pool = new DPool(poolAddress)
+      let poolContract = DInterest.bind(Address.fromString(poolAddress))
+      pool = new DPool(poolAddress)
+      pool.address = poolAddress
+      pool.moneyMarket = poolContract.moneyMarket().toHex()
+      pool.stablecoin = poolContract.stablecoin().toHex()
+      pool.interestModel = poolContract.interestModel().toHex()
+      pool.numUsers = ZERO_INT
+      pool.numDeposits = ZERO_INT
+      pool.numActiveDeposits = ZERO_INT
+      pool.totalActiveDeposit = ZERO_DEC
+      pool.totalHistoricalDeposit = ZERO_DEC
+      pool.numFunders = ZERO_INT
+      pool.numFundings = ZERO_INT
+      pool.totalInterestPaid = ZERO_DEC
+      pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
+      pool.surplus = ZERO_DEC
+      pool.moneyMarketIncomeIndex = ZERO_INT
+      pool.MinDepositPeriod = poolContract.MinDepositPeriod()
+      pool.MaxDepositPeriod = poolContract.MaxDepositPeriod()
+      pool.MinDepositAmount = poolContract.MinDepositAmount()
+      pool.MaxDepositAmount = poolContract.MaxDepositAmount()
+      pool.save()
+    })
+
+    // Initialize DPoolList
     poolList = new DPoolList(DPOOLLIST_ID)
-    poolList.pools = new Array<string>()
-    poolList.numPools = ZERO_INT
+    poolList.pools = POOL_ADDRESSES
+    poolList.numPools = BigInt.fromI32(POOL_ADDRESSES.length)
     poolList.numUsers = ZERO_INT
     poolList.numActiveUsers = ZERO_INT
     poolList.numFunders = ZERO_INT
@@ -44,38 +80,7 @@ function getPoolList(): DPoolList {
 }
 
 function getPool(event: ethereum.Event): DPool {
-  let poolList = getPoolList()
   let pool = DPool.load(event.address.toHex())
-  // Init DPool entity if it doesn't exist
-  if (pool == null) {
-    let poolContract = DInterest.bind(event.address)
-    pool = new DPool(event.address.toHex())
-    pool.address = event.address.toHex()
-    pool.moneyMarket = poolContract.moneyMarket().toHex()
-    pool.stablecoin = poolContract.stablecoin().toHex()
-    pool.interestModel = poolContract.interestModel().toHex()
-    pool.numUsers = ZERO_INT
-    pool.numDeposits = ZERO_INT
-    pool.numActiveDeposits = ZERO_INT
-    pool.totalActiveDeposit = ZERO_DEC
-    pool.totalHistoricalDeposit = ZERO_DEC
-    pool.numFundings = ZERO_INT
-    pool.totalInterestPaid = ZERO_DEC
-    pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(ONE_INT, YEAR))
-    pool.surplus = ZERO_DEC
-    pool.moneyMarketIncomeIndex = ZERO_INT
-    pool.MinDepositPeriod = poolContract.MinDepositPeriod()
-    pool.MaxDepositPeriod = poolContract.MaxDepositPeriod()
-    pool.MinDepositAmount = poolContract.MinDepositAmount()
-    pool.MaxDepositAmount = poolContract.MaxDepositAmount()
-    pool.save()
-
-    let pools = poolList.pools
-    pools.push(pool.id)
-    poolList.pools = pools
-    poolList.numPools = poolList.numPools.plus(ONE_INT)
-    poolList.save()
-  }
   return pool as DPool
 }
 
@@ -295,7 +300,7 @@ export function handleBlock(block: ethereum.Block): void {
     // Update DPool statistics
     let pool = DPool.load(poolID)
     let poolContract = DInterest.bind(Address.fromString(pool.address))
-    pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(ONE_INT, YEAR))
+    pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
     let surplusResult = poolContract.surplus()
     pool.surplus = normalize(surplusResult.value1).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC)
     pool.moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
