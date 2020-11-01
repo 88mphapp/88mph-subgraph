@@ -16,6 +16,7 @@ let ONE_INT = BigInt.fromI32(1)
 let YEAR = BigInt.fromI32(31556952) // One year in seconds
 let PRECISION = new BigDecimal(tenPow(18))
 let DELIMITER = "---"
+let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11173300)
 
 let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push("0xeb2f0a3045db12366a9f6a8e922d725d86a117eb"); // cUSDC
@@ -294,14 +295,16 @@ export function handleEFund(event: EFund): void {
 export function handleBlock(block: ethereum.Block): void {
   let poolList = getPoolList()
 
-  poolList.pools.forEach(poolID => {
-    // Update DPool statistics
-    let pool = DPool.load(poolID)
-    let poolContract = DInterest.bind(Address.fromString(pool.address))
-    pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
-    let surplusResult = poolContract.surplus()
-    pool.surplus = normalize(surplusResult.value1).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC)
-    pool.moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
-    pool.save()
-  });
+  if (block.number.ge(BLOCK_HANDLER_START_BLOCK)) {
+    poolList.pools.forEach(poolID => {
+      // Update DPool statistics
+      let pool = DPool.load(poolID)
+      let poolContract = DInterest.bind(Address.fromString(pool.address))
+      pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
+      let surplusResult = poolContract.surplus()
+      pool.surplus = normalize(surplusResult.value1).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC)
+      pool.moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
+      pool.save()
+    });
+  }
 }
