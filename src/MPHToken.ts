@@ -24,6 +24,7 @@ function normalize(i: BigInt): BigDecimal {
 function getMPH(): MPH {
   let entity = MPH.load(MPH_ID)
   if (entity == null) {
+    entity = new MPH(MPH_ID)
     entity.totalSupply = ZERO_DEC
     entity.totalStakedMPHBalance = ZERO_DEC
     entity.totalHistoricalReward = ZERO_DEC
@@ -39,6 +40,7 @@ function getMPHHolder(address: Address): MPHHolder | null {
   }
   let entity = MPHHolder.load(address.toHex())
   if (entity == null) {
+    entity = new MPHHolder(address.toHex())
     entity.address = address.toHex()
     entity.mphBalance = ZERO_DEC
     entity.stakedMPHBalance = ZERO_DEC

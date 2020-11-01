@@ -18,11 +18,11 @@ let PRECISION = new BigDecimal(tenPow(18))
 let DELIMITER = "---"
 
 let POOL_ADDRESSES = new Array<string>(0)
-POOL_ADDRESSES.push("0xEB2F0A3045db12366A9f6A8e922D725D86a117EB"); // cUSDC
-POOL_ADDRESSES.push("0xb5EE8910A93F8A450E97BE0436F36B9458106682"); // aUSDC
-POOL_ADDRESSES.push("0xF9761c1A244C66E40cF9B7EfB4b0C29b562B6bC0"); // cUNI
-POOL_ADDRESSES.push("0x25a5feB5aC6533fE3C4E8E8e2a55f9E1f1F8E5f0"); // yyCRV
-POOL_ADDRESSES.push("0xD42F7c7463B261fAc72510C638A877690beA8d68"); // ycrvSBTC
+POOL_ADDRESSES.push("0xeb2f0a3045db12366a9f6a8e922d725d86a117eb"); // cUSDC
+POOL_ADDRESSES.push("0xb5ee8910a93f8a450e97be0436f36b9458106682"); // aUSDC
+POOL_ADDRESSES.push("0xf9761c1a244c66e40cf9b7efb4b0c29b562b6bc0"); // cUNI
+POOL_ADDRESSES.push("0x25a5feb5ac6533fe3c4e8e8e2a55f9e1f1f8e5f0"); // yyCRV
+POOL_ADDRESSES.push("0xd42f7c7463b261fac72510c638a877690bea8d68"); // ycrvSBTC
 
 
 function tenPow(exponent: number): BigInt {
@@ -44,7 +44,6 @@ function getPoolList(): DPoolList {
     POOL_ADDRESSES.forEach(poolAddress => {
       let pool = new DPool(poolAddress)
       let poolContract = DInterest.bind(Address.fromString(poolAddress))
-      pool = new DPool(poolAddress)
       pool.address = poolAddress
       pool.moneyMarket = poolContract.moneyMarket().toHex()
       pool.stablecoin = poolContract.stablecoin().toHex()
@@ -87,25 +86,24 @@ function getPool(event: ethereum.Event): DPool {
 function getUser(address: Address, pool: DPool): User {
   let user = User.load(address.toHex())
   if (user == null) {
+    let poolList = getPoolList()
+    poolList.numUsers = poolList.numUsers.plus(ONE_INT)
+    poolList.save()
+
     user = new User(address.toHex())
     user.address = address.toHex()
     let pools = new Array<string>(0)
-    pools.push(pool.address)
+    pools.push(pool.id)
     user.pools = pools
     user.numPools = ZERO_INT
     user.numDeposits = ZERO_INT
     user.numActiveDeposits = ZERO_INT
-    user.totalDeposits = new Array<string>(0)
     user.totalMPHEarned = ZERO_DEC
     user.totalMPHPaidBack = ZERO_DEC
     user.save()
 
     pool.numUsers = pool.numUsers.plus(ONE_INT)
     pool.save()
-
-    let poolList = getPoolList()
-    poolList.numUsers = poolList.numUsers.plus(ONE_INT)
-    poolList.save()
   }
   return user as User
 }
@@ -187,7 +185,7 @@ export function handleEDeposit(event: EDeposit): void {
   let userTotalDepositEntity = UserTotalDeposit.load(userTotalDepositID)
   if (userTotalDepositEntity == null) {
     // Initialize UserTotalDeposits entity
-    let userTotalDepositEntity = new UserTotalDeposit(userTotalDepositID)
+    userTotalDepositEntity = new UserTotalDeposit(userTotalDepositID)
     userTotalDepositEntity.user = user.id
     userTotalDepositEntity.pool = pool.id
     userTotalDepositEntity.totalActiveDeposit = ZERO_DEC
