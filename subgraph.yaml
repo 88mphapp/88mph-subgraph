@@ -6,9 +6,9 @@ dataSources:
     name: cUSDCPool
     network: mainnet
     source:
-      address: "0xB23cCBcf22D2e6096046493Ae65EdA2590923347"
+      address: "0xEB2F0A3045db12366A9f6A8e922D725D86a117EB"
       abi: DInterest
-      startBlock: 11155080
+      startBlock: 11170208
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -38,9 +38,9 @@ dataSources:
     name: aUSDCPool
     network: mainnet
     source:
-      address: "0x6bA0251940E6c22c1FF5270198a134E3779B2f93"
+      address: "0xb5EE8910A93F8A450E97BE0436F36B9458106682"
       abi: DInterest
-      startBlock: 11155080
+      startBlock: 11170208
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -70,9 +70,9 @@ dataSources:
     name: cUNIPool
     network: mainnet
     source:
-      address: "0xF44AfBA5a8F55D54d4509db4baC51a9961B7aA05"
+      address: "0xF9761c1A244C66E40cF9B7EfB4b0C29b562B6bC0"
       abi: DInterest
-      startBlock: 11155080
+      startBlock: 11170208
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -102,9 +102,9 @@ dataSources:
     name: yyCRVPool
     network: mainnet
     source:
-      address: "0xda6602774ef3Bd0a79103BAd6777d06A638D8402"
+      address: "0x25a5feB5aC6533fE3C4E8E8e2a55f9E1f1F8E5f0"
       abi: DInterest
-      startBlock: 11155080
+      startBlock: 11170208
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -134,9 +134,9 @@ dataSources:
     name: ycrvSBTCPool
     network: mainnet
     source:
-      address: "0x998290144d13C05fcEA2890A9f9e2f433c27CE9d"
+      address: "0xD42F7c7463B261fAc72510C638A877690beA8d68"
       abi: DInterest
-      startBlock: 11155080
+      startBlock: 11170208
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -166,9 +166,9 @@ dataSources:
     name: Rewards
     network: mainnet
     source:
-      address: "0xAD87fa880BAb24c2446Fb863cc70af32a3D6a6E5"
+      address: "0x2C8Ac1173998ca1A06A69bF12CbB8155Bd5B8C4e"
       abi: Rewards
-      startBlock: 11155080
+      startBlock: 11170208
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -193,9 +193,9 @@ dataSources:
     name: MPHToken
     network: mainnet
     source:
-      address: "0x68245Bd25201B57f1928931B4332c0ADF0d6291D"
+      address: "0x75A1169E51A3C6336Ef854f76cDE949F999720B1"
       abi: MPHToken
-      startBlock: 11155080
+      startBlock: 11170208
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
