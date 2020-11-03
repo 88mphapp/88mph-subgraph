@@ -252,8 +252,11 @@ export function handleEWithdraw(event: EWithdraw): void {
 
     if (!funding.active) {
       funderTotalInterestEntity.totalDeficitFunded = funderTotalInterestEntity.totalDeficitFunded.minus(funding.fundedDeficitAmount)
+      funderTotalInterestEntity.totalInterestEarned = funderTotalInterestEntity.totalInterestEarned.minus(funding.totalInterestEarned)
+    } else {
+      funderTotalInterestEntity.totalInterestEarned = funderTotalInterestEntity.totalInterestEarned.plus(interestAmount)
+      funderTotalInterestEntity.totalHistoricalInterestEarned = funderTotalInterestEntity.totalHistoricalInterestEarned.plus(interestAmount)
     }
-    funderTotalInterestEntity.totalInterestEarned = funderTotalInterestEntity.totalInterestEarned.plus(interestAmount)
     funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.minus(deposit.amount)
   }
 }
@@ -306,10 +309,13 @@ export function handleEFund(event: EFund): void {
     funderTotalInterestEntity.funder = funder.id
     funderTotalInterestEntity.pool = pool.id
     funderTotalInterestEntity.totalDeficitFunded = ZERO_DEC
+    funderTotalInterestEntity.totalHistoricalDeficitFunded = ZERO_DEC
     funderTotalInterestEntity.totalInterestEarned = ZERO_DEC
+    funderTotalInterestEntity.totalHistoricalInterestEarned = ZERO_DEC
     funderTotalInterestEntity.totalRecordedFundedDepositAmount = ZERO_DEC
   }
   funderTotalInterestEntity.totalDeficitFunded = funderTotalInterestEntity.totalDeficitFunded.plus(funding.fundedDeficitAmount)
+  funderTotalInterestEntity.totalHistoricalDeficitFunded = funderTotalInterestEntity.totalHistoricalDeficitFunded.plus(funding.fundedDeficitAmount)
   funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.plus(funding.recordedFundedDepositAmount)
   funderTotalInterestEntity.save()
 }
