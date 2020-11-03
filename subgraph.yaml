@@ -21,6 +21,7 @@ dataSources:
         - Funder
         - Funding
         - UserTotalDeposit
+        - FunderTotalInterest
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
@@ -53,6 +54,7 @@ dataSources:
         - Funder
         - Funding
         - UserTotalDeposit
+        - FunderTotalInterest
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
@@ -85,6 +87,7 @@ dataSources:
         - Funder
         - Funding
         - UserTotalDeposit
+        - FunderTotalInterest
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
@@ -117,6 +120,7 @@ dataSources:
         - Funder
         - Funding
         - UserTotalDeposit
+        - FunderTotalInterest
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
@@ -149,6 +153,7 @@ dataSources:
         - Funder
         - Funding
         - UserTotalDeposit
+        - FunderTotalInterest
       abis:
         - name: DInterest
           file: ./abis/DInterest.json

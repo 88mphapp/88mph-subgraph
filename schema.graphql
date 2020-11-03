@@ -42,7 +42,7 @@ type User @entity {
   deposits: [Deposit!]! @derivedFrom(field: "user")
   numDeposits: BigInt!
   numActiveDeposits: BigInt!
-  totalDeposits: [UserTotalDeposit!]! @derivedFrom(field: "user")
+  totalDepositByPool: [UserTotalDeposit!]! @derivedFrom(field: "user")
   totalMPHEarned: BigDecimal!
   totalMPHPaidBack: BigDecimal!
 }
@@ -79,8 +79,16 @@ type Funder @entity {
   numPools: BigInt!
   fundings: [Funding!]! @derivedFrom(field: "funder")
   numFundings: BigInt!
-  totalInterestEarned: BigDecimal!
   totalMPHEarned: BigDecimal!
+  totalInterestByPool: [FunderTotalInterest!]! @derivedFrom(field: "funder")
+}
+
+type FunderTotalInterest @entity {
+  id: ID!
+  funder: Funder!
+  pool: DPool!
+  totalInterestEarned: BigDecimal!
+  totalRecordedFundedDepositAmount: BigDecimal!
 }
 
 type Funding @entity {
@@ -90,6 +98,7 @@ type Funding @entity {
   pool: DPool!
   fromDepositID: BigInt!
   toDepositID: BigInt!
+  active: Boolean!
   recordedFundedDepositAmount: BigDecimal!
   recordedMoneyMarketIncomeIndex: BigInt!
   initialFundedDepositAmount: BigDecimal!

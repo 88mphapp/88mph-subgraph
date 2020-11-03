@@ -61,6 +61,7 @@ export function handleTransfer(event: ETransfer): void {
     // burn
     mph.totalSupply = mph.totalSupply.minus(value)
   }
+  mph.save()
 
   let from = getMPHHolder(event.params.from)
 

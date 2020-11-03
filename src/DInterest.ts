@@ -5,7 +5,7 @@ import {
   EWithdraw,
   EFund
 } from "../generated/DInterest/DInterest"
-import { DPoolList, DPool, User, Deposit, Funder, Funding, UserTotalDeposit } from "../generated/schema"
+import { DPoolList, DPool, User, Deposit, Funder, Funding, UserTotalDeposit, FunderTotalInterest } from "../generated/schema"
 
 let DPOOLLIST_ID = "0";
 let ZERO_DEC = BigDecimal.fromString("0")
@@ -16,7 +16,7 @@ let ONE_INT = BigInt.fromI32(1)
 let YEAR = BigInt.fromI32(31556952) // One year in seconds
 let PRECISION = new BigDecimal(tenPow(18))
 let DELIMITER = "---"
-let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11173300)
+let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11182092)
 
 let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push("0xeb2f0a3045db12366a9f6a8e922d725d86a117eb"); // cUSDC
@@ -119,7 +119,6 @@ function getFunder(address: Address, pool: DPool): Funder {
     user.pools = pools
     user.numPools = ZERO_INT
     user.numFundings = ZERO_INT
-    user.totalInterestEarned = ZERO_DEC
     user.totalMPHEarned = ZERO_DEC
     user.save()
 
@@ -244,12 +243,14 @@ export function handleEWithdraw(event: EWithdraw): void {
     funding.totalInterestEarned = funding.totalInterestEarned.plus(interestAmount)
     funding.recordedFundedDepositAmount = normalize(fundingObj.recordedFundedDepositAmount)
     funding.recordedMoneyMarketIncomeIndex = fundingObj.recordedMoneyMarketIncomeIndex
+    funding.active = funding.recordedFundedDepositAmount.gt(ZERO_DEC)
     funding.save()
 
-    // Update Funder
-    let funder = Funder.load(funding.funder)
-    funder.totalInterestEarned = funder.totalInterestEarned.plus(interestAmount)
-    funder.save()
+    // Update FunderTotalInterest
+    let funderTotalInterestID = funding.funder + DELIMITER + pool.id
+    let funderTotalInterestEntity = FunderTotalInterest.load(funderTotalInterestID)
+    funderTotalInterestEntity.totalInterestEarned = funderTotalInterestEntity.totalInterestEarned.plus(interestAmount)
+    funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.minus(deposit.amount)
   }
 }
 
@@ -267,6 +268,7 @@ export function handleEFund(event: EFund): void {
   let fundingObj = poolContract.getFunding(fundingID)
   funding.fromDepositID = fundingObj.fromDepositID
   funding.toDepositID = fundingObj.toDepositID
+  funding.active = true
   funding.recordedFundedDepositAmount = normalize(fundingObj.recordedFundedDepositAmount)
   funding.recordedMoneyMarketIncomeIndex = fundingObj.recordedMoneyMarketIncomeIndex
   funding.initialFundedDepositAmount = normalize(fundingObj.recordedFundedDepositAmount)
@@ -290,6 +292,20 @@ export function handleEFund(event: EFund): void {
     deposit.fundingID = fundingID
     deposit.save()
   }
+
+  // Update FunderTotalInterest
+  let funderTotalInterestID = funder.id + DELIMITER + pool.id
+  let funderTotalInterestEntity = FunderTotalInterest.load(funderTotalInterestID)
+  if (funderTotalInterestEntity == null) {
+    // Initialize UserTotalDeposits entity
+    funderTotalInterestEntity = new FunderTotalInterest(funderTotalInterestID)
+    funderTotalInterestEntity.funder = funder.id
+    funderTotalInterestEntity.pool = pool.id
+    funderTotalInterestEntity.totalInterestEarned = ZERO_DEC
+    funderTotalInterestEntity.totalRecordedFundedDepositAmount = ZERO_DEC
+  }
+  funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.plus(funding.recordedFundedDepositAmount)
+  funderTotalInterestEntity.save()
 }
 
 export function handleBlock(block: ethereum.Block): void {
