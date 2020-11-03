@@ -16,7 +16,7 @@ let ONE_INT = BigInt.fromI32(1)
 let YEAR = BigInt.fromI32(31556952) // One year in seconds
 let PRECISION = new BigDecimal(tenPow(18))
 let DELIMITER = "---"
-let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11182092)
+let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11182479)
 
 let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push("0xeb2f0a3045db12366a9f6a8e922d725d86a117eb"); // cUSDC
@@ -249,6 +249,10 @@ export function handleEWithdraw(event: EWithdraw): void {
     // Update FunderTotalInterest
     let funderTotalInterestID = funding.funder + DELIMITER + pool.id
     let funderTotalInterestEntity = FunderTotalInterest.load(funderTotalInterestID)
+
+    if (!funding.active) {
+      funderTotalInterestEntity.totalDeficitFunded = funderTotalInterestEntity.totalDeficitFunded.minus(funding.fundedDeficitAmount)
+    }
     funderTotalInterestEntity.totalInterestEarned = funderTotalInterestEntity.totalInterestEarned.plus(interestAmount)
     funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.minus(deposit.amount)
   }
@@ -301,9 +305,11 @@ export function handleEFund(event: EFund): void {
     funderTotalInterestEntity = new FunderTotalInterest(funderTotalInterestID)
     funderTotalInterestEntity.funder = funder.id
     funderTotalInterestEntity.pool = pool.id
+    funderTotalInterestEntity.totalDeficitFunded = ZERO_DEC
     funderTotalInterestEntity.totalInterestEarned = ZERO_DEC
     funderTotalInterestEntity.totalRecordedFundedDepositAmount = ZERO_DEC
   }
+  funderTotalInterestEntity.totalDeficitFunded = funderTotalInterestEntity.totalDeficitFunded.plus(funding.fundedDeficitAmount)
   funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.plus(funding.recordedFundedDepositAmount)
   funderTotalInterestEntity.save()
 }

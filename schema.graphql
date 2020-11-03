@@ -87,6 +87,7 @@ type FunderTotalInterest @entity {
   id: ID!
   funder: Funder!
   pool: DPool!
+  totalDeficitFunded: BigDecimal!
   totalInterestEarned: BigDecimal!
   totalRecordedFundedDepositAmount: BigDecimal!
 }
