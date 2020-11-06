@@ -16,7 +16,7 @@ let ONE_INT = BigInt.fromI32(1)
 let YEAR = BigInt.fromI32(31556952) // One year in seconds
 let PRECISION = new BigDecimal(tenPow(18))
 let DELIMITER = "---"
-let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11200682)
+let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11201501)
 
 let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push("0xeb2f0a3045db12366a9f6a8e922d725d86a117eb"); // cUSDC
@@ -136,6 +136,7 @@ function getFunder(address: Address, pool: DPool): Funder {
 export function handleEDeposit(event: EDeposit): void {
   let pool = getPool(event)
   let user = getUser(event.params.sender, pool)
+  let poolContract = DInterest.bind(Address.fromString(pool.address))
 
   // Create new Deposit entity
   let deposit = new Deposit(pool.address + DELIMITER + event.params.depositID.toString())
@@ -150,6 +151,7 @@ export function handleEDeposit(event: EDeposit): void {
   deposit.fundingID = ZERO_INT
   deposit.mintMPHAmount = normalize(event.params.mintMPHAmount)
   deposit.takeBackMPHAmount = ZERO_DEC
+  deposit.initialMoneyMarketIncomeIndex = normalize(poolContract.moneyMarketIncomeIndex())
   deposit.save()
 
   // Update DPool statistics
