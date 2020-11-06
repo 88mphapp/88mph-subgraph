@@ -25,6 +25,8 @@ dataSources:
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -58,6 +60,8 @@ dataSources:
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -91,6 +95,8 @@ dataSources:
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -124,6 +130,8 @@ dataSources:
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -157,6 +165,8 @@ dataSources:
       abis:
         - name: DInterest
           file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit

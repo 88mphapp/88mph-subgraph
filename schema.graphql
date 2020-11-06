@@ -33,6 +33,7 @@ type DPool @entity {
   oneYearInterestRate: BigDecimal!
   surplus: BigDecimal!
   moneyMarketIncomeIndex: BigInt!
+  oracleInterestRate: BigDecimal!
 }
 
 type User @entity {
