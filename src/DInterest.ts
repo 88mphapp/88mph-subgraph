@@ -16,7 +16,7 @@ let ONE_INT = BigInt.fromI32(1)
 let YEAR = BigInt.fromI32(31556952) // One year in seconds
 let PRECISION = new BigDecimal(tenPow(18))
 let DELIMITER = "---"
-let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11182479)
+let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11200682)
 
 let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push("0xeb2f0a3045db12366a9f6a8e922d725d86a117eb"); // cUSDC
@@ -57,13 +57,14 @@ function getPoolList(): DPoolList {
       pool.numFunders = ZERO_INT
       pool.numFundings = ZERO_INT
       pool.totalInterestPaid = ZERO_DEC
+      pool.unfundedDepositAmount = ZERO_DEC
       pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
       pool.surplus = ZERO_DEC
       pool.moneyMarketIncomeIndex = ZERO_INT
       pool.MinDepositPeriod = poolContract.MinDepositPeriod()
       pool.MaxDepositPeriod = poolContract.MaxDepositPeriod()
-      pool.MinDepositAmount = poolContract.MinDepositAmount()
-      pool.MaxDepositAmount = poolContract.MaxDepositAmount()
+      pool.MinDepositAmount = normalize(poolContract.MinDepositAmount())
+      pool.MaxDepositAmount = normalize(poolContract.MaxDepositAmount())
       pool.save()
     })
 
@@ -163,6 +164,7 @@ export function handleEDeposit(event: EDeposit): void {
   pool.totalActiveDeposit = pool.totalActiveDeposit.plus(deposit.amount)
   pool.totalHistoricalDeposit = pool.totalHistoricalDeposit.plus(deposit.amount)
   pool.totalInterestPaid = pool.totalInterestPaid.plus(deposit.interestEarned)
+  pool.unfundedDepositAmount = pool.unfundedDepositAmount.plus(deposit.amount)
   pool.save()
 
   // Update User
@@ -232,6 +234,7 @@ export function handleEWithdraw(event: EWithdraw): void {
   }
   pool.numActiveDeposits = pool.numActiveDeposits.minus(ONE_INT)
   pool.totalActiveDeposit = pool.totalActiveDeposit.minus(deposit.amount)
+  pool.unfundedDepositAmount = pool.unfundedDepositAmount.minus(deposit.amount)
   pool.save()
 
   let fundingID = event.params.fundingID
@@ -286,6 +289,7 @@ export function handleEFund(event: EFund): void {
 
   // Update DPool statistics
   pool.numFundings = pool.numFundings.plus(ONE_INT)
+  pool.unfundedDepositAmount = pool.unfundedDepositAmount.minus(funding.fundedDeficitAmount)
   pool.save()
 
   // Update Funder

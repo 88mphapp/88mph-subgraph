@@ -21,14 +21,15 @@ type DPool @entity {
   totalActiveDeposit: BigDecimal!
   totalHistoricalDeposit: BigDecimal!
   totalInterestPaid: BigDecimal!
+  unfundedDepositAmount: BigDecimal!
   funders: [Funder!]! @derivedFrom(field: "pools")
   numFunders: BigInt!
   fundings: [Funding!]! @derivedFrom(field: "pool")
   numFundings: BigInt!
   MinDepositPeriod: BigInt!
   MaxDepositPeriod: BigInt!
-  MinDepositAmount: BigInt!
-  MaxDepositAmount: BigInt!
+  MinDepositAmount: BigDecimal!
+  MaxDepositAmount: BigDecimal!
   oneYearInterestRate: BigDecimal!
   surplus: BigDecimal!
   moneyMarketIncomeIndex: BigInt!
