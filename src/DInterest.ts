@@ -3,9 +3,12 @@ import {
   DInterest,
   EDeposit,
   EWithdraw,
-  EFund
+  EFund,
+  ESetParamUint,
+  ESetParamAddress
 } from "../generated/aUSDCPool/DInterest"
 import { IInterestOracle } from "../generated/aUSDCPool/IInterestOracle"
+import { ERC20 } from "../generated/aUSDCPool/ERC20"
 import { DPoolList, DPool, User, Deposit, Funder, Funding, UserTotalDeposit, FunderTotalInterest } from "../generated/schema"
 
 let DPOOLLIST_ID = "0";
@@ -17,7 +20,7 @@ let ONE_INT = BigInt.fromI32(1)
 let YEAR = BigInt.fromI32(31556952) // One year in seconds
 let PRECISION = new BigDecimal(tenPow(18))
 let DELIMITER = "---"
-let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11202474)
+let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11213335)
 
 let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push("0xeb2f0a3045db12366a9f6a8e922d725d86a117eb"); // cUSDC
@@ -47,6 +50,9 @@ function getPoolList(): DPoolList {
       let pool = new DPool(poolAddress)
       let poolContract = DInterest.bind(Address.fromString(poolAddress))
       let oracleContract = IInterestOracle.bind(poolContract.interestOracle())
+      let stablecoinContract = ERC20.bind(poolContract.stablecoin())
+      let stablecoinDecimals: number = stablecoinContract.decimals()
+      let stablecoinPrecision = new BigDecimal(tenPow(stablecoinDecimals))
       pool.address = poolAddress
       pool.moneyMarket = poolContract.moneyMarket().toHex()
       pool.stablecoin = poolContract.stablecoin().toHex()
@@ -66,8 +72,8 @@ function getPoolList(): DPoolList {
       pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1)
       pool.MinDepositPeriod = poolContract.MinDepositPeriod()
       pool.MaxDepositPeriod = poolContract.MaxDepositPeriod()
-      pool.MinDepositAmount = normalize(poolContract.MinDepositAmount())
-      pool.MaxDepositAmount = normalize(poolContract.MaxDepositAmount())
+      pool.MinDepositAmount = poolContract.MinDepositAmount().toBigDecimal().div(stablecoinPrecision)
+      pool.MaxDepositAmount = poolContract.MaxDepositAmount().toBigDecimal().div(stablecoinPrecision)
       pool.save()
     })
 
@@ -327,6 +333,39 @@ export function handleEFund(event: EFund): void {
   funderTotalInterestEntity.totalHistoricalDeficitFunded = funderTotalInterestEntity.totalHistoricalDeficitFunded.plus(funding.fundedDeficitAmount)
   funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.plus(funding.recordedFundedDepositAmount)
   funderTotalInterestEntity.save()
+}
+
+export function handleESetParamAddress(event: ESetParamAddress): void {
+  let pool = getPool(event)
+  let paramName = event.params.paramName.toString()
+  if (paramName === "feeModel") {
+  } else if (paramName === "interestModel") {
+    pool.interestModel = event.params.newValue.toHex()
+  } else if (paramName === "interestOracle") {
+  } else if (paramName === "moneyMarket.rewards") { }
+  pool.save()
+}
+
+export function handleESetParamUint(event: ESetParamUint): void {
+  let pool = getPool(event)
+  let poolContract = DInterest.bind(Address.fromString(pool.address))
+  let stablecoinContract = ERC20.bind(poolContract.stablecoin())
+  let stablecoinDecimals: number = stablecoinContract.decimals()
+  let stablecoinPrecision = new BigDecimal(tenPow(stablecoinDecimals))
+  let paramName = event.params.paramName.toString()
+  if (paramName === "MinDepositPeriod") {
+    pool.MinDepositPeriod = event.params.newValue
+  }
+  else if (paramName === "MaxDepositPeriod") {
+    pool.MaxDepositPeriod = event.params.newValue
+  }
+  else if (paramName === "MinDepositAmount") {
+    pool.MinDepositAmount = event.params.newValue.toBigDecimal().div(stablecoinPrecision)
+  }
+  else if (paramName === "MaxDepositAmount") {
+    pool.MaxDepositAmount = event.params.newValue.toBigDecimal().div(stablecoinPrecision)
+  }
+  pool.save()
 }
 
 export function handleBlock(block: ethereum.Block): void {

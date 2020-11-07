@@ -27,6 +27,8 @@ dataSources:
           file: ./abis/DInterest.json
         - name: IInterestOracle
           file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -34,6 +36,10 @@ dataSources:
           handler: handleEWithdraw
         - event: EFund(indexed address,indexed uint256,uint256,uint256)
           handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
       blockHandlers:
         - handler: handleBlock
       file: ./src/DInterest.ts
@@ -62,6 +68,8 @@ dataSources:
           file: ./abis/DInterest.json
         - name: IInterestOracle
           file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -69,6 +77,10 @@ dataSources:
           handler: handleEWithdraw
         - event: EFund(indexed address,indexed uint256,uint256,uint256)
           handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
       blockHandlers:
         - handler: handleBlock
       file: ./src/DInterest.ts
@@ -97,6 +109,8 @@ dataSources:
           file: ./abis/DInterest.json
         - name: IInterestOracle
           file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -104,6 +118,10 @@ dataSources:
           handler: handleEWithdraw
         - event: EFund(indexed address,indexed uint256,uint256,uint256)
           handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
       blockHandlers:
         - handler: handleBlock
       file: ./src/DInterest.ts
@@ -132,6 +150,8 @@ dataSources:
           file: ./abis/DInterest.json
         - name: IInterestOracle
           file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -139,6 +159,10 @@ dataSources:
           handler: handleEWithdraw
         - event: EFund(indexed address,indexed uint256,uint256,uint256)
           handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
       blockHandlers:
         - handler: handleBlock
       file: ./src/DInterest.ts
@@ -167,6 +191,8 @@ dataSources:
           file: ./abis/DInterest.json
         - name: IInterestOracle
           file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -174,6 +200,10 @@ dataSources:
           handler: handleEWithdraw
         - event: EFund(indexed address,indexed uint256,uint256,uint256)
           handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
       blockHandlers:
         - handler: handleBlock
       file: ./src/DInterest.ts
