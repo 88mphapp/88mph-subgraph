@@ -20,7 +20,7 @@ let ONE_INT = BigInt.fromI32(1)
 let YEAR = BigInt.fromI32(31556952) // One year in seconds
 let PRECISION = new BigDecimal(tenPow(18))
 let DELIMITER = "---"
-let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11219791)
+let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11226366)
 
 let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push("0xeb2f0a3045db12366a9f6a8e922d725d86a117eb"); // cUSDC
@@ -272,6 +272,7 @@ export function handleEWithdraw(event: EWithdraw): void {
       funderTotalInterestEntity.totalHistoricalInterestEarned = funderTotalInterestEntity.totalHistoricalInterestEarned.plus(interestAmount)
     }
     funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.minus(deposit.amount)
+    funderTotalInterestEntity.save()
   }
 }
 
