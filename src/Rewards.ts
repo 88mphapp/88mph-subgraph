@@ -52,7 +52,9 @@ export function handleRewardAdded(event: ERewardAdded): void {
   let mph = getMPH()
   let rewards = Rewards.bind(event.address)
 
-  mph.rewardPerMPHPerSecond = normalize(rewards.rewardRate()).div(mph.totalStakedMPHBalance)
+  mph.rewardPerMPHPerSecond = mph.totalStakedMPHBalance.equals(ZERO_DEC) ?
+    ZERO_DEC :
+    normalize(rewards.rewardRate()).div(mph.totalStakedMPHBalance)
 
   mph.save()
 }
@@ -79,7 +81,9 @@ export function handleWithdrawn(event: EWithdrawn): void {
   let stakeAmount = normalize(event.params.amount)
   mph.totalStakedMPHBalance = mph.totalStakedMPHBalance.minus(stakeAmount)
   mphHolder.stakedMPHBalance = mphHolder.stakedMPHBalance.minus(stakeAmount)
-  mph.rewardPerMPHPerSecond = normalize(rewards.rewardRate()).div(mph.totalStakedMPHBalance)
+  mph.rewardPerMPHPerSecond = mph.totalStakedMPHBalance.equals(ZERO_DEC) ?
+    ZERO_DEC :
+    normalize(rewards.rewardRate()).div(mph.totalStakedMPHBalance)
 
   mphHolder.save()
   mph.save()
