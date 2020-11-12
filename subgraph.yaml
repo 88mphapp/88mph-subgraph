@@ -211,9 +211,9 @@ dataSources:
     name: Rewards
     network: mainnet
     source:
-      address: "0x2C8Ac1173998ca1A06A69bF12CbB8155Bd5B8C4e"
+      address: "0xbf724db570B9Cf3a8deD903055BcaA863CE07ad7"
       abi: Rewards
-      startBlock: 11172905
+      startBlock: 11239803
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

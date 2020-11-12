@@ -19,7 +19,7 @@ let ZERO_INT = BigInt.fromI32(0)
 let ONE_INT = BigInt.fromI32(1)
 let YEAR = BigInt.fromI32(31556952) // One year in seconds
 let DELIMITER = "---"
-let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11228836)
+let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11240197)
 
 let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push("0xeb2f0a3045db12366a9f6a8e922d725d86a117eb"); // cUSDC

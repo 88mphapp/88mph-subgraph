@@ -12,11 +12,6 @@
         "type": "address"
       },
       {
-        "internalType": "address",
-        "name": "_oneSplit",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "_starttime",
         "type": "uint256"
@@ -152,26 +147,6 @@
     "type": "function"
   },
   {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "parts",
-        "type": "uint256"
-      }
-    ],
-    "name": "dump",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "constant": true,
     "inputs": [
       {
@@ -213,7 +188,7 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "initialized",
+    "name": "isOwner",
     "outputs": [
       {
         "internalType": "bool",
@@ -227,8 +202,14 @@
   },
   {
     "constant": true,
-    "inputs": [],
-    "name": "isOwner",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "isRewardDistribution",
     "outputs": [
       {
         "internalType": "bool",
@@ -283,21 +264,6 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "oneSplit",
-    "outputs": [
-      {
-        "internalType": "contract OneSplitAudit",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -427,6 +393,11 @@
         "internalType": "address",
         "name": "_rewardDistribution",
         "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isRewardDistribution",
+        "type": "bool"
       }
     ],
     "name": "setRewardDistribution",
