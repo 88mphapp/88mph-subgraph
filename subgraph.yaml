@@ -255,3 +255,27 @@ dataSources:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/MPHToken.ts
+templates:
+  - kind: ethereum/contract
+    name: NFT
+    network: mainnet
+    source:
+      abi: NFT
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Deposit
+        - Funding
+        - User
+        - Funder
+        - UserTotalDeposit
+        - FunderTotalInterest
+      abis:
+        - name: NFT
+          file: ./abis/NFT.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/NFT.ts
