@@ -1,4 +1,4 @@
-import { BigDecimal, BigInt, Address, DataSourceContext, ethereum } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt, Address, DataSourceContext, ethereum, ByteArray, crypto } from "@graphprotocol/graph-ts";
 import { DInterest } from "../generated/aUSDCPool/DInterest";
 import { ERC20 } from "../generated/aUSDCPool/ERC20";
 import { IInterestOracle } from "../generated/aUSDCPool/IInterestOracle";
@@ -16,13 +16,13 @@ export let ONE_INT = BigInt.fromI32(1)
 export let YEAR = BigInt.fromI32(31556952) // One year in seconds
 export let ZERO_ADDR = Address.fromString('0x0000000000000000000000000000000000000000')
 export let DELIMITER = '---'
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11247380)
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11251290)
 
 let POOL_ADDRESSES = new Array<string>(0)
-POOL_ADDRESSES.push('0xeb2f0a3045db12366a9f6a8e922d725d86a117eb'); // cUSDC
 POOL_ADDRESSES.push('0xb5ee8910a93f8a450e97be0436f36b9458106682'); // aUSDC
 POOL_ADDRESSES.push('0xf9761c1a244c66e40cf9b7efb4b0c29b562b6bc0'); // cUNI
-POOL_ADDRESSES.push('0x25a5feb5ac6533fe3c4e8e8e2a55f9e1f1f8e5f0'); // yyCRV
+POOL_ADDRESSES.push('0xeb2f0a3045db12366a9f6a8e922d725d86a117eb'); // cUSDC
+POOL_ADDRESSES.push('0x25a5feb5ac6533fe3c4e8e8e2a55f9e1f1f8e5f0'); // yUSD
 POOL_ADDRESSES.push('0xd42f7c7463b261fac72510c638a877690bea8d68'); // ycrvSBTC
 
 export function tenPow(exponent: number): BigInt {
@@ -35,6 +35,10 @@ export function tenPow(exponent: number): BigInt {
 
 export function normalize(i: BigInt, decimals: number = 18): BigDecimal {
   return i.toBigDecimal().div(new BigDecimal(tenPow(decimals)))
+}
+
+export function keccak256(s: string): ByteArray {
+  return crypto.keccak256(ByteArray.fromUTF8(s))
 }
 
 export function getPoolList(): DPoolList {

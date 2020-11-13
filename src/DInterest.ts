@@ -1,4 +1,4 @@
-import { BigDecimal, Address, ethereum } from '@graphprotocol/graph-ts'
+import { BigDecimal, Address, ethereum, log, ByteArray } from '@graphprotocol/graph-ts'
 import {
   DInterest,
   EDeposit,
@@ -10,7 +10,7 @@ import {
 import { IInterestOracle } from '../generated/aUSDCPool/IInterestOracle'
 import { ERC20 } from '../generated/aUSDCPool/ERC20'
 import { DPool, Deposit, Funding, UserTotalDeposit, FunderTotalInterest } from '../generated/schema'
-import { getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC } from './utils'
+import { getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC, keccak256 } from './utils'
 
 export function handleEDeposit(event: EDeposit): void {
   let pool = getPool(event)
@@ -32,7 +32,7 @@ export function handleEDeposit(event: EDeposit): void {
   deposit.fundingID = ZERO_INT
   deposit.mintMPHAmount = normalize(event.params.mintMPHAmount)
   deposit.takeBackMPHAmount = ZERO_DEC
-  deposit.initialMoneyMarketIncomeIndex = normalize(poolContract.moneyMarketIncomeIndex())
+  deposit.initialMoneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
   deposit.save()
 
   // Update DPool statistics
@@ -214,12 +214,12 @@ export function handleEFund(event: EFund): void {
 
 export function handleESetParamAddress(event: ESetParamAddress): void {
   let pool = getPool(event)
-  let paramName = event.params.paramName.toString()
-  if (paramName === 'feeModel') {
-  } else if (paramName === 'interestModel') {
+  let paramName = event.params.paramName
+  if (paramName == keccak256('feeModel')) {
+  } else if (paramName == keccak256('interestModel')) {
     pool.interestModel = event.params.newValue.toHex()
-  } else if (paramName === 'interestOracle') {
-  } else if (paramName === 'moneyMarket.rewards') { }
+  } else if (paramName == keccak256('interestOracle')) {
+  } else if (paramName == keccak256('moneyMarket.rewards')) { }
   pool.save()
 }
 
@@ -229,17 +229,17 @@ export function handleESetParamUint(event: ESetParamUint): void {
   let stablecoinContract = ERC20.bind(poolContract.stablecoin())
   let stablecoinDecimals: number = stablecoinContract.decimals()
   let stablecoinPrecision = new BigDecimal(tenPow(stablecoinDecimals))
-  let paramName = event.params.paramName.toString()
-  if (paramName === 'MinDepositPeriod') {
+  let paramName = event.params.paramName
+  if (paramName == keccak256('MinDepositPeriod')) {
     pool.MinDepositPeriod = event.params.newValue
   }
-  else if (paramName === 'MaxDepositPeriod') {
+  else if (paramName == keccak256('MaxDepositPeriod')) {
     pool.MaxDepositPeriod = event.params.newValue
   }
-  else if (paramName === 'MinDepositAmount') {
+  else if (paramName == keccak256('MinDepositAmount')) {
     pool.MinDepositAmount = event.params.newValue.toBigDecimal().div(stablecoinPrecision)
   }
-  else if (paramName === 'MaxDepositAmount') {
+  else if (paramName == keccak256('MaxDepositAmount')) {
     pool.MaxDepositAmount = event.params.newValue.toBigDecimal().div(stablecoinPrecision)
   }
   pool.save()
