@@ -29,6 +29,8 @@ dataSources:
           file: ./abis/IInterestOracle.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -70,6 +72,8 @@ dataSources:
           file: ./abis/IInterestOracle.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -111,6 +115,8 @@ dataSources:
           file: ./abis/IInterestOracle.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -152,6 +158,8 @@ dataSources:
           file: ./abis/IInterestOracle.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -193,6 +201,8 @@ dataSources:
           file: ./abis/IInterestOracle.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -255,6 +265,34 @@ dataSources:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/MPHToken.ts
+  - kind: ethereum/contract
+    name: MPHMinter
+    network: mainnet
+    source:
+      address: "0x2165b3800B17224De39303c240a41064179Db0A6"
+      abi: MPHMinter
+      startBlock: 11172905
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPool
+      abis:
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      callHandlers:
+        - function: setPoolMintingMultiplier(address,uint256)
+          handler: handleSetPoolMintingMultiplier
+        - function: setPoolDepositorRewardMultiplier(address,uint256)
+          handler: handleSetPoolDepositorRewardMultiplier
+        - function: setPoolFunderRewardMultiplier(address,uint256)
+          handler: handleSetPoolFunderRewardMultiplier
+      file: ./src/MPHMinter.ts
 templates:
   - kind: ethereum/contract
     name: NFT

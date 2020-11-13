@@ -30,6 +30,9 @@ type DPool @entity {
   MaxDepositPeriod: BigInt!
   MinDepositAmount: BigDecimal!
   MaxDepositAmount: BigDecimal!
+  mphMintingMultiplier: BigDecimal!
+  mphDepositorRewardMultiplier: BigDecimal!
+  mphFunderRewardMultiplier: BigDecimal!
   oneYearInterestRate: BigDecimal!
   surplus: BigDecimal!
   moneyMarketIncomeIndex: BigInt!
@@ -126,5 +129,6 @@ type MPH @entity {
   totalSupply: BigDecimal!
   totalStakedMPHBalance: BigDecimal!
   totalHistoricalReward: BigDecimal!
+  rewardPerSecond: BigDecimal!
   rewardPerMPHPerSecond: BigDecimal!
 }
