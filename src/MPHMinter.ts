@@ -7,10 +7,10 @@ import { normalize } from './utils'
 
 export function handleSetPoolMintingMultiplier(call: SetPoolMintingMultiplierCall): void {
   let pool = DPool.load(call.inputs.pool.toHex())
-  let poolContract = DInterest.bind(call.inputs.pool)
-  let stablecoinContract = ERC20.bind(poolContract.stablecoin())
-  let stablecoinDecimals: number = stablecoinContract.decimals()
   if (pool != null) {
+    let poolContract = DInterest.bind(call.inputs.pool)
+    let stablecoinContract = ERC20.bind(poolContract.stablecoin())
+    let stablecoinDecimals: number = stablecoinContract.decimals()
     pool.mphMintingMultiplier = normalize(call.inputs.newMultiplier, 36 - stablecoinDecimals)
     pool.save()
   }
