@@ -16,7 +16,7 @@ export let ONE_INT = BigInt.fromI32(1)
 export let YEAR = BigInt.fromI32(31556952) // One year in seconds
 export let ZERO_ADDR = Address.fromString('0x0000000000000000000000000000000000000000')
 export let DELIMITER = '---'
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11251290)
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11264284)
 
 let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push('0xb5ee8910a93f8a450e97be0436f36b9458106682'); // aUSDC

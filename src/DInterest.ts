@@ -181,6 +181,13 @@ export function handleEFund(event: EFund): void {
   pool.save()
 
   // Update Funder
+  if (!funder.pools.includes(pool.id)) {
+    // Add pool to list of pools
+    let pools = funder.pools
+    pools.push(pool.id)
+    funder.pools = pools
+    funder.numPools = funder.numPools.plus(ONE_INT)
+  }
   funder.numFundings = funder.numFundings.plus(ONE_INT)
   funder.totalMPHEarned = funder.totalMPHEarned.plus(funding.mintMPHAmount)
   funder.save()
