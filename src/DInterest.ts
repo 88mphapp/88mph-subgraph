@@ -47,7 +47,7 @@ export function handleEDeposit(event: EDeposit): void {
   pool.totalActiveDeposit = pool.totalActiveDeposit.plus(deposit.amount)
   pool.totalHistoricalDeposit = pool.totalHistoricalDeposit.plus(deposit.amount)
   pool.totalInterestPaid = pool.totalInterestPaid.plus(deposit.interestEarned)
-  pool.unfundedDepositAmount = pool.unfundedDepositAmount.plus(deposit.amount)
+  pool.unfundedDepositAmount = normalize(poolContract.unfundedUserDepositAmount(), stablecoinDecimals)
   pool.save()
 
   // Update User
@@ -119,7 +119,7 @@ export function handleEWithdraw(event: EWithdraw): void {
   }
   pool.numActiveDeposits = pool.numActiveDeposits.minus(ONE_INT)
   pool.totalActiveDeposit = pool.totalActiveDeposit.minus(deposit.amount)
-  pool.unfundedDepositAmount = pool.unfundedDepositAmount.minus(deposit.amount)
+  pool.unfundedDepositAmount = normalize(poolContract.unfundedUserDepositAmount(), stablecoinDecimals)
   pool.save()
 
   let fundingID = event.params.fundingID
@@ -177,7 +177,7 @@ export function handleEFund(event: EFund): void {
 
   // Update DPool statistics
   pool.numFundings = pool.numFundings.plus(ONE_INT)
-  pool.unfundedDepositAmount = pool.unfundedDepositAmount.minus(funding.fundedDeficitAmount)
+  pool.unfundedDepositAmount = normalize(poolContract.unfundedUserDepositAmount(), stablecoinDecimals)
   pool.save()
 
   // Update Funder
