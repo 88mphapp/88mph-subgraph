@@ -175,6 +175,49 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
+    name: crvSBTCPool
+    network: mainnet
+    source:
+      address: "0x681Aaa7CF3F7E1f110842f0149bA8A4AF53Ef2Fd"
+      abi: DInterest
+      startBlock: 11316753
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPoolList
+        - DPool
+        - User
+        - Deposit
+        - Funder
+        - Funding
+        - UserTotalDeposit
+        - FunderTotalInterest
+      abis:
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: MPHIssuanceModel01
+          file: ./abis/MPHIssuanceModel01.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handleEDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed uint256,bool,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint256,uint256)
+          handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/DInterest.ts
+  - kind: ethereum/contract
     name: Rewards
     network: mainnet
     source:

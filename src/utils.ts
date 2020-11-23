@@ -17,19 +17,21 @@ export let YEAR = BigInt.fromI32(31556952) // One year in seconds
 export let ZERO_ADDR = Address.fromString('0x0000000000000000000000000000000000000000')
 export let MPH_ISSUANCE_MODEL_ADDR = Address.fromString('0x36ad542dadc22078511d64b98aff818abd1ac713')
 export let DELIMITER = '---'
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11316745)
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11317020)
 
-let POOL_ADDRESSES = new Array<string>(0)
+export let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push('0x35966201A7724b952455B73A36C8846D8745218e') // cDAI
 POOL_ADDRESSES.push('0x374226dbAa3e44bF3923AfB63f5Fd83928B7e148') // cUSDC
 POOL_ADDRESSES.push('0x19E10132841616CE4790920d5f94B8571F9b9341') // cUNI
 POOL_ADDRESSES.push('0xe615e59353f70cA2424Aa0F24F49C639B8E924D3') // yCRV
+POOL_ADDRESSES.push('0x681Aaa7CF3F7E1f110842f0149bA8A4AF53Ef2Fd') // crvSBTC
 
-let POOL_DEPLOY_BLOCKS = new Array<BigInt>(0)
-POOL_DEPLOY_BLOCKS.push(BigInt.fromI32(11312644)) // cDAI
-POOL_DEPLOY_BLOCKS.push(BigInt.fromI32(11315763)) // cUSDC
-POOL_DEPLOY_BLOCKS.push(BigInt.fromI32(11315994)) // cUNI
-POOL_DEPLOY_BLOCKS.push(BigInt.fromI32(11316295)) // yCRV
+export let POOL_DEPLOY_BLOCKS = new Array<i32>(0)
+POOL_DEPLOY_BLOCKS.push(11312644) // cDAI
+POOL_DEPLOY_BLOCKS.push(11315763) // cUSDC
+POOL_DEPLOY_BLOCKS.push(11315994) // cUNI
+POOL_DEPLOY_BLOCKS.push(11316295) // yCRV
+POOL_DEPLOY_BLOCKS.push(11316753) // crvSBTC
 
 export function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1)
@@ -47,21 +49,13 @@ export function keccak256(s: string): ByteArray {
   return crypto.keccak256(ByteArray.fromUTF8(s))
 }
 
-export function getPoolList(blockNumber: BigInt): DPoolList {
+export function getPoolList(): DPoolList {
   let poolList = DPoolList.load(DPOOLLIST_ID)
-  // Initialize DPool entities
-  POOL_ADDRESSES.forEach((poolAddress, idx) => {
-    let deployedBlock = POOL_DEPLOY_BLOCKS[idx]
-    log.warning('deployedBlock: {}, idx: {}, blockNumber: {}', [deployedBlock.toString(), idx.toString(), blockNumber.toString()])
-    if (deployedBlock.le(blockNumber)) {
-      getPool(poolAddress)
-    }
-  })
   if (poolList == null) {
     // Initialize DPoolList
     poolList = new DPoolList(DPOOLLIST_ID)
-    poolList.pools = POOL_ADDRESSES
-    poolList.numPools = BigInt.fromI32(POOL_ADDRESSES.length)
+    poolList.pools = new Array<string>(0)
+    poolList.numPools = ZERO_INT
     poolList.numUsers = ZERO_INT
     poolList.numActiveUsers = ZERO_INT
     poolList.numFunders = ZERO_INT
@@ -115,14 +109,22 @@ export function getPool(poolAddress: string): DPool {
     fundingNFTContext.setString('pool', poolAddress)
     fundingNFTContext.setString('type', 'funding')
     NFT.createWithContext(poolContract.fundingNFT(), fundingNFTContext)
+
+    // Add pool to DPoolList
+    let poolList = getPoolList()
+    let poolListPools = poolList.pools
+    poolListPools.push(poolAddress)
+    poolList.pools = poolListPools
+    poolList.numPools = poolList.numPools.plus(ONE_INT)
+    poolList.save()
   }
   return pool as DPool
 }
 
-export function getUser(address: Address, pool: DPool, blockNumber: BigInt): User {
+export function getUser(address: Address, pool: DPool): User {
   let user = User.load(address.toHex())
   if (user == null) {
-    let poolList = getPoolList(blockNumber)
+    let poolList = getPoolList()
     poolList.numUsers = poolList.numUsers.plus(ONE_INT)
     poolList.save()
 
@@ -144,7 +146,7 @@ export function getUser(address: Address, pool: DPool, blockNumber: BigInt): Use
   return user as User
 }
 
-export function getFunder(address: Address, pool: DPool, blockNumber: BigInt): Funder {
+export function getFunder(address: Address, pool: DPool): Funder {
   let user = Funder.load(address.toHex())
   if (user == null) {
     user = new Funder(address.toHex())
@@ -160,7 +162,7 @@ export function getFunder(address: Address, pool: DPool, blockNumber: BigInt): F
     pool.numFunders = pool.numFunders.plus(ONE_INT)
     pool.save()
 
-    let poolList = getPoolList(blockNumber)
+    let poolList = getPoolList()
     poolList.numFunders = poolList.numFunders.plus(ONE_INT)
     poolList.save()
   }

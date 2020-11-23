@@ -10,11 +10,11 @@ import {
 import { IInterestOracle } from '../generated/cDAIPool/IInterestOracle'
 import { ERC20 } from '../generated/cDAIPool/ERC20'
 import { DPool, Deposit, Funding, UserTotalDeposit, FunderTotalInterest } from '../generated/schema'
-import { getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC, keccak256 } from './utils'
+import { POOL_ADDRESSES, POOL_DEPLOY_BLOCKS, getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC, keccak256 } from './utils'
 
 export function handleEDeposit(event: EDeposit): void {
   let pool = getPool(event.address.toHex())
-  let user = getUser(event.params.sender, pool, event.block.number)
+  let user = getUser(event.params.sender, pool)
   let poolContract = DInterest.bind(Address.fromString(pool.address))
   let stablecoinContract = ERC20.bind(poolContract.stablecoin())
   let stablecoinDecimals: number = stablecoinContract.decimals()
@@ -38,7 +38,7 @@ export function handleEDeposit(event: EDeposit): void {
   // Update DPool statistics
   if (user.numActiveDeposits.equals(ZERO_INT)) {
     // User has become active
-    let poolList = getPoolList(event.block.number)
+    let poolList = getPoolList()
     poolList.numActiveUsers = poolList.numActiveUsers.plus(ONE_INT)
     poolList.save()
   }
@@ -88,7 +88,7 @@ export function handleEDeposit(event: EDeposit): void {
 export function handleEWithdraw(event: EWithdraw): void {
   let pool = getPool(event.address.toHex())
   let poolContract = DInterest.bind(event.address)
-  let user = getUser(event.params.sender, pool, event.block.number)
+  let user = getUser(event.params.sender, pool)
   let deposit = Deposit.load(pool.address + DELIMITER + event.params.depositID.toString())
   let stablecoinContract = ERC20.bind(poolContract.stablecoin())
   let stablecoinDecimals: number = stablecoinContract.decimals()
@@ -113,7 +113,7 @@ export function handleEWithdraw(event: EWithdraw): void {
   // Update DPool statistics
   if (user.numActiveDeposits.equals(ZERO_INT)) {
     // User has become inactive
-    let poolList = getPoolList(event.block.number)
+    let poolList = getPoolList()
     poolList.numActiveUsers = poolList.numActiveUsers.minus(ONE_INT)
     poolList.save()
   }
@@ -139,7 +139,7 @@ export function handleEWithdraw(event: EWithdraw): void {
     funding.save()
 
     // Update Funder
-    let funder = getFunder(event.params.sender, pool, event.block.number)
+    let funder = getFunder(event.params.sender, pool)
 
     funder.totalMPHEarned = funder.totalMPHEarned.plus(mintMPHAmount)
     funder.save()
@@ -163,7 +163,7 @@ export function handleEWithdraw(event: EWithdraw): void {
 export function handleEFund(event: EFund): void {
   let pool = getPool(event.address.toHex())
   let poolContract = DInterest.bind(event.address)
-  let funder = getFunder(event.params.sender, pool, event.block.number)
+  let funder = getFunder(event.params.sender, pool)
   let stablecoinContract = ERC20.bind(poolContract.stablecoin())
   let stablecoinDecimals: number = stablecoinContract.decimals()
 
@@ -263,22 +263,24 @@ export function handleESetParamUint(event: ESetParamUint): void {
 }
 
 export function handleBlock(block: ethereum.Block): void {
-  let poolList = getPoolList(block.number)
-
   if (block.number.ge(BLOCK_HANDLER_START_BLOCK)) {
-    poolList.pools.forEach(poolID => {
+    let blockNumber = block.number.toI32()
+    for (let i = 0; i < POOL_ADDRESSES.length; i++) {
       // Update DPool statistics
-      let pool = DPool.load(poolID)
-      let poolContract = DInterest.bind(Address.fromString(pool.address))
-      let stablecoinContract = ERC20.bind(poolContract.stablecoin())
-      let stablecoinDecimals: number = stablecoinContract.decimals()
-      let oracleContract = IInterestOracle.bind(poolContract.interestOracle())
-      pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
-      let surplusResult = poolContract.surplus()
-      pool.surplus = normalize(surplusResult.value1, stablecoinDecimals).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC)
-      pool.moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
-      pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1)
-      pool.save()
-    });
+      let poolID = POOL_ADDRESSES[i]
+      if (blockNumber >= POOL_DEPLOY_BLOCKS[i]) {
+        let pool = getPool(poolID)
+        let poolContract = DInterest.bind(Address.fromString(pool.address))
+        let stablecoinContract = ERC20.bind(poolContract.stablecoin())
+        let stablecoinDecimals: number = stablecoinContract.decimals()
+        let oracleContract = IInterestOracle.bind(poolContract.interestOracle())
+        pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
+        let surplusResult = poolContract.surplus()
+        pool.surplus = normalize(surplusResult.value1, stablecoinDecimals).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC)
+        pool.moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
+        pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1)
+        pool.save()
+      }
+    }
   }
 }
