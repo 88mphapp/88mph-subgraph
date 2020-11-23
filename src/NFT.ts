@@ -17,11 +17,11 @@ export function handleTransfer(event: ETransfer): void {
   let context = dataSource.context()
   let pool = DPool.load(context.getString('pool')) as DPool
   let type = context.getString('type')
-  let poolList = getPoolList()
+  let poolList = getPoolList(event.block.number)
 
   if (type === 'deposit') {
-    let fromUser = getUser(from, pool)
-    let toUser = getUser(to, pool)
+    let fromUser = getUser(from, pool, event.block.number)
+    let toUser = getUser(to, pool, event.block.number)
     let deposit = Deposit.load(pool.address + DELIMITER + tokenId.toString())
 
     // update from user
@@ -85,8 +85,8 @@ export function handleTransfer(event: ETransfer): void {
     deposit.user = toUser.id
     deposit.save()
   } else if (type === 'funding') {
-    let fromFunder = getFunder(from, pool)
-    let toFunder = getFunder(to, pool)
+    let fromFunder = getFunder(from, pool, event.block.number)
+    let toFunder = getFunder(to, pool, event.block.number)
     let funding = Funding.load(pool.address + DELIMITER + tokenId.toString())
 
     // update fromFunder

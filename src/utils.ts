@@ -1,4 +1,4 @@
-import { BigDecimal, BigInt, Address, DataSourceContext, ethereum, ByteArray, crypto } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt, Address, DataSourceContext, ethereum, ByteArray, crypto, log, TypedMap } from "@graphprotocol/graph-ts";
 import { DInterest } from "../generated/cDAIPool/DInterest";
 import { ERC20 } from "../generated/cDAIPool/ERC20";
 import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
@@ -17,10 +17,19 @@ export let YEAR = BigInt.fromI32(31556952) // One year in seconds
 export let ZERO_ADDR = Address.fromString('0x0000000000000000000000000000000000000000')
 export let MPH_ISSUANCE_MODEL_ADDR = Address.fromString('0x36ad542dadc22078511d64b98aff818abd1ac713')
 export let DELIMITER = '---'
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11264284)
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11316745)
 
 let POOL_ADDRESSES = new Array<string>(0)
-POOL_ADDRESSES.push('0x35966201A7724b952455B73A36C8846D8745218e'); // cDAI
+POOL_ADDRESSES.push('0x35966201A7724b952455B73A36C8846D8745218e') // cDAI
+POOL_ADDRESSES.push('0x374226dbAa3e44bF3923AfB63f5Fd83928B7e148') // cUSDC
+POOL_ADDRESSES.push('0x19E10132841616CE4790920d5f94B8571F9b9341') // cUNI
+POOL_ADDRESSES.push('0xe615e59353f70cA2424Aa0F24F49C639B8E924D3') // yCRV
+
+let POOL_DEPLOY_BLOCKS = new Array<BigInt>(0)
+POOL_DEPLOY_BLOCKS.push(BigInt.fromI32(11312644)) // cDAI
+POOL_DEPLOY_BLOCKS.push(BigInt.fromI32(11315763)) // cUSDC
+POOL_DEPLOY_BLOCKS.push(BigInt.fromI32(11315994)) // cUNI
+POOL_DEPLOY_BLOCKS.push(BigInt.fromI32(11316295)) // yCRV
 
 export function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1)
@@ -38,55 +47,17 @@ export function keccak256(s: string): ByteArray {
   return crypto.keccak256(ByteArray.fromUTF8(s))
 }
 
-export function getPoolList(): DPoolList {
+export function getPoolList(blockNumber: BigInt): DPoolList {
   let poolList = DPoolList.load(DPOOLLIST_ID)
+  // Initialize DPool entities
+  POOL_ADDRESSES.forEach((poolAddress, idx) => {
+    let deployedBlock = POOL_DEPLOY_BLOCKS[idx]
+    log.warning('deployedBlock: {}, idx: {}, blockNumber: {}', [deployedBlock.toString(), idx.toString(), blockNumber.toString()])
+    if (deployedBlock.le(blockNumber)) {
+      getPool(poolAddress)
+    }
+  })
   if (poolList == null) {
-    // Initialize DPool entities
-    POOL_ADDRESSES.forEach(poolAddress => {
-      let pool = new DPool(poolAddress)
-      let poolContract = DInterest.bind(Address.fromString(poolAddress))
-      let oracleContract = IInterestOracle.bind(poolContract.interestOracle())
-      let stablecoinContract = ERC20.bind(poolContract.stablecoin())
-      let stablecoinDecimals: number = stablecoinContract.decimals()
-      let stablecoinPrecision = new BigDecimal(tenPow(stablecoinDecimals))
-      let mphIssuanceModel01Contract = MPHIssuanceModel01.bind(MPH_ISSUANCE_MODEL_ADDR)
-      pool.address = poolAddress
-      pool.moneyMarket = poolContract.moneyMarket().toHex()
-      pool.stablecoin = poolContract.stablecoin().toHex()
-      pool.interestModel = poolContract.interestModel().toHex()
-      pool.numUsers = ZERO_INT
-      pool.numDeposits = ZERO_INT
-      pool.numActiveDeposits = ZERO_INT
-      pool.totalActiveDeposit = ZERO_DEC
-      pool.totalHistoricalDeposit = ZERO_DEC
-      pool.numFunders = ZERO_INT
-      pool.numFundings = ZERO_INT
-      pool.totalInterestPaid = ZERO_DEC
-      pool.unfundedDepositAmount = ZERO_DEC
-      pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
-      pool.surplus = ZERO_DEC
-      pool.moneyMarketIncomeIndex = ZERO_INT
-      pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1)
-      pool.MinDepositPeriod = poolContract.MinDepositPeriod()
-      pool.MaxDepositPeriod = poolContract.MaxDepositPeriod()
-      pool.MinDepositAmount = poolContract.MinDepositAmount().toBigDecimal().div(stablecoinPrecision)
-      pool.MaxDepositAmount = poolContract.MaxDepositAmount().toBigDecimal().div(stablecoinPrecision)
-      pool.mphDepositorRewardMintMultiplier = normalize(mphIssuanceModel01Contract.poolDepositorRewardMintMultiplier(Address.fromString(poolAddress)), 36 - stablecoinDecimals)
-      pool.mphDepositorRewardTakeBackMultiplier = normalize(mphIssuanceModel01Contract.poolDepositorRewardTakeBackMultiplier(Address.fromString(poolAddress)))
-      pool.mphFunderRewardMultiplier = normalize(mphIssuanceModel01Contract.poolFunderRewardMultiplier(Address.fromString(poolAddress)), 36 - stablecoinDecimals)
-      pool.save()
-
-      // Create NFT templates
-      let depositNFTContext = new DataSourceContext()
-      depositNFTContext.setString('pool', poolAddress)
-      depositNFTContext.setString('type', 'deposit')
-      NFT.createWithContext(poolContract.depositNFT(), depositNFTContext)
-      let fundingNFTContext = new DataSourceContext()
-      fundingNFTContext.setString('pool', poolAddress)
-      fundingNFTContext.setString('type', 'funding')
-      NFT.createWithContext(poolContract.fundingNFT(), fundingNFTContext)
-    })
-
     // Initialize DPoolList
     poolList = new DPoolList(DPOOLLIST_ID)
     poolList.pools = POOL_ADDRESSES
@@ -99,15 +70,59 @@ export function getPoolList(): DPoolList {
   return poolList as DPoolList
 }
 
-export function getPool(event: ethereum.Event): DPool {
-  let pool = DPool.load(event.address.toHex())
+export function getPool(poolAddress: string): DPool {
+  let pool = DPool.load(poolAddress)
+  if (pool == null) {
+    pool = new DPool(poolAddress)
+    let poolContract = DInterest.bind(Address.fromString(poolAddress))
+    let oracleContract = IInterestOracle.bind(poolContract.interestOracle())
+    let stablecoinContract = ERC20.bind(poolContract.stablecoin())
+    let stablecoinDecimals: number = stablecoinContract.decimals()
+    let stablecoinPrecision = new BigDecimal(tenPow(stablecoinDecimals))
+    let mphIssuanceModel01Contract = MPHIssuanceModel01.bind(MPH_ISSUANCE_MODEL_ADDR)
+    pool.address = poolAddress
+    pool.moneyMarket = poolContract.moneyMarket().toHex()
+    pool.stablecoin = poolContract.stablecoin().toHex()
+    pool.interestModel = poolContract.interestModel().toHex()
+    pool.numUsers = ZERO_INT
+    pool.numDeposits = ZERO_INT
+    pool.numActiveDeposits = ZERO_INT
+    pool.totalActiveDeposit = ZERO_DEC
+    pool.totalHistoricalDeposit = ZERO_DEC
+    pool.numFunders = ZERO_INT
+    pool.numFundings = ZERO_INT
+    pool.totalInterestPaid = ZERO_DEC
+    pool.unfundedDepositAmount = ZERO_DEC
+    pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
+    pool.surplus = ZERO_DEC
+    pool.moneyMarketIncomeIndex = ZERO_INT
+    pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1)
+    pool.MinDepositPeriod = poolContract.MinDepositPeriod()
+    pool.MaxDepositPeriod = poolContract.MaxDepositPeriod()
+    pool.MinDepositAmount = poolContract.MinDepositAmount().toBigDecimal().div(stablecoinPrecision)
+    pool.MaxDepositAmount = poolContract.MaxDepositAmount().toBigDecimal().div(stablecoinPrecision)
+    pool.mphDepositorRewardMintMultiplier = normalize(mphIssuanceModel01Contract.poolDepositorRewardMintMultiplier(Address.fromString(poolAddress)), 36 - stablecoinDecimals)
+    pool.mphDepositorRewardTakeBackMultiplier = normalize(mphIssuanceModel01Contract.poolDepositorRewardTakeBackMultiplier(Address.fromString(poolAddress)))
+    pool.mphFunderRewardMultiplier = normalize(mphIssuanceModel01Contract.poolFunderRewardMultiplier(Address.fromString(poolAddress)), 36 - stablecoinDecimals)
+    pool.save()
+
+    // Create NFT templates
+    let depositNFTContext = new DataSourceContext()
+    depositNFTContext.setString('pool', poolAddress)
+    depositNFTContext.setString('type', 'deposit')
+    NFT.createWithContext(poolContract.depositNFT(), depositNFTContext)
+    let fundingNFTContext = new DataSourceContext()
+    fundingNFTContext.setString('pool', poolAddress)
+    fundingNFTContext.setString('type', 'funding')
+    NFT.createWithContext(poolContract.fundingNFT(), fundingNFTContext)
+  }
   return pool as DPool
 }
 
-export function getUser(address: Address, pool: DPool): User {
+export function getUser(address: Address, pool: DPool, blockNumber: BigInt): User {
   let user = User.load(address.toHex())
   if (user == null) {
-    let poolList = getPoolList()
+    let poolList = getPoolList(blockNumber)
     poolList.numUsers = poolList.numUsers.plus(ONE_INT)
     poolList.save()
 
@@ -129,7 +144,7 @@ export function getUser(address: Address, pool: DPool): User {
   return user as User
 }
 
-export function getFunder(address: Address, pool: DPool): Funder {
+export function getFunder(address: Address, pool: DPool, blockNumber: BigInt): Funder {
   let user = Funder.load(address.toHex())
   if (user == null) {
     user = new Funder(address.toHex())
@@ -145,7 +160,7 @@ export function getFunder(address: Address, pool: DPool): Funder {
     pool.numFunders = pool.numFunders.plus(ONE_INT)
     pool.save()
 
-    let poolList = getPoolList()
+    let poolList = getPoolList(blockNumber)
     poolList.numFunders = poolList.numFunders.plus(ONE_INT)
     poolList.save()
   }
