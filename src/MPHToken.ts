@@ -4,7 +4,7 @@ import {
 import { ZERO_ADDR, normalize, getMPH, getMPHHolder, getPoolList } from './utils'
 
 export function handleTransfer(event: ETransfer): void {
-  /*let mph = getMPH()
+  let mph = getMPH()
   let value = normalize(event.params.value)
 
   if (event.params.from.equals(ZERO_ADDR)) {
@@ -28,5 +28,5 @@ export function handleTransfer(event: ETransfer): void {
   if (to != null) {
     to.mphBalance = to.mphBalance.plus(value)
     to.save()
-  }*/
+  }
 }
