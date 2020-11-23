@@ -6,9 +6,9 @@ import {
   EFund,
   ESetParamUint,
   ESetParamAddress
-} from '../generated/aUSDCPool/DInterest'
-import { IInterestOracle } from '../generated/aUSDCPool/IInterestOracle'
-import { ERC20 } from '../generated/aUSDCPool/ERC20'
+} from '../generated/cDAIPool/DInterest'
+import { IInterestOracle } from '../generated/cDAIPool/IInterestOracle'
+import { ERC20 } from '../generated/cDAIPool/ERC20'
 import { DPool, Deposit, Funding, UserTotalDeposit, FunderTotalInterest } from '../generated/schema'
 import { getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC, keccak256 } from './utils'
 
@@ -172,7 +172,6 @@ export function handleEFund(event: EFund): void {
   funding.initialFundedDepositAmount = normalize(fundingObj.recordedFundedDepositAmount, stablecoinDecimals)
   funding.fundedDeficitAmount = normalize(event.params.deficitAmount, stablecoinDecimals)
   funding.totalInterestEarned = ZERO_DEC
-  funding.mintMPHAmount = normalize(event.params.mintMPHAmount)
   funding.save()
 
   // Update DPool statistics

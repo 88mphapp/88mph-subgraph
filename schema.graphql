@@ -30,8 +30,8 @@ type DPool @entity {
   MaxDepositPeriod: BigInt!
   MinDepositAmount: BigDecimal!
   MaxDepositAmount: BigDecimal!
-  mphMintingMultiplier: BigDecimal!
-  mphDepositorRewardMultiplier: BigDecimal!
+  mphDepositorRewardMintMultiplier: BigDecimal!
+  mphDepositorRewardTakeBackMultiplier: BigDecimal!
   mphFunderRewardMultiplier: BigDecimal!
   oneYearInterestRate: BigDecimal!
   surplus: BigDecimal!
@@ -113,7 +113,6 @@ type Funding @entity {
   initialFundedDepositAmount: BigDecimal!
   fundedDeficitAmount: BigDecimal!
   totalInterestEarned: BigDecimal!
-  mintMPHAmount: BigDecimal!
 }
 
 type MPHHolder @entity {
@@ -131,4 +130,13 @@ type MPH @entity {
   totalHistoricalReward: BigDecimal!
   rewardPerSecond: BigDecimal!
   rewardPerMPHPerSecond: BigDecimal!
+}
+
+type Vest @entity {
+  id: ID!
+  user: String!
+  amount: BigDecimal!
+  vestPeriodInSeconds: BigInt!
+  creationTimestamp: BigInt!
+  withdrawnAmount: BigDecimal!
 }
