@@ -1,7 +1,7 @@
 import {
   Transfer as ETransfer
 } from '../generated/MPHToken/MPHToken'
-import { ZERO_ADDR, normalize, getMPH, getMPHHolder } from './utils'
+import { ZERO_ADDR, normalize, getMPH, getMPHHolder, getPoolList } from './utils'
 
 export function handleTransfer(event: ETransfer): void {
   let mph = getMPH()

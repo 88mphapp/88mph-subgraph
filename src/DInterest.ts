@@ -6,14 +6,14 @@ import {
   EFund,
   ESetParamUint,
   ESetParamAddress
-} from '../generated/aUSDCPool/DInterest'
-import { IInterestOracle } from '../generated/aUSDCPool/IInterestOracle'
-import { ERC20 } from '../generated/aUSDCPool/ERC20'
+} from '../generated/cDAIPool/DInterest'
+import { IInterestOracle } from '../generated/cDAIPool/IInterestOracle'
+import { ERC20 } from '../generated/cDAIPool/ERC20'
 import { DPool, Deposit, Funding, UserTotalDeposit, FunderTotalInterest } from '../generated/schema'
-import { getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC, keccak256 } from './utils'
+import { POOL_ADDRESSES, POOL_DEPLOY_BLOCKS, getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC, keccak256 } from './utils'
 
 export function handleEDeposit(event: EDeposit): void {
-  let pool = getPool(event)
+  let pool = getPool(event.address.toHex())
   let user = getUser(event.params.sender, pool)
   let poolContract = DInterest.bind(Address.fromString(pool.address))
   let stablecoinContract = ERC20.bind(poolContract.stablecoin())
@@ -47,7 +47,7 @@ export function handleEDeposit(event: EDeposit): void {
   pool.totalActiveDeposit = pool.totalActiveDeposit.plus(deposit.amount)
   pool.totalHistoricalDeposit = pool.totalHistoricalDeposit.plus(deposit.amount)
   pool.totalInterestPaid = pool.totalInterestPaid.plus(deposit.interestEarned)
-  pool.unfundedDepositAmount = pool.unfundedDepositAmount.plus(deposit.amount)
+  pool.unfundedDepositAmount = normalize(poolContract.unfundedUserDepositAmount(), stablecoinDecimals)
   pool.save()
 
   // Update User
@@ -86,7 +86,7 @@ export function handleEDeposit(event: EDeposit): void {
 }
 
 export function handleEWithdraw(event: EWithdraw): void {
-  let pool = getPool(event)
+  let pool = getPool(event.address.toHex())
   let poolContract = DInterest.bind(event.address)
   let user = getUser(event.params.sender, pool)
   let deposit = Deposit.load(pool.address + DELIMITER + event.params.depositID.toString())
@@ -119,7 +119,7 @@ export function handleEWithdraw(event: EWithdraw): void {
   }
   pool.numActiveDeposits = pool.numActiveDeposits.minus(ONE_INT)
   pool.totalActiveDeposit = pool.totalActiveDeposit.minus(deposit.amount)
-  pool.unfundedDepositAmount = pool.unfundedDepositAmount.minus(deposit.amount)
+  pool.unfundedDepositAmount = normalize(poolContract.unfundedUserDepositAmount(), stablecoinDecimals)
   pool.save()
 
   let fundingID = event.params.fundingID
@@ -128,11 +128,21 @@ export function handleEWithdraw(event: EWithdraw): void {
     let funding = Funding.load(pool.address + DELIMITER + fundingID.toString())
     let fundingObj = poolContract.getFunding(fundingID)
     let interestAmount = funding.recordedFundedDepositAmount.times(poolContract.moneyMarketIncomeIndex().toBigDecimal()).div(funding.recordedMoneyMarketIncomeIndex.toBigDecimal()).minus(funding.recordedFundedDepositAmount)
+    let mintMPHAmount = funding.creationTimestamp.gt(deposit.maturationTimestamp) ?
+      pool.mphFunderRewardMultiplier.times(deposit.amount).times(deposit.maturationTimestamp
+        .minus(funding.creationTimestamp).toBigDecimal()) : ZERO_DEC
     funding.totalInterestEarned = funding.totalInterestEarned.plus(interestAmount)
     funding.recordedFundedDepositAmount = normalize(fundingObj.recordedFundedDepositAmount, stablecoinDecimals)
     funding.recordedMoneyMarketIncomeIndex = fundingObj.recordedMoneyMarketIncomeIndex
     funding.active = funding.recordedFundedDepositAmount.gt(ZERO_DEC)
+    funding.mphRewardEarned = funding.mphRewardEarned.plus(mintMPHAmount)
     funding.save()
+
+    // Update Funder
+    let funder = getFunder(event.params.sender, pool)
+
+    funder.totalMPHEarned = funder.totalMPHEarned.plus(mintMPHAmount)
+    funder.save()
 
     // Update FunderTotalInterest
     let funderTotalInterestID = funding.funder + DELIMITER + pool.id
@@ -151,7 +161,7 @@ export function handleEWithdraw(event: EWithdraw): void {
 }
 
 export function handleEFund(event: EFund): void {
-  let pool = getPool(event)
+  let pool = getPool(event.address.toHex())
   let poolContract = DInterest.bind(event.address)
   let funder = getFunder(event.params.sender, pool)
   let stablecoinContract = ERC20.bind(poolContract.stablecoin())
@@ -172,17 +182,24 @@ export function handleEFund(event: EFund): void {
   funding.initialFundedDepositAmount = normalize(fundingObj.recordedFundedDepositAmount, stablecoinDecimals)
   funding.fundedDeficitAmount = normalize(event.params.deficitAmount, stablecoinDecimals)
   funding.totalInterestEarned = ZERO_DEC
-  funding.mintMPHAmount = normalize(event.params.mintMPHAmount)
+  funding.creationTimestamp = fundingObj.creationTimestamp
+  funding.mphRewardEarned = ZERO_DEC
   funding.save()
 
   // Update DPool statistics
   pool.numFundings = pool.numFundings.plus(ONE_INT)
-  pool.unfundedDepositAmount = pool.unfundedDepositAmount.minus(funding.fundedDeficitAmount)
+  pool.unfundedDepositAmount = normalize(poolContract.unfundedUserDepositAmount(), stablecoinDecimals)
   pool.save()
 
   // Update Funder
+  if (!funder.pools.includes(pool.id)) {
+    // Add pool to list of pools
+    let pools = funder.pools
+    pools.push(pool.id)
+    funder.pools = pools
+    funder.numPools = funder.numPools.plus(ONE_INT)
+  }
   funder.numFundings = funder.numFundings.plus(ONE_INT)
-  funder.totalMPHEarned = funder.totalMPHEarned.plus(funding.mintMPHAmount)
   funder.save()
 
   // Update funded Deposits
@@ -213,7 +230,7 @@ export function handleEFund(event: EFund): void {
 }
 
 export function handleESetParamAddress(event: ESetParamAddress): void {
-  let pool = getPool(event)
+  let pool = getPool(event.address.toHex())
   let paramName = event.params.paramName
   if (paramName == keccak256('feeModel')) {
   } else if (paramName == keccak256('interestModel')) {
@@ -224,7 +241,7 @@ export function handleESetParamAddress(event: ESetParamAddress): void {
 }
 
 export function handleESetParamUint(event: ESetParamUint): void {
-  let pool = getPool(event)
+  let pool = getPool(event.address.toHex())
   let poolContract = DInterest.bind(Address.fromString(pool.address))
   let stablecoinContract = ERC20.bind(poolContract.stablecoin())
   let stablecoinDecimals: number = stablecoinContract.decimals()
@@ -246,22 +263,24 @@ export function handleESetParamUint(event: ESetParamUint): void {
 }
 
 export function handleBlock(block: ethereum.Block): void {
-  let poolList = getPoolList()
-
   if (block.number.ge(BLOCK_HANDLER_START_BLOCK)) {
-    poolList.pools.forEach(poolID => {
+    let blockNumber = block.number.toI32()
+    for (let i = 0; i < POOL_ADDRESSES.length; i++) {
       // Update DPool statistics
-      let pool = DPool.load(poolID)
-      let poolContract = DInterest.bind(Address.fromString(pool.address))
-      let stablecoinContract = ERC20.bind(poolContract.stablecoin())
-      let stablecoinDecimals: number = stablecoinContract.decimals()
-      let oracleContract = IInterestOracle.bind(poolContract.interestOracle())
-      pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
-      let surplusResult = poolContract.surplus()
-      pool.surplus = normalize(surplusResult.value1, stablecoinDecimals).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC)
-      pool.moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
-      pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1)
-      pool.save()
-    });
+      let poolID = POOL_ADDRESSES[i]
+      if (blockNumber >= POOL_DEPLOY_BLOCKS[i]) {
+        let pool = getPool(poolID)
+        let poolContract = DInterest.bind(Address.fromString(pool.address))
+        let stablecoinContract = ERC20.bind(poolContract.stablecoin())
+        let stablecoinDecimals: number = stablecoinContract.decimals()
+        let oracleContract = IInterestOracle.bind(poolContract.interestOracle())
+        pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
+        let surplusResult = poolContract.surplus()
+        pool.surplus = normalize(surplusResult.value1, stablecoinDecimals).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC)
+        pool.moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
+        pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1)
+        pool.save()
+      }
+    }
   }
 }
