@@ -15,6 +15,7 @@ export function handleRewardAdded(event: ERewardAdded): void {
   mph.rewardPerMPHPerSecond = mph.totalStakedMPHBalance.equals(ZERO_DEC) ?
     ZERO_DEC :
     mph.rewardPerSecond.div(mph.totalStakedMPHBalance)
+  mph.totalHistoricalReward = mph.totalHistoricalReward.plus(normalize(event.params.reward))
 
   mph.save()
 }
@@ -56,7 +57,6 @@ export function handleRewardPaid(event: ERewardPaid): void {
   let mphHolder = getMPHHolder(event.params.user)
 
   let rewardAmount = normalize(event.params.reward)
-  mph.totalHistoricalReward = mph.totalHistoricalReward.plus(rewardAmount)
   mphHolder.totalHistoricalReward = mphHolder.totalHistoricalReward.plus(rewardAmount)
 
   mphHolder.save()
