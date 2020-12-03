@@ -132,7 +132,7 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: yCRVPool
+    name: yUSDPool
     network: mainnet
     source:
       address: "0xe615e59353f70cA2424Aa0F24F49C639B8E924D3"
@@ -181,6 +181,49 @@ dataSources:
       address: "0x681Aaa7CF3F7E1f110842f0149bA8A4AF53Ef2Fd"
       abi: DInterest
       startBlock: 11316753
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPoolList
+        - DPool
+        - User
+        - Deposit
+        - Funder
+        - Funding
+        - UserTotalDeposit
+        - FunderTotalInterest
+      abis:
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: MPHIssuanceModel01
+          file: ./abis/MPHIssuanceModel01.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handleEDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed uint256,bool,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint256,uint256)
+          handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/DInterest.ts
+  - kind: ethereum/contract
+    name: harvestYCRVPool
+    network: mainnet
+    source:
+      address: "0x23Fa6b36E870ca5753853538D17C3ca7f5269e84"
+      abi: DInterest
+      startBlock: 11370919
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
