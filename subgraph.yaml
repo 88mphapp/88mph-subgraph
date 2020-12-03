@@ -85,8 +85,6 @@ dataSources:
           handler: handleESetParamAddress
         - event: ESetParamUint(indexed address,indexed string,uint256)
           handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
     name: cUNIPool
@@ -128,8 +126,6 @@ dataSources:
           handler: handleESetParamAddress
         - event: ESetParamUint(indexed address,indexed string,uint256)
           handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
     name: yUSDPool
@@ -171,8 +167,6 @@ dataSources:
           handler: handleESetParamAddress
         - event: ESetParamUint(indexed address,indexed string,uint256)
           handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
     name: crvSBTCPool
@@ -214,8 +208,6 @@ dataSources:
           handler: handleESetParamAddress
         - event: ESetParamUint(indexed address,indexed string,uint256)
           handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
     name: harvestYCRVPool
@@ -257,8 +249,6 @@ dataSources:
           handler: handleESetParamAddress
         - event: ESetParamUint(indexed address,indexed string,uint256)
           handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
     name: Rewards
