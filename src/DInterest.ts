@@ -136,6 +136,16 @@ export function handleEWithdraw(event: EWithdraw): void {
     funding.recordedMoneyMarketIncomeIndex = fundingObj.recordedMoneyMarketIncomeIndex
     funding.active = funding.recordedFundedDepositAmount.gt(ZERO_DEC)
     funding.mphRewardEarned = funding.mphRewardEarned.plus(mintMPHAmount)
+    if (event.params.early) {
+      // Early withdraw, update refund amount
+      let depositSurplusObject = poolContract.surplusOfDeposit(deposit.nftID)
+      let refundAmount = ZERO_DEC
+      if (depositSurplusObject.value0) {
+        // Surplus is negative, add refund amount
+        refundAmount = normalize(depositSurplusObject.value1, stablecoinDecimals)
+      }
+      funding.refundAmount = funding.refundAmount.plus(refundAmount)
+    }
     funding.save()
 
     // Update Funder
@@ -184,6 +194,7 @@ export function handleEFund(event: EFund): void {
   funding.totalInterestEarned = ZERO_DEC
   funding.creationTimestamp = fundingObj.creationTimestamp
   funding.mphRewardEarned = ZERO_DEC
+  funding.refundAmount = ZERO_DEC
   funding.save()
 
   // Update DPool statistics

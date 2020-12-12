@@ -115,6 +115,7 @@ type Funding @entity {
   totalInterestEarned: BigDecimal!
   creationTimestamp: BigInt!
   mphRewardEarned: BigDecimal!
+  refundAmount: BigDecimal!
 }
 
 type MPHHolder @entity {
