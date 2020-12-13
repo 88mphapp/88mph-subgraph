@@ -292,6 +292,47 @@ dataSources:
           handler: handleESetParamUint
       file: ./src/DInterest.ts
   - kind: ethereum/contract
+    name: crvHUSDPool
+    network: mainnet
+    source:
+      address: "0xb1abaac351e06d40441cf2cd97f6f0098e6473f2"
+      abi: DInterest
+      startBlock: 11446987
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPoolList
+        - DPool
+        - User
+        - Deposit
+        - Funder
+        - Funding
+        - UserTotalDeposit
+        - FunderTotalInterest
+      abis:
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: MPHIssuanceModel01
+          file: ./abis/MPHIssuanceModel01.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handleEDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed uint256,bool,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint256,uint256)
+          handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      file: ./src/DInterest.ts
+  - kind: ethereum/contract
     name: Rewards
     network: mainnet
     source:
