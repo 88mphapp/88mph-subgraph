@@ -12,9 +12,10 @@ export function handleRewardAdded(event: ERewardAdded): void {
   let rewards = Rewards.bind(event.address)
 
   mph.rewardPerSecond = normalize(rewards.rewardRate())
-  mph.rewardPerMPHPerSecond = mph.totalStakedMPHBalance.equals(ZERO_DEC) ?
+  let totalStakedMPHBalance = normalize(rewards.totalSupply())
+  mph.rewardPerMPHPerSecond = totalStakedMPHBalance.equals(ZERO_DEC) ?
     ZERO_DEC :
-    mph.rewardPerSecond.div(mph.totalStakedMPHBalance)
+    mph.rewardPerSecond.div(totalStakedMPHBalance)
   mph.totalHistoricalReward = mph.totalHistoricalReward.plus(normalize(event.params.reward))
 
   mph.save()
@@ -22,33 +23,26 @@ export function handleRewardAdded(event: ERewardAdded): void {
 
 export function handleStaked(event: EStaked): void {
   let mph = getMPH()
-  let mphHolder = getMPHHolder(event.params.user)
   let rewards = Rewards.bind(event.address)
 
   let stakeAmount = normalize(event.params.amount)
-  mph.totalStakedMPHBalance = mph.totalStakedMPHBalance.plus(stakeAmount)
-  mphHolder.stakedMPHBalance = mphHolder.stakedMPHBalance.plus(stakeAmount)
+  let totalStakedMPHBalance = normalize(rewards.totalSupply())
   mph.rewardPerSecond = normalize(rewards.rewardRate())
-  mph.rewardPerMPHPerSecond = mph.rewardPerSecond.div(mph.totalStakedMPHBalance)
+  mph.rewardPerMPHPerSecond = mph.rewardPerSecond.div(totalStakedMPHBalance)
 
-  mphHolder.save()
   mph.save()
 }
 
 export function handleWithdrawn(event: EWithdrawn): void {
   let mph = getMPH()
-  let mphHolder = getMPHHolder(event.params.user)
   let rewards = Rewards.bind(event.address)
 
-  let stakeAmount = normalize(event.params.amount)
-  mph.totalStakedMPHBalance = mph.totalStakedMPHBalance.minus(stakeAmount)
-  mphHolder.stakedMPHBalance = mphHolder.stakedMPHBalance.minus(stakeAmount)
+  let totalStakedMPHBalance = normalize(rewards.totalSupply())
   mph.rewardPerSecond = normalize(rewards.rewardRate())
-  mph.rewardPerMPHPerSecond = mph.totalStakedMPHBalance.equals(ZERO_DEC) ?
+  mph.rewardPerMPHPerSecond = totalStakedMPHBalance.equals(ZERO_DEC) ?
     ZERO_DEC :
-    mph.rewardPerSecond.div(mph.totalStakedMPHBalance)
+    mph.rewardPerSecond.div(totalStakedMPHBalance)
 
-  mphHolder.save()
   mph.save()
 }
 

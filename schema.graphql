@@ -121,15 +121,11 @@ type Funding @entity {
 type MPHHolder @entity {
   id: ID!
   address: String!
-  mphBalance: BigDecimal!
-  stakedMPHBalance: BigDecimal!
   totalHistoricalReward: BigDecimal!
 }
 
 type MPH @entity {
   id: ID!
-  totalSupply: BigDecimal!
-  totalStakedMPHBalance: BigDecimal!
   totalHistoricalReward: BigDecimal!
   rewardPerSecond: BigDecimal!
   rewardPerMPHPerSecond: BigDecimal!

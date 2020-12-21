@@ -17,7 +17,7 @@ export let YEAR = BigInt.fromI32(31556952) // One year in seconds
 export let ZERO_ADDR = Address.fromString('0x0000000000000000000000000000000000000000')
 export let MPH_ISSUANCE_MODEL_ADDR = Address.fromString('0x36ad542dadc22078511d64b98aff818abd1ac713')
 export let DELIMITER = '---'
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11447442)
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11499218 + 300)
 
 export let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push('0x35966201a7724b952455b73a36c8846d8745218e') // cDAI
@@ -28,6 +28,7 @@ POOL_ADDRESSES.push('0x681aaa7cf3f7e1f110842f0149ba8a4af53ef2fd') // crvSBTC
 POOL_ADDRESSES.push('0x23fa6b36e870ca5753853538d17c3ca7f5269e84') // Harvest yCRV
 POOL_ADDRESSES.push('0xe8c52367b81113ed32bb276184e521c2fbe9393a') // aUSDC
 POOL_ADDRESSES.push('0xb1abaac351e06d40441cf2cd97f6f0098e6473f2') // Harvest crvHUSD
+POOL_ADDRESSES.push('0x2f3efd1a90a2336ab8fa1b9060380dc37361ca55') // Harvest 3CRV
 
 export let POOL_DEPLOY_BLOCKS = new Array<i32>(0)
 POOL_DEPLOY_BLOCKS.push(11312644) // cDAI
@@ -38,6 +39,7 @@ POOL_DEPLOY_BLOCKS.push(11316753) // crvSBTC
 POOL_DEPLOY_BLOCKS.push(11370919) // Harvest yCRV
 POOL_DEPLOY_BLOCKS.push(11410383) // aUSDC
 POOL_DEPLOY_BLOCKS.push(11446987) // Harvest crvHUSD
+POOL_DEPLOY_BLOCKS.push(11479937) // Harvest 3CRV
 
 export function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1)
@@ -179,8 +181,6 @@ export function getMPH(): MPH {
   let entity = MPH.load(MPH_ID)
   if (entity == null) {
     entity = new MPH(MPH_ID)
-    entity.totalSupply = ZERO_DEC
-    entity.totalStakedMPHBalance = ZERO_DEC
     entity.totalHistoricalReward = ZERO_DEC
     entity.rewardPerMPHPerSecond = ZERO_DEC
     entity.rewardPerSecond = ZERO_DEC
@@ -197,8 +197,6 @@ export function getMPHHolder(address: Address): MPHHolder | null {
   if (entity == null) {
     entity = new MPHHolder(address.toHex())
     entity.address = address.toHex()
-    entity.mphBalance = ZERO_DEC
-    entity.stakedMPHBalance = ZERO_DEC
     entity.totalHistoricalReward = ZERO_DEC
     entity.save()
   }
