@@ -17,7 +17,7 @@ export let YEAR = BigInt.fromI32(31556952) // One year in seconds
 export let ZERO_ADDR = Address.fromString('0x0000000000000000000000000000000000000000')
 export let MPH_ISSUANCE_MODEL_ADDR = Address.fromString('0x36ad542dadc22078511d64b98aff818abd1ac713')
 export let DELIMITER = '---'
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11524922 + 300)
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11538756 + 300)
 
 export let POOL_ADDRESSES = new Array<string>(0)
 POOL_ADDRESSES.push('0x35966201a7724b952455b73a36c8846d8745218e') // cDAI
@@ -30,6 +30,7 @@ POOL_ADDRESSES.push('0xe8c52367b81113ed32bb276184e521c2fbe9393a') // aUSDC
 POOL_ADDRESSES.push('0xb1abaac351e06d40441cf2cd97f6f0098e6473f2') // Harvest crvHUSD
 POOL_ADDRESSES.push('0x2f3efd1a90a2336ab8fa1b9060380dc37361ca55') // Harvest 3CRV
 POOL_ADDRESSES.push('0x3f5611f7762cc39fc11e10c864ae38526f650e9d') // Harvest crvHBTC
+POOL_ADDRESSES.push('0x6712baab01fa2dc7be6635746ec2da6f8bd73e71') // Aave sUSD
 
 export let POOL_DEPLOY_BLOCKS = new Array<i32>(0)
 POOL_DEPLOY_BLOCKS.push(11312644) // cDAI
@@ -42,6 +43,7 @@ POOL_DEPLOY_BLOCKS.push(11410383) // aUSDC
 POOL_DEPLOY_BLOCKS.push(11446987) // Harvest crvHUSD
 POOL_DEPLOY_BLOCKS.push(11479937) // Harvest 3CRV
 POOL_DEPLOY_BLOCKS.push(11507624) // Harvest crvHBTC
+POOL_DEPLOY_BLOCKS.push(11533975) // Aave sUSD
 
 export function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1)
