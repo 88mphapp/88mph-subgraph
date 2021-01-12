@@ -10,7 +10,7 @@ import {
 import { IInterestOracle } from '../generated/cDAIPool/IInterestOracle'
 import { ERC20 } from '../generated/cDAIPool/ERC20'
 import { DPool, Deposit, Funding, UserTotalDeposit, FunderTotalInterest } from '../generated/schema'
-import { POOL_ADDRESSES, POOL_DEPLOY_BLOCKS, getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC, keccak256 } from './utils'
+import { POOL_ADDRESSES, POOL_DEPLOY_BLOCKS, getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC, keccak256, BLOCK_HANDLER_INTERVAL } from './utils'
 
 export function handleEDeposit(event: EDeposit): void {
   let pool = getPool(event.address.toHex())
@@ -274,7 +274,7 @@ export function handleESetParamUint(event: ESetParamUint): void {
 }
 
 export function handleBlock(block: ethereum.Block): void {
-  if (block.number.ge(BLOCK_HANDLER_START_BLOCK)) {
+  if (block.number.ge(BLOCK_HANDLER_START_BLOCK) && block.number.mod(BLOCK_HANDLER_INTERVAL).isZero()) {
     let blockNumber = block.number.toI32()
     for (let i = 0; i < POOL_ADDRESSES.length; i++) {
       // Update DPool statistics
