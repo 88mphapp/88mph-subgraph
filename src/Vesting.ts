@@ -8,6 +8,7 @@ import { Vest } from '../generated/schema'
 export function handleVest(call: VestCall): void {
   let vestID = call.inputs.to.toHex() + DELIMITER + call.outputs.vestIdx.toString()
   let vest = new Vest(vestID)
+  vest.index = call.outputs.vestIdx
   vest.user = call.inputs.to.toHex()
   vest.amount = normalize(call.inputs.amount)
   vest.vestPeriodInSeconds = call.inputs.vestPeriodInSeconds

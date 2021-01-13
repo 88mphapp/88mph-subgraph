@@ -133,6 +133,7 @@ type MPH @entity {
 
 type Vest @entity {
   id: ID!
+  index: BigInt!
   user: String!
   amount: BigDecimal!
   vestPeriodInSeconds: BigInt!
