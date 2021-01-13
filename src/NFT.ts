@@ -46,12 +46,12 @@ export function handleTransfer(event: ETransfer): void {
 
     // update to user
     toUser.numDeposits = toUser.numDeposits.plus(ONE_INT)
-    if (deposit.active) {
-      toUser.numActiveDeposits = toUser.numActiveDeposits.plus(ONE_INT)
-    }
     if (toUser.numActiveDeposits.equals(ZERO_INT)) {
       // User has become active
       poolList.numActiveUsers = poolList.numActiveUsers.plus(ONE_INT)
+    }
+    if (deposit.active) {
+      toUser.numActiveDeposits = toUser.numActiveDeposits.plus(ONE_INT)
     }
     if (!toUser.pools.includes(pool.id)) {
       // Add pool to list of pools
