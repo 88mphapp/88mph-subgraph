@@ -62,6 +62,10 @@ export function keccak256(s: string): ByteArray {
   return crypto.keccak256(ByteArray.fromUTF8(s))
 }
 
+export function stringEqual(s1: string, s2: string): boolean {
+  return keccak256(s1) == keccak256(s2)
+}
+
 export function getPoolList(): DPoolList {
   let poolList = DPoolList.load(DPOOLLIST_ID)
   if (poolList == null) {

@@ -1,9 +1,9 @@
-import { BigInt, BigDecimal, Address, dataSource } from '@graphprotocol/graph-ts'
+import { dataSource } from '@graphprotocol/graph-ts'
 import {
   Transfer as ETransfer
 } from '../generated/templates/NFT/NFT'
 import { Deposit, Funding, DPool, UserTotalDeposit, FunderTotalInterest } from '../generated/schema'
-import { DELIMITER, getFunder, getPoolList, getUser, ONE_INT, ZERO_ADDR, ZERO_DEC, ZERO_INT } from './utils'
+import { DELIMITER, getFunder, getPoolList, getUser, ONE_INT, stringEqual, ZERO_ADDR, ZERO_DEC, ZERO_INT } from './utils'
 
 export function handleTransfer(event: ETransfer): void {
   if (event.params.from.equals(ZERO_ADDR) || event.params.to.equals(ZERO_ADDR)) {
@@ -19,7 +19,7 @@ export function handleTransfer(event: ETransfer): void {
   let type = context.getString('type')
   let poolList = getPoolList()
 
-  if (type === 'deposit') {
+  if (stringEqual(type, 'deposit')) {
     let fromUser = getUser(from, pool)
     let toUser = getUser(to, pool)
     let deposit = Deposit.load(pool.address + DELIMITER + tokenId.toString())
@@ -84,7 +84,7 @@ export function handleTransfer(event: ETransfer): void {
     // update deposit
     deposit.user = toUser.id
     deposit.save()
-  } else if (type === 'funding') {
+  } else if (stringEqual(type, 'funding')) {
     let fromFunder = getFunder(from, pool)
     let toFunder = getFunder(to, pool)
     let funding = Funding.load(pool.address + DELIMITER + tokenId.toString())
