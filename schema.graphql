@@ -76,6 +76,8 @@ type Deposit @entity {
   mintMPHAmount: BigDecimal!
   takeBackMPHAmount: BigDecimal!
   initialMoneyMarketIncomeIndex: BigInt!
+  fundingInterestPaid: BigDecimal!
+  fundingRefundAmount: BigDecimal!
 }
 
 type Funder @entity {

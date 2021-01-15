@@ -33,6 +33,8 @@ export function handleEDeposit(event: EDeposit): void {
   deposit.mintMPHAmount = normalize(event.params.mintMPHAmount)
   deposit.takeBackMPHAmount = ZERO_DEC
   deposit.initialMoneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
+  deposit.fundingInterestPaid = ZERO_DEC
+  deposit.fundingRefundAmount = ZERO_DEC
   deposit.save()
 
   // Update DPool statistics
@@ -96,7 +98,6 @@ export function handleEWithdraw(event: EWithdraw): void {
   // Set Deposit entity to inactive
   deposit.active = false
   deposit.takeBackMPHAmount = normalize(event.params.takeBackMPHAmount)
-  deposit.save()
 
   // Update User statistics
   user.numActiveDeposits = user.numActiveDeposits.minus(ONE_INT)
@@ -123,11 +124,12 @@ export function handleEWithdraw(event: EWithdraw): void {
   pool.save()
 
   let fundingID = event.params.fundingID
+  let moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
   if (fundingID.notEqual(ZERO_INT)) {
     // Update Funding
     let funding = Funding.load(pool.address + DELIMITER + fundingID.toString())
     let fundingObj = poolContract.getFunding(fundingID)
-    let interestAmount = funding.recordedFundedDepositAmount.times(poolContract.moneyMarketIncomeIndex().toBigDecimal()).div(funding.recordedMoneyMarketIncomeIndex.toBigDecimal()).minus(funding.recordedFundedDepositAmount)
+    let interestAmount = funding.recordedFundedDepositAmount.times(moneyMarketIncomeIndex.toBigDecimal()).div(funding.recordedMoneyMarketIncomeIndex.toBigDecimal()).minus(funding.recordedFundedDepositAmount)
     let mintMPHAmount = funding.creationTimestamp.gt(deposit.maturationTimestamp) ?
       pool.mphFunderRewardMultiplier.times(deposit.amount).times(deposit.maturationTimestamp
         .minus(funding.creationTimestamp).toBigDecimal()) : ZERO_DEC
@@ -145,8 +147,19 @@ export function handleEWithdraw(event: EWithdraw): void {
         refundAmount = normalize(depositSurplusObject.value1, stablecoinDecimals)
       }
       funding.refundAmount = funding.refundAmount.plus(refundAmount)
+      deposit.fundingRefundAmount = refundAmount
     }
     funding.save()
+
+    // Update funded Deposits
+    for (let id = funding.fromDepositID.plus(ONE_INT); id.le(funding.toDepositID); id = id.plus(ONE_INT)) {
+      let fundedDeposit = Deposit.load(pool.address + DELIMITER + id.toString())
+      if (fundedDeposit.active) {
+        let fundedDepositInterestGenerated = fundedDeposit.amount.plus(fundedDeposit.interestEarned).times(moneyMarketIncomeIndex.toBigDecimal()).div(fundingObj.recordedMoneyMarketIncomeIndex.toBigDecimal())
+        fundedDeposit.fundingInterestPaid = fundedDeposit.fundingInterestPaid.plus(fundedDepositInterestGenerated)
+        fundedDeposit.save()
+      }
+    }
 
     // Update Funder
     let funder = getFunder(event.params.sender, pool)
@@ -168,6 +181,8 @@ export function handleEWithdraw(event: EWithdraw): void {
     funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.minus(deposit.amount)
     funderTotalInterestEntity.save()
   }
+
+  deposit.save()
 }
 
 export function handleEFund(event: EFund): void {
@@ -216,8 +231,10 @@ export function handleEFund(event: EFund): void {
   // Update funded Deposits
   for (let id = funding.fromDepositID.plus(ONE_INT); id.le(funding.toDepositID); id = id.plus(ONE_INT)) {
     let deposit = Deposit.load(pool.address + DELIMITER + id.toString())
-    deposit.fundingID = fundingID
-    deposit.save()
+    if (deposit.active) {
+      deposit.fundingID = fundingID
+      deposit.save()
+    }
   }
 
   // Update FunderTotalInterest
