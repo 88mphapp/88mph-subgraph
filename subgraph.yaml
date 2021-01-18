@@ -251,7 +251,7 @@ dataSources:
           handler: handleESetParamUint
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: aUSDCPool
+    name: aaveUSDCPool
     network: mainnet
     source:
       address: "0xe8c52367b81113ed32bb276184e521c2fbe9393a"
@@ -421,6 +421,88 @@ dataSources:
       address: "0x6712baab01fa2dc7be6635746ec2da6f8bd73e71"
       abi: DInterest
       startBlock: 11533975
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPoolList
+        - DPool
+        - User
+        - Deposit
+        - Funder
+        - Funding
+        - UserTotalDeposit
+        - FunderTotalInterest
+      abis:
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: MPHIssuanceModel01
+          file: ./abis/MPHIssuanceModel01.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handleEDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed uint256,bool,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint256,uint256)
+          handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      file: ./src/DInterest.ts
+  - kind: ethereum/contract
+    name: aaveDAIPool
+    network: mainnet
+    source:
+      address: "0xDC86AC6140026267E0873B27c8629eFE748E7146"
+      abi: DInterest
+      startBlock: 11669032
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPoolList
+        - DPool
+        - User
+        - Deposit
+        - Funder
+        - Funding
+        - UserTotalDeposit
+        - FunderTotalInterest
+      abis:
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: MPHIssuanceModel01
+          file: ./abis/MPHIssuanceModel01.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
+          handler: handleEDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed uint256,bool,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint256,uint256)
+          handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      file: ./src/DInterest.ts
+  - kind: ethereum/contract
+    name: harvestCRVOBTCPool
+    network: mainnet
+    source:
+      address: "0xD4837145c7e13D580904e8431cfD481f9794fC41"
+      abi: DInterest
+      startBlock: 11669290
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
