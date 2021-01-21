@@ -155,7 +155,7 @@ export function handleEWithdraw(event: EWithdraw): void {
     for (let id = funding.fromDepositID.plus(ONE_INT); id.le(funding.toDepositID); id = id.plus(ONE_INT)) {
       let fundedDeposit = Deposit.load(pool.address + DELIMITER + id.toString())
       if (fundedDeposit.active) {
-        let fundedDepositInterestGenerated = fundedDeposit.amount.plus(fundedDeposit.interestEarned).times(moneyMarketIncomeIndex.toBigDecimal()).div(fundingObj.recordedMoneyMarketIncomeIndex.toBigDecimal())
+        let fundedDepositInterestGenerated = fundedDeposit.amount.plus(fundedDeposit.interestEarned).times(moneyMarketIncomeIndex.toBigDecimal().div(fundingObj.recordedMoneyMarketIncomeIndex.toBigDecimal()).minus(ONE_INT.toBigDecimal()))
         fundedDeposit.fundingInterestPaid = fundedDeposit.fundingInterestPaid.plus(fundedDepositInterestGenerated)
         fundedDeposit.save()
       }
