@@ -135,6 +135,7 @@ export function handleEWithdraw(event: EWithdraw): void {
         .minus(funding.creationTimestamp).toBigDecimal()) : ZERO_DEC
     funding.totalInterestEarned = funding.totalInterestEarned.plus(interestAmount)
     funding.recordedFundedDepositAmount = normalize(fundingObj.recordedFundedDepositAmount, stablecoinDecimals)
+    let recordedMoneyMarketIncomeIndex = funding.recordedMoneyMarketIncomeIndex
     funding.recordedMoneyMarketIncomeIndex = fundingObj.recordedMoneyMarketIncomeIndex
     funding.active = funding.recordedFundedDepositAmount.gt(ZERO_DEC)
     funding.mphRewardEarned = funding.mphRewardEarned.plus(mintMPHAmount)
@@ -155,7 +156,7 @@ export function handleEWithdraw(event: EWithdraw): void {
     for (let id = funding.fromDepositID.plus(ONE_INT); id.le(funding.toDepositID); id = id.plus(ONE_INT)) {
       let fundedDeposit = Deposit.load(pool.address + DELIMITER + id.toString())
       if (fundedDeposit.active) {
-        let fundedDepositInterestGenerated = fundedDeposit.amount.plus(fundedDeposit.interestEarned).times(moneyMarketIncomeIndex.toBigDecimal().div(fundingObj.recordedMoneyMarketIncomeIndex.toBigDecimal()).minus(ONE_INT.toBigDecimal()))
+        let fundedDepositInterestGenerated = fundedDeposit.amount.plus(fundedDeposit.interestEarned).times(moneyMarketIncomeIndex.toBigDecimal().div(recordedMoneyMarketIncomeIndex.toBigDecimal()).minus(ONE_INT.toBigDecimal()))
         fundedDeposit.fundingInterestPaid = fundedDeposit.fundingInterestPaid.plus(fundedDepositInterestGenerated)
         fundedDeposit.save()
       }
