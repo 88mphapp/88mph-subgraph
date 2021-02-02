@@ -677,6 +677,8 @@ templates:
       eventHandlers:
         - event: Mint(indexed address,indexed address,uint256)
           handler: handleMint
+        - event: RedeemFractionalDepositShares(indexed address,indexed address,uint256)
+          handler: handleRedeemFractionalDepositShares
       file: ./src/ZeroCouponBond.ts
   - kind: ethereum/contract
     name: FractionalDeposit
