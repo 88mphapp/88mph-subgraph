@@ -678,3 +678,21 @@ templates:
         - event: Mint(indexed address,indexed address,uint256)
           handler: handleMint
       file: ./src/ZeroCouponBond.ts
+  - kind: ethereum/contract
+    name: FractionalDeposit
+    network: mainnet
+    source:
+      abi: FractionalDeposit
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - FractionalDeposit
+      abis:
+        - name: FractionalDeposit
+          file: ./abis/FractionalDeposit.json
+      eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      file: ./src/FractionalDeposit.ts

@@ -3,6 +3,7 @@ import {
 } from '../generated/templates/ZeroCouponBond/ZeroCouponBond'
 import { FractionalDeposit as FractionalDepositContract } from '../generated/templates/ZeroCouponBond/FractionalDeposit'
 import { FractionalDeposit } from '../generated/schema'
+import { FractionalDeposit as FractionalDepositTemplate } from '../generated/templates'
 import { DELIMITER } from './utils'
 
 export function handleMint(event: MintEvent): void {
@@ -13,12 +14,17 @@ export function handleMint(event: MintEvent): void {
     fractionalDeposit.address = event.params.fractionalDepositAddress.toHex()
     fractionalDeposit.zeroCouponBondAddress = event.address.toHex()
 
+    // fetch info from the fractional deposit contract
     let fractionalDepositContract = FractionalDepositContract.bind(event.params.fractionalDepositAddress)
     let depositID = fractionalDepositContract.nftID()
     let poolAddress = fractionalDepositContract.pool()
     let depositEntityID = poolAddress.toHex() + DELIMITER + depositID.toString()
     fractionalDeposit.deposit = depositEntityID
+    fractionalDeposit.ownerAddress = fractionalDepositContract.owner().toHex()
 
     fractionalDeposit.save()
+
+    // create template for tracking fractional deposit ownership
+    FractionalDepositTemplate.create(event.params.fractionalDepositAddress)
   }
 }

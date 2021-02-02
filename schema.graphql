@@ -147,5 +147,6 @@ type FractionalDeposit @entity {
   id: ID!
   address: String!
   zeroCouponBondAddress: String!
+  ownerAddress: String!
   deposit: Deposit!
 }
