@@ -142,3 +142,12 @@ type Vest @entity {
   creationTimestamp: BigInt!
   withdrawnAmount: BigDecimal!
 }
+
+type FractionalDeposit @entity {
+  id: ID!
+  address: String!
+  zeroCouponBondAddress: String!
+  ownerAddress: String!
+  active: Boolean!
+  deposit: Deposit!
+}

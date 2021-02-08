@@ -614,6 +614,26 @@ dataSources:
         - function: withdrawVested(address,uint256)
           handler: handleWithdrawVested
       file: ./src/Vesting.ts
+  - kind: ethereum/contract
+    name: ZeroCouponBondFactory
+    network: mainnet
+    source:
+      address: "0xE74b4CaA808c52F3b1101AF54C59f2598cD2D279"
+      abi: ZeroCouponBondFactory
+      startBlock: 11730452
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - FractionalDeposit
+      abis:
+        - name: ZeroCouponBondFactory
+          file: ./abis/ZeroCouponBondFactory.json
+      eventHandlers:
+        - event: CreateClone(address)
+          handler: handleCreateClone
+      file: ./src/ZeroCouponBondFactory.ts
 templates:
   - kind: ethereum/contract
     name: NFT
@@ -638,3 +658,43 @@ templates:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/NFT.ts
+  - kind: ethereum/contract
+    name: ZeroCouponBond
+    network: mainnet
+    source:
+      abi: ZeroCouponBond
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - FractionalDeposit
+      abis:
+        - name: ZeroCouponBond
+          file: ./abis/ZeroCouponBond.json
+        - name: FractionalDeposit
+          file: ./abis/FractionalDeposit.json
+      eventHandlers:
+        - event: Mint(indexed address,indexed address,uint256)
+          handler: handleMint
+        - event: RedeemFractionalDepositShares(indexed address,indexed address,uint256)
+          handler: handleRedeemFractionalDepositShares
+      file: ./src/ZeroCouponBond.ts
+  - kind: ethereum/contract
+    name: FractionalDeposit
+    network: mainnet
+    source:
+      abi: FractionalDeposit
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - FractionalDeposit
+      abis:
+        - name: FractionalDeposit
+          file: ./abis/FractionalDeposit.json
+      eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+      file: ./src/FractionalDeposit.ts
