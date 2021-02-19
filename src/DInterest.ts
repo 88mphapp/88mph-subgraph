@@ -28,6 +28,7 @@ export function handleEDeposit(event: EDeposit): void {
   deposit.maturationTimestamp = event.params.maturationTimestamp
   deposit.active = true
   deposit.depositTimestamp = event.block.timestamp
+  deposit.depositLength = deposit.maturationTimestamp.minus(deposit.depositTimestamp)
   deposit.interestEarned = normalize(event.params.interestAmount, stablecoinDecimals)
   deposit.fundingID = ZERO_INT
   deposit.mintMPHAmount = normalize(event.params.mintMPHAmount)

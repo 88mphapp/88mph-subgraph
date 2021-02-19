@@ -541,9 +541,9 @@ dataSources:
     name: yaLINKPool
     network: mainnet
     source:
-      address: "0xDB7F4a6F7aE241a8944F3b3aE5DcDEEC6A20465E"
+      address: "0x904f81eff3c35877865810cca9a63f2d9cb7d4dd"
       abi: DInterest
-      startBlock: 11808475
+      startBlock: 11871065
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

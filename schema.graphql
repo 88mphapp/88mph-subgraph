@@ -71,6 +71,7 @@ type Deposit @entity {
   maturationTimestamp: BigInt!
   active: Boolean!
   depositTimestamp: BigInt!
+  depositLength: BigInt!
   interestEarned: BigDecimal!
   fundingID: BigInt!
   mintMPHAmount: BigDecimal!
