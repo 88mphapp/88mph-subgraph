@@ -17,7 +17,7 @@ export let YEAR = BigInt.fromI32(31556952) // One year in seconds
 export let ZERO_ADDR = Address.fromString('0x0000000000000000000000000000000000000000')
 export let MPH_ISSUANCE_MODEL_ADDR = Address.fromString('0x36ad542dadc22078511d64b98aff818abd1ac713')
 export let DELIMITER = '---'
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11886217 + 1500)
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(11951179 + 1500)
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20) // call block handler every 20 blocks
 
 export let POOL_ADDRESSES = new Array<string>(0)
@@ -35,6 +35,8 @@ POOL_ADDRESSES.push('0x6712baab01fa2dc7be6635746ec2da6f8bd73e71') // Aave sUSD
 POOL_ADDRESSES.push('0xdc86ac6140026267e0873b27c8629efe748e7146') // Aave DAI
 POOL_ADDRESSES.push('0xd4837145c7e13d580904e8431cfd481f9794fc41') // Harvest crvOBTC
 POOL_ADDRESSES.push('0x904f81eff3c35877865810cca9a63f2d9cb7d4dd') // yaLINK
+POOL_ADDRESSES.push('0x303cb7ede0c3ad99ce017cdc3abacd65164ff486') // Harvest CRV:STETH
+POOL_ADDRESSES.push('0x22e6b9a65163ce1225d1f65ef7942a979d093039') // Harvest CRV:RENWBTC
 
 export let POOL_DEPLOY_BLOCKS = new Array<i32>(0)
 POOL_DEPLOY_BLOCKS.push(11312644) // cDAI
@@ -51,6 +53,8 @@ POOL_DEPLOY_BLOCKS.push(11533975) // Aave sUSD
 POOL_DEPLOY_BLOCKS.push(11669032) // Aave DAI
 POOL_DEPLOY_BLOCKS.push(11669290) // Harvest crvOBTC
 POOL_DEPLOY_BLOCKS.push(11871065) // yaLINK
+POOL_DEPLOY_BLOCKS.push(11937307) // Harvest CRV:STETH
+POOL_DEPLOY_BLOCKS.push(11938573) // Harvest CRV:RENWBTC
 
 export function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1)
