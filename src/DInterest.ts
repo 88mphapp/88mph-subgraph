@@ -10,7 +10,7 @@ import {
 import { IInterestOracle } from '../generated/cDAIPool/IInterestOracle'
 import { ERC20 } from '../generated/cDAIPool/ERC20'
 import { Deposit, Funding, UserTotalDeposit, FunderTotalInterest } from '../generated/schema'
-import { POOL_ADDRESSES, POOL_DEPLOY_BLOCKS, getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC, keccak256, BLOCK_HANDLER_INTERVAL } from './utils'
+import { POOL_ADDRESSES, POOL_DEPLOY_BLOCKS, getPool, getUser, DELIMITER, normalize, ZERO_INT, ZERO_DEC, getPoolList, ONE_INT, getFunder, tenPow, BLOCK_HANDLER_START_BLOCK, YEAR, NEGONE_DEC, ONE_DEC, keccak256, BLOCK_HANDLER_INTERVAL, POOL_STABLECOIN_DECIMALS } from './utils'
 
 export function handleEDeposit(event: EDeposit): void {
   let pool = getPool(event.address.toHex())
@@ -301,8 +301,7 @@ export function handleBlock(block: ethereum.Block): void {
       if (blockNumber >= POOL_DEPLOY_BLOCKS[i]) {
         let pool = getPool(poolID)
         let poolContract = DInterest.bind(Address.fromString(pool.address))
-        let stablecoinContract = ERC20.bind(poolContract.stablecoin())
-        let stablecoinDecimals: number = stablecoinContract.decimals()
+        let stablecoinDecimals: number = POOL_STABLECOIN_DECIMALS[i]
         let oracleContract = IInterestOracle.bind(poolContract.interestOracle())
         pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
         let surplusResult = poolContract.surplus()
