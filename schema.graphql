@@ -1,12 +1,3 @@
-type DPoolList @entity {
-  id: ID!
-  pools: [DPool!]!
-  numPools: BigInt!
-  numUsers: BigInt!
-  numActiveUsers: BigInt!
-  numFunders: BigInt!
-}
-
 type DPool @entity {
   id: ID!
   address: String!
@@ -17,22 +8,15 @@ type DPool @entity {
   numUsers: BigInt!
   deposits: [Deposit!]! @derivedFrom(field: "pool")
   numDeposits: BigInt!
-  numActiveDeposits: BigInt!
-  totalActiveDeposit: BigDecimal!
-  totalHistoricalDeposit: BigDecimal!
-  totalInterestPaid: BigDecimal!
-  unfundedDepositAmount: BigDecimal!
+  totalDeposit: BigDecimal!
+  totalInterestOwed: BigDecimal!
+  totalFeeOwed: BigDecimal!
   funders: [Funder!]! @derivedFrom(field: "pools")
   numFunders: BigInt!
   fundings: [Funding!]! @derivedFrom(field: "pool")
   numFundings: BigInt!
-  MinDepositPeriod: BigInt!
   MaxDepositPeriod: BigInt!
   MinDepositAmount: BigDecimal!
-  MaxDepositAmount: BigDecimal!
-  mphDepositorRewardMintMultiplier: BigDecimal!
-  mphDepositorRewardTakeBackMultiplier: BigDecimal!
-  mphFunderRewardMultiplier: BigDecimal!
   oneYearInterestRate: BigDecimal!
   surplus: BigDecimal!
   moneyMarketIncomeIndex: BigInt!
@@ -46,20 +30,16 @@ type User @entity {
   numPools: BigInt!
   deposits: [Deposit!]! @derivedFrom(field: "user")
   numDeposits: BigInt!
-  numActiveDeposits: BigInt!
   totalDepositByPool: [UserTotalDeposit!]! @derivedFrom(field: "user")
-  totalMPHEarned: BigDecimal!
-  totalMPHPaidBack: BigDecimal!
 }
 
 type UserTotalDeposit @entity {
   id: ID!
   user: User!
   pool: DPool!
-  totalActiveDeposit: BigDecimal!
-  totalHistoricalDeposit: BigDecimal!
-  totalInterestEarned: BigDecimal!
-  totalHistoricalInterestEarned: BigDecimal!
+  totalDeposit: BigDecimal!
+  totalInterestOwed: BigDecimal!
+  totalFeeOwed: BigDecimal!
 }
 
 type Deposit @entity {
@@ -67,18 +47,17 @@ type Deposit @entity {
   nftID: BigInt!
   user: User!
   pool: DPool!
-  amount: BigDecimal!
+  vest: Vest
+  funding: Funding
+  virtualTokenTotalSupply: BigDecimal!
+  interestRate: BigDecimal!
+  feeRate: BigDecimal!
   maturationTimestamp: BigInt!
-  active: Boolean!
   depositTimestamp: BigInt!
   depositLength: BigInt!
-  interestEarned: BigDecimal!
-  fundingID: BigInt!
-  mintMPHAmount: BigDecimal!
-  takeBackMPHAmount: BigDecimal!
-  initialMoneyMarketIncomeIndex: BigInt!
+  averageRecordedIncomeIndex: BigInt!
   fundingInterestPaid: BigDecimal!
-  fundingRefundAmount: BigDecimal!
+  fundingRefundPaid: BigDecimal!
 }
 
 type Funder @entity {
@@ -86,69 +65,31 @@ type Funder @entity {
   address: String!
   pools: [DPool!]!
   numPools: BigInt!
-  fundings: [Funding!]! @derivedFrom(field: "funder")
+  fundings: [Funding!]!
   numFundings: BigInt!
-  totalMPHEarned: BigDecimal!
-  totalInterestByPool: [FunderTotalInterest!]! @derivedFrom(field: "funder")
-}
-
-type FunderTotalInterest @entity {
-  id: ID!
-  funder: Funder!
-  pool: DPool!
-  totalDeficitFunded: BigDecimal!
-  totalHistoricalDeficitFunded: BigDecimal!
-  totalInterestEarned: BigDecimal!
-  totalHistoricalInterestEarned: BigDecimal!
-  totalRecordedFundedDepositAmount: BigDecimal!
 }
 
 type Funding @entity {
   id: ID!
   nftID: BigInt!
-  funder: Funder!
   pool: DPool!
-  fromDepositID: BigInt!
-  toDepositID: BigInt!
+  deposit: Deposit!
   active: Boolean!
-  recordedFundedDepositAmount: BigDecimal!
   recordedMoneyMarketIncomeIndex: BigInt!
-  initialFundedDepositAmount: BigDecimal!
+  principalPerToken: BigDecimal!
+  totalSupply: BigDecimal!
   fundedDeficitAmount: BigDecimal!
   totalInterestEarned: BigDecimal!
-  creationTimestamp: BigInt!
-  mphRewardEarned: BigDecimal!
-  refundAmount: BigDecimal!
-}
-
-type MPHHolder @entity {
-  id: ID!
-  address: String!
-  totalHistoricalReward: BigDecimal!
-}
-
-type MPH @entity {
-  id: ID!
-  totalHistoricalReward: BigDecimal!
-  rewardPerSecond: BigDecimal!
-  rewardPerMPHPerSecond: BigDecimal!
+  totalRefundEarned: BigDecimal!
 }
 
 type Vest @entity {
   id: ID!
-  index: BigInt!
-  user: String!
-  amount: BigDecimal!
-  vestPeriodInSeconds: BigInt!
-  creationTimestamp: BigInt!
-  withdrawnAmount: BigDecimal!
-}
-
-type FractionalDeposit @entity {
-  id: ID!
-  address: String!
-  zeroCouponBondAddress: String!
-  ownerAddress: String!
-  active: Boolean!
+  pool: DPool!
   deposit: Deposit!
+  owner: String!
+  lastUpdateTimestamp: BigInt!
+  accumulatedAmount: BigInt!
+  withdrawnAmount: BigInt!
+  vestAmountPerStablecoinPerSecond: BigInt!
 }

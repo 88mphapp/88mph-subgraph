@@ -7,10 +7,20 @@
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ Bacon-Labs/eighty-eight-mph",
     "create-local": "graph create --node http://localhost:8020/ Bacon-Labs/88mph",
     "remove-local": "graph remove --node http://localhost:8020/ Bacon-Labs/88mph",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 Bacon-Labs/eighty-eight-mph"
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 Bacon-Labs/eighty-eight-mph",
+    "prettier": "npx prettier --write '**/*.json' '**/*.ts' '**/*.yaml' '**/*.graphql'",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.18.0",
     "@graphprotocol/graph-ts": "^0.18.1"
+  },
+  "devDependencies": {
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "prettier": "^1.19.1"
+  },
+  "lint-staged": {
+    "*.{json,ts,yaml,graphql}": "prettier --write"
   }
 }
