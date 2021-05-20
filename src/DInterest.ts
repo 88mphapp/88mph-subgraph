@@ -29,7 +29,8 @@ import {
   ONE_DEC,
   keccak256,
   BLOCK_HANDLER_INTERVAL,
-  POOL_STABLECOIN_DECIMALS
+  POOL_STABLECOIN_DECIMALS,
+  ULTRA_PRECISION
 } from "./utils";
 
 export function handleEDeposit(event: EDeposit): void {
@@ -206,9 +207,8 @@ export function handleEWithdraw(event: EWithdraw): void {
     let funding = Funding.load(deposit.funding);
     let fundingID = funding.nftID;
     let fundingObj = poolContract.getFunding(fundingID);
-    funding.principalPerToken = normalize(
-      fundingObj.principalPerToken,
-      stablecoinDecimals
+    funding.principalPerToken = fundingObj.principalPerToken.divDecimal(
+      ULTRA_PRECISION
     );
     funding.recordedMoneyMarketIncomeIndex =
       fundingObj.recordedMoneyMarketIncomeIndex;
@@ -274,7 +274,9 @@ export function handleEFund(event: EFund): void {
     funding.active = true;
     funding.recordedMoneyMarketIncomeIndex =
       fundingObj.recordedMoneyMarketIncomeIndex;
-    funding.principalPerToken = normalize(fundingObj.principalPerToken);
+    funding.principalPerToken = fundingObj.principalPerToken.divDecimal(
+      ULTRA_PRECISION
+    );
     funding.totalSupply = ZERO_DEC; // TODO: fetch supply from multitoken contract
     funding.fundedDeficitAmount = normalize(
       event.params.fundAmount,
