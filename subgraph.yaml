@@ -29,6 +29,8 @@ dataSources:
           file: ./abis/IInterestOracle.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit

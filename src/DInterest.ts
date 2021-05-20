@@ -32,6 +32,7 @@ import {
   POOL_STABLECOIN_DECIMALS,
   ULTRA_PRECISION
 } from "./utils";
+import { FundingMultitoken } from "../generated/templates/FundingMultitoken/FundingMultitoken";
 
 export function handleEDeposit(event: EDeposit): void {
   let pool = getPool(event.address.toHex());
@@ -264,6 +265,9 @@ export function handleEFund(event: EFund): void {
   let fundingID = event.params.fundingID;
   let fundingObj = poolContract.getFunding(fundingID);
   let funding = Funding.load(pool.address + DELIMITER + fundingID.toString());
+  let fundingMultitoken = FundingMultitoken.bind(
+    poolContract.fundingMultitoken()
+  );
   if (funding == null) {
     // Create new Funding entity
     funding = new Funding(pool.address + DELIMITER + fundingID.toString());
@@ -277,7 +281,10 @@ export function handleEFund(event: EFund): void {
     funding.principalPerToken = fundingObj.principalPerToken.divDecimal(
       ULTRA_PRECISION
     );
-    funding.totalSupply = ZERO_DEC; // TODO: fetch supply from multitoken contract
+    funding.totalSupply = normalize(
+      fundingMultitoken.totalSupply(fundingID),
+      stablecoinDecimals
+    );
     funding.fundedDeficitAmount = normalize(
       event.params.fundAmount,
       stablecoinDecimals
