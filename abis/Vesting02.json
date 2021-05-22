@@ -66,9 +66,15 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "depositID",
-        "type": "uint256"
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "vestID",
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -98,9 +104,9 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "vestID",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "EUpdateVest",
@@ -117,9 +123,9 @@
       },
       {
         "indexed": true,
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "vestID",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "indexed": false,
@@ -238,9 +244,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "depositID",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint256",
@@ -251,9 +257,9 @@
     "name": "createVestForDeposit",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "vestID",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "stateMutability": "nonpayable",
@@ -262,17 +268,22 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "address",
         "name": "",
-        "type": "uint256"
+        "type": "address"
+      },
+      {
+        "internalType": "uint64",
+        "name": "",
+        "type": "uint64"
       }
     ],
     "name": "depositIDToVestID",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "stateMutability": "view",
@@ -300,9 +311,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "vestID",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "getVest",
@@ -315,14 +326,14 @@
             "type": "address"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint64",
             "name": "depositID",
-            "type": "uint256"
+            "type": "uint64"
           },
           {
-            "internalType": "uint256",
+            "internalType": "uint64",
             "name": "lastUpdateTimestamp",
-            "type": "uint256"
+            "type": "uint64"
           },
           {
             "internalType": "uint256",
@@ -351,9 +362,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "vestID",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "getVestWithdrawableAmount",
@@ -721,9 +732,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      },
+      {
+        "internalType": "uint64",
         "name": "depositID",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint256",
@@ -762,14 +778,14 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "depositID",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "lastUpdateTimestamp",
-        "type": "uint256"
+        "type": "uint64"
       },
       {
         "internalType": "uint256",
@@ -793,9 +809,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint64",
         "name": "vestID",
-        "type": "uint256"
+        "type": "uint64"
       }
     ],
     "name": "withdraw",

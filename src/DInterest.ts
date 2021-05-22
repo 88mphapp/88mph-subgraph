@@ -38,7 +38,7 @@ export function handleEDeposit(event: EDeposit): void {
   let pool = getPool(event.address.toHex());
   let user = getUser(event.params.sender, pool);
   let poolContract = DInterest.bind(Address.fromString(pool.address));
-  let stablecoinContract = ERC20.bind(poolContract.stablecoin());
+  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
   let stablecoinDecimals: number = stablecoinContract.decimals();
 
   // Create new Deposit entity
@@ -120,7 +120,7 @@ export function handleETopupDeposit(event: ETopupDeposit): void {
   let pool = getPool(event.address.toHex());
   let user = getUser(event.params.sender, pool);
   let poolContract = DInterest.bind(Address.fromString(pool.address));
-  let stablecoinContract = ERC20.bind(poolContract.stablecoin());
+  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
   let stablecoinDecimals: number = stablecoinContract.decimals();
 
   // Update Deposit
@@ -171,7 +171,7 @@ export function handleEWithdraw(event: EWithdraw): void {
   let deposit = Deposit.load(
     pool.address + DELIMITER + event.params.depositID.toString()
   );
-  let stablecoinContract = ERC20.bind(poolContract.stablecoin());
+  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
   let stablecoinDecimals: number = stablecoinContract.decimals();
 
   // Update UserTotalDeposit
@@ -227,11 +227,10 @@ export function handleEWithdraw(event: EWithdraw): void {
 
 export function handleEPayFundingInterest(event: EPayFundingInterest): void {
   let pool = getPool(event.address.toHex());
-  let poolContract = DInterest.bind(event.address);
   let funding = Funding.load(
     pool.address + DELIMITER + event.params.fundingID.toString()
   );
-  let stablecoinContract = ERC20.bind(poolContract.stablecoin());
+  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
   let stablecoinDecimals: number = stablecoinContract.decimals();
 
   // Update Funding
@@ -259,7 +258,7 @@ export function handleEFund(event: EFund): void {
   let pool = getPool(event.address.toHex());
   let poolContract = DInterest.bind(event.address);
   let funder = getFunder(event.params.sender, pool);
-  let stablecoinContract = ERC20.bind(poolContract.stablecoin());
+  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
   let stablecoinDecimals: number = stablecoinContract.decimals();
 
   let fundingID = event.params.fundingID;
@@ -331,8 +330,7 @@ export function handleESetParamAddress(event: ESetParamAddress): void {
 
 export function handleESetParamUint(event: ESetParamUint): void {
   let pool = getPool(event.address.toHex());
-  let poolContract = DInterest.bind(Address.fromString(pool.address));
-  let stablecoinContract = ERC20.bind(poolContract.stablecoin());
+  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
   let stablecoinDecimals: number = stablecoinContract.decimals();
   let stablecoinPrecision = new BigDecimal(tenPow(stablecoinDecimals));
   let paramName = event.params.paramName;

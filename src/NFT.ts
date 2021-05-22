@@ -3,6 +3,7 @@ import { Transfer as ETransfer } from "../generated/templates/NFT/NFT";
 import { Deposit, DPool, UserTotalDeposit } from "../generated/schema";
 import {
   DELIMITER,
+  getPool,
   getUser,
   ONE_DEC,
   ONE_INT,
@@ -23,7 +24,7 @@ export function handleTransfer(event: ETransfer): void {
   let from = event.params.from;
   let to = event.params.to;
   let context = dataSource.context();
-  let pool = DPool.load(context.getString("pool")) as DPool;
+  let pool = getPool(context.getString("pool"));
 
   let fromUser = getUser(from, pool);
   let toUser = getUser(to, pool);

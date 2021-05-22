@@ -90,7 +90,7 @@ type Vest @entity {
   deposit: Deposit!
   owner: String!
   lastUpdateTimestamp: BigInt!
-  accumulatedAmount: BigInt!
-  withdrawnAmount: BigInt!
-  vestAmountPerStablecoinPerSecond: BigInt!
+  accumulatedAmount: BigDecimal!
+  withdrawnAmount: BigDecimal!
+  vestAmountPerStablecoinPerSecond: BigDecimal!
 }
