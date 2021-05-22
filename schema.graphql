@@ -81,6 +81,7 @@ type Funding @entity {
   fundedDeficitAmount: BigDecimal!
   totalInterestEarned: BigDecimal!
   totalRefundEarned: BigDecimal!
+  totalMPHEarned: BigDecimal!
 }
 
 type Vest @entity {

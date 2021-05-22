@@ -21,6 +21,7 @@ export let YEAR = BigInt.fromI32(31556952); // One year in seconds
 export let ZERO_ADDR = Address.fromString(
   "0x0000000000000000000000000000000000000000"
 );
+export let MPH_ADDR = Address.fromString("0x8888801af4d980682e47f1a9036e589479e835c5");
 export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
