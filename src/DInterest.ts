@@ -275,20 +275,7 @@ export function handleEFund(event: EFund): void {
     funding.pool = pool.id;
     funding.deposit =
       pool.address + DELIMITER + fundingObj.depositID.toString();
-    funding.active = true;
-    funding.recordedMoneyMarketIncomeIndex =
-      fundingObj.recordedMoneyMarketIncomeIndex;
-    funding.principalPerToken = fundingObj.principalPerToken.divDecimal(
-      ULTRA_PRECISION
-    );
-    funding.totalSupply = normalize(
-      fundingMultitoken.totalSupply(fundingID),
-      stablecoinDecimals
-    );
-    funding.fundedDeficitAmount = normalize(
-      event.params.fundAmount,
-      stablecoinDecimals
-    );
+    funding.fundedDeficitAmount = ZERO_DEC;
     funding.totalInterestEarned = ZERO_DEC;
     funding.totalRefundEarned = ZERO_DEC;
 
@@ -311,10 +298,22 @@ export function handleEFund(event: EFund): void {
     }
     funder.numFundings = funder.numFundings.plus(ONE_INT);
     funder.save();
-  } else {
-    // existing funding
-    // TODO
   }
+  // Update funding
+  funding.active = true;
+  funding.recordedMoneyMarketIncomeIndex =
+    fundingObj.recordedMoneyMarketIncomeIndex;
+  funding.principalPerToken = fundingObj.principalPerToken.divDecimal(
+    ULTRA_PRECISION
+  );
+  funding.totalSupply = normalize(
+    fundingMultitoken.totalSupply(fundingID),
+    stablecoinDecimals
+  );
+  funding.fundedDeficitAmount = funding.fundedDeficitAmount.plus(normalize(
+    event.params.fundAmount,
+    stablecoinDecimals
+  ));
   funding.save();
 }
 
