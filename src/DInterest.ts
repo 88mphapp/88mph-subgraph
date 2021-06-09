@@ -91,8 +91,8 @@ export function handleEDeposit(event: EDeposit): void {
 export function handleEWithdraw(event: EWithdraw): void {
   let pool = getPool(event.address.toHex())
   let poolContract = DInterest.bind(event.address)
-  let user = getUser(event.params.sender, pool)
   let deposit = Deposit.load(pool.address + DELIMITER + event.params.depositID.toString())
+  let user = getUser(Address.fromString(deposit.user), pool)
   let stablecoinContract = ERC20.bind(poolContract.stablecoin())
   let stablecoinDecimals: number = stablecoinContract.decimals()
 

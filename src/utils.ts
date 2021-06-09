@@ -17,7 +17,7 @@ export let YEAR = BigInt.fromI32(31556952) // One year in seconds
 export let ZERO_ADDR = Address.fromString('0x0000000000000000000000000000000000000000')
 export let MPH_ISSUANCE_MODEL_ADDR = Address.fromString('0x36ad542dadc22078511d64b98aff818abd1ac713')
 export let DELIMITER = '---'
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(12370019 + 3000)
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(12597997 + 3000)
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20) // call block handler every 20 blocks
 
 export let POOL_ADDRESSES = new Array<string>(0)
