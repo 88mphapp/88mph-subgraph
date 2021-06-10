@@ -9,6 +9,7 @@ import {
 import { DInterest } from "../generated/cDAIPool/DInterest";
 import { ERC20 } from "../generated/cDAIPool/ERC20";
 import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
+import { MPHMinter } from "../generated/cDAIPool/MPHMinter";
 import { DPool, User, Funder } from "../generated/schema";
 import { NFT, FundingMultitoken } from "../generated/templates";
 
@@ -67,6 +68,7 @@ export function getPool(poolAddress: string): DPool {
     let stablecoinContract = ERC20.bind(poolContract.stablecoin());
     let stablecoinDecimals: number = stablecoinContract.decimals();
     let stablecoinPrecision = new BigDecimal(tenPow(stablecoinDecimals));
+    let mphMinterContract = MPHMinter.bind(poolContract.mphMinter());
     pool.address = poolAddress;
     pool.moneyMarket = poolContract.moneyMarket().toHex();
     pool.stablecoin = poolContract.stablecoin().toHex();
@@ -86,6 +88,8 @@ export function getPool(poolAddress: string): DPool {
       .MinDepositAmount()
       .toBigDecimal()
       .div(stablecoinPrecision);
+    pool.poolDepositorRewardMintMultiplier = normalize(mphMinterContract.poolDepositorRewardMintMultiplier(Address.fromString(poolAddress)), 36 - stablecoinDecimals);
+    pool.poolFunderRewardMultiplier = normalize(mphMinterContract.poolFunderRewardMultiplier(Address.fromString(poolAddress)), 36 - stablecoinDecimals);
     pool.save();
 
     // Create deposit NFT template

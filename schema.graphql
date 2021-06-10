@@ -21,6 +21,8 @@ type DPool @entity {
   surplus: BigDecimal!
   moneyMarketIncomeIndex: BigInt!
   oracleInterestRate: BigDecimal!
+  poolDepositorRewardMintMultiplier: BigDecimal!
+  poolFunderRewardMultiplier: BigDecimal!
 }
 
 type User @entity {

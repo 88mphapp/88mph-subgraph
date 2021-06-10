@@ -31,6 +31,8 @@ dataSources:
           file: ./abis/ERC20.json
         - name: FundingMultitoken
           file: ./abis/FundingMultitoken.json
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
       eventHandlers:
         - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
           handler: handleEDeposit
@@ -67,6 +69,12 @@ dataSources:
           file: ./abis/Vesting02.json
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
       eventHandlers:
         - event: ECreateVest(indexed address,indexed address,uint64,uint64,uint256)
           handler: handleCreateVest
@@ -77,6 +85,28 @@ dataSources:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/Vesting.ts
+  - kind: ethereum/contract
+    name: MPHMinter
+    network: mainnet
+    source:
+      address: "0x8943eb8F104bCf826910e7d2f4D59edfe018e0e7"
+      abi: MPHMinter
+      startBlock: 11316134
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPool
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
+      eventHandlers:
+        - event: ESetParamUint(indexed address,indexed string,address,uint256)
+          handler: handleESetParamUint
+      file: ./src/MPHMinter.ts
 templates:
   - kind: ethereum/contract
     name: NFT
@@ -97,6 +127,14 @@ templates:
       abis:
         - name: NFT
           file: ./abis/NFT.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
@@ -120,6 +158,14 @@ templates:
       abis:
         - name: FundingMultitoken
           file: ./abis/FundingMultitoken.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: MPHMinter
+          file: ./abis/MPHMinter.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: DividendsDistributed(indexed uint256,indexed address,indexed address,uint256)
           handler: handleDividendsDistributed
