@@ -19,4 +19,5 @@ export function handleESetParamUint(
     } else if (paramName == keccak256("poolFunderRewardMultiplier")) {
         pool.poolFunderRewardMultiplier = normalize(event.params.newValue, 36 - stablecoinDecimals);
     }
+    pool.save()
 }

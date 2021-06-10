@@ -67,7 +67,6 @@ export function getPool(poolAddress: string): DPool {
     let oracleContract = IInterestOracle.bind(poolContract.interestOracle());
     let stablecoinContract = ERC20.bind(poolContract.stablecoin());
     let stablecoinDecimals: number = stablecoinContract.decimals();
-    let stablecoinPrecision = new BigDecimal(tenPow(stablecoinDecimals));
     let mphMinterContract = MPHMinter.bind(poolContract.mphMinter());
     pool.address = poolAddress;
     pool.moneyMarket = poolContract.moneyMarket().toHex();
@@ -75,19 +74,20 @@ export function getPool(poolAddress: string): DPool {
     pool.interestModel = poolContract.interestModel().toHex();
     pool.numUsers = ZERO_INT;
     pool.numDeposits = ZERO_INT;
+    pool.totalDeposit = ZERO_DEC;
+    pool.totalFeeOwed = ZERO_DEC;
+    pool.totalInterestOwed = ZERO_DEC;
     pool.numFunders = ZERO_INT;
     pool.numFundings = ZERO_INT;
+    pool.MaxDepositPeriod = poolContract.MaxDepositPeriod();
+    pool.MinDepositAmount = normalize(poolContract
+      .MinDepositAmount(), stablecoinDecimals);
     pool.oneYearInterestRate = normalize(
       poolContract.calculateInterestAmount(tenPow(18), YEAR)
     );
     pool.surplus = ZERO_DEC;
     pool.moneyMarketIncomeIndex = ZERO_INT;
     pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1);
-    pool.MaxDepositPeriod = poolContract.MaxDepositPeriod();
-    pool.MinDepositAmount = poolContract
-      .MinDepositAmount()
-      .toBigDecimal()
-      .div(stablecoinPrecision);
     pool.poolDepositorRewardMintMultiplier = normalize(mphMinterContract.poolDepositorRewardMintMultiplier(Address.fromString(poolAddress)), 36 - stablecoinDecimals);
     pool.poolFunderRewardMultiplier = normalize(mphMinterContract.poolFunderRewardMultiplier(Address.fromString(poolAddress)), 36 - stablecoinDecimals);
     pool.save();

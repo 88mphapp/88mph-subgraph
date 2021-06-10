@@ -368,7 +368,10 @@ export function handleBlock(block: ethereum.Block): void {
           surplusResult.value1,
           stablecoinDecimals
         ).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC);
-        pool.moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex();
+        let moneyMarketIncomeIndexResult = poolContract.try_moneyMarketIncomeIndex();
+        if (!moneyMarketIncomeIndexResult.reverted) {
+          pool.moneyMarketIncomeIndex = moneyMarketIncomeIndexResult.value;
+        }
         pool.oracleInterestRate = normalize(
           oracleContract.updateAndQuery().value1
         );
