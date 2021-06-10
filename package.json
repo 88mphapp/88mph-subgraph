@@ -2,12 +2,12 @@
   "name": "88mph",
   "license": "GPL-3.0-or-above",
   "scripts": {
-    "codegen": "graph codegen",
-    "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ Bacon-Labs/eighty-eight-mph",
-    "create-local": "graph create --node http://localhost:8020/ Bacon-Labs/88mph",
-    "remove-local": "graph remove --node http://localhost:8020/ Bacon-Labs/88mph",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 Bacon-Labs/eighty-eight-mph",
+    "codegen": "npx graph codegen",
+    "build": "npx graph build",
+    "deploy": "npx graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ bacon-labs/eighty-eight-mph-v3-rinkeby",
+    "create-local": "npx graph create --node http://localhost:8020/ bacon-labs/eighty-eight-mph-v3-rinkeby",
+    "remove-local": "npx graph remove --node http://localhost:8020/ bacon-labs/eighty-eight-mph-v3-rinkeby",
+    "deploy-local": "npx graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bacon-labs/eighty-eight-mph-v3-rinkeby",
     "prettier": "npx prettier --write '**/*.json' '**/*.ts' '**/*.yaml' '**/*.graphql'",
     "prepare": "husky install"
   },

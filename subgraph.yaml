@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: cDAIPool
-    network: mainnet
+    network: rinkeby
     source:
-      address: "0x35966201A7724b952455B73A36C8846D8745218e"
+      address: "0x71482F8cD0e956051208603709639FA28cBc1F33"
       abi: DInterest
-      startBlock: 11316134
+      startBlock: 8735259
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -53,11 +53,11 @@ dataSources:
       file: ./src/DInterest.ts
   - kind: ethereum/contract
     name: Vesting
-    network: mainnet
+    network: rinkeby
     source:
-      address: "0x8943eb8F104bCf826910e7d2f4D59edfe018e0e7"
+      address: "0xab5bAA840b4C9321aa66144ffB2693E2db1166C7"
       abi: Vesting02
-      startBlock: 11316134
+      startBlock: 8735246
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -87,11 +87,11 @@ dataSources:
       file: ./src/Vesting.ts
   - kind: ethereum/contract
     name: MPHMinter
-    network: mainnet
+    network: rinkeby
     source:
-      address: "0x8943eb8F104bCf826910e7d2f4D59edfe018e0e7"
+      address: "0x2534b0a1a49b31f982881F3cb2909eCC6aEc2365"
       abi: MPHMinter
-      startBlock: 11316134
+      startBlock: 8735249
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -110,7 +110,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: NFT
-    network: mainnet
+    network: rinkeby
     source:
       abi: NFT
     mapping:
@@ -141,7 +141,7 @@ templates:
       file: ./src/NFT.ts
   - kind: ethereum/contract
     name: FundingMultitoken
-    network: mainnet
+    network: rinkeby
     source:
       abi: FundingMultitoken
     mapping:

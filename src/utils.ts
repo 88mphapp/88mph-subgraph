@@ -27,17 +27,17 @@ export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(12370019 + 3000);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(8733881 + 3000);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 export let POOL_ADDRESSES = new Array<string>(0);
-POOL_ADDRESSES.push("0x35966201a7724b952455b73a36c8846d8745218e"); // cDAI
+POOL_ADDRESSES.push("0x71482f8cd0e956051208603709639fa28cbc1f33"); // cDAI
 
 export let POOL_STABLECOIN_DECIMALS = new Array<i32>(0);
 POOL_STABLECOIN_DECIMALS.push(18); // cDAI
 
 export let POOL_DEPLOY_BLOCKS = new Array<i32>(0);
-POOL_DEPLOY_BLOCKS.push(11312644); // cDAI
+POOL_DEPLOY_BLOCKS.push(8735259); // cDAI
 
 export function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1);
