@@ -60,6 +60,7 @@ type Deposit @entity {
   averageRecordedIncomeIndex: BigInt!
   fundingInterestPaid: BigDecimal!
   fundingRefundPaid: BigDecimal!
+  mintMPHAmount: BigDecimal!
 }
 
 type Funder @entity {
@@ -90,6 +91,7 @@ type Vest @entity {
   id: ID!
   pool: DPool!
   deposit: Deposit!
+  nftID: BigInt!
   owner: String!
   lastUpdateTimestamp: BigInt!
   accumulatedAmount: BigDecimal!

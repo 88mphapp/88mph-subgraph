@@ -78,7 +78,7 @@ dataSources:
       eventHandlers:
         - event: ECreateVest(indexed address,indexed address,uint64,uint64,uint256)
           handler: handleCreateVest
-        - event: EUpdateVest(indexed uint64)
+        - event: EUpdateVest(indexed uint64,address,uint64,uint256,uint256,uint256)
           handler: handleUpdateVest
         - event: EWithdraw(indexed address,indexed uint64,uint256)
           handler: handleWithdraw

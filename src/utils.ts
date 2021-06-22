@@ -22,12 +22,14 @@ export let YEAR = BigInt.fromI32(31556952); // One year in seconds
 export let ZERO_ADDR = Address.fromString(
   "0x0000000000000000000000000000000000000000"
 );
-export let MPH_ADDR = Address.fromString("0x8888801af4d980682e47f1a9036e589479e835c5");
+export let MPH_ADDR = Address.fromString(
+  "0xC79a56Af51Ec36738E965e88100e4570c5C77A93"
+);
 export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(8733881 + 3000);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(8804061 + 3000);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 export let POOL_ADDRESSES = new Array<string>(0);
@@ -80,16 +82,28 @@ export function getPool(poolAddress: string): DPool {
     pool.numFunders = ZERO_INT;
     pool.numFundings = ZERO_INT;
     pool.MaxDepositPeriod = poolContract.MaxDepositPeriod();
-    pool.MinDepositAmount = normalize(poolContract
-      .MinDepositAmount(), stablecoinDecimals);
+    pool.MinDepositAmount = normalize(
+      poolContract.MinDepositAmount(),
+      stablecoinDecimals
+    );
     pool.oneYearInterestRate = normalize(
       poolContract.calculateInterestAmount(tenPow(18), YEAR)
     );
     pool.surplus = ZERO_DEC;
     pool.moneyMarketIncomeIndex = ZERO_INT;
     pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1);
-    pool.poolDepositorRewardMintMultiplier = normalize(mphMinterContract.poolDepositorRewardMintMultiplier(Address.fromString(poolAddress)), 36 - stablecoinDecimals);
-    pool.poolFunderRewardMultiplier = normalize(mphMinterContract.poolFunderRewardMultiplier(Address.fromString(poolAddress)), 36 - stablecoinDecimals);
+    pool.poolDepositorRewardMintMultiplier = normalize(
+      mphMinterContract.poolDepositorRewardMintMultiplier(
+        Address.fromString(poolAddress)
+      ),
+      36 - stablecoinDecimals
+    );
+    pool.poolFunderRewardMultiplier = normalize(
+      mphMinterContract.poolFunderRewardMultiplier(
+        Address.fromString(poolAddress)
+      ),
+      36 - stablecoinDecimals
+    );
     pool.save();
 
     // Create deposit NFT template

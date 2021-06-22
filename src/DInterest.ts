@@ -64,6 +64,7 @@ export function handleEDeposit(event: EDeposit): void {
   deposit.averageRecordedIncomeIndex = depositStruct.averageRecordedIncomeIndex;
   deposit.fundingInterestPaid = ZERO_DEC;
   deposit.fundingRefundPaid = ZERO_DEC;
+  deposit.mintMPHAmount = ZERO_DEC;
   deposit.save();
 
   // Update DPool statistics
