@@ -41,10 +41,11 @@ export function handleCreateVest(event: ECreateVest): void {
   let depositAmount = normalize(depositStruct.virtualTokenTotalSupply, stablecoinDecimals).div(
     normalize(depositStruct.interestRate).plus(ONE_DEC)
   );
+  let depositTime = depositStruct.maturationTimestamp.minus(event.block.timestamp);
   vest.totalExpectedMPHAmount = depositAmount
     .times(vest.vestAmountPerStablecoinPerSecond)
-    .times(depositStruct.maturationTimestamp.minus(event.block.timestamp).toBigDecimal());
-    vest.save();
+    .times(depositTime.toBigDecimal());
+  vest.save();
 }
 
 export function handleUpdateVest(event: EUpdateVest): void {
