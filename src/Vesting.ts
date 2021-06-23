@@ -4,23 +4,24 @@ import {
   EWithdraw,
   Transfer
 } from "../generated/Vesting/Vesting02";
+import { DInterest } from "../generated/Vesting/DInterest";
 import {
   ZERO_DEC,
   normalize,
   DELIMITER,
   ZERO_ADDR,
   getPool,
-  ONE_DEC
+  ONE_DEC,
+  getTokenDecimals
 } from "./utils";
 import { Deposit, Vest } from "../generated/schema";
 import { Vesting02 as VestContract } from "../generated/Vesting/Vesting02";
 import { Address } from "@graphprotocol/graph-ts";
-import { ERC20 } from "../generated/cDAIPool/ERC20";
 
 export function handleCreateVest(event: ECreateVest): void {
   let pool = getPool(event.params.pool.toHex());
-  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
-  let stablecoinDecimals: number = stablecoinContract.decimals();
+  let poolContract = DInterest.bind(Address.fromString(pool.address));
+  let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
 
   let depositEntityID =
     event.params.pool.toHex() + DELIMITER + event.params.depositID.toString();
@@ -36,17 +37,14 @@ export function handleCreateVest(event: ECreateVest): void {
     event.params.vestAmountPerStablecoinPerSecond,
     36 - stablecoinDecimals
   );
-  vest.save();
-
-  // update deposit mintMPHAmount
-  let deposit = Deposit.load(depositEntityID);
-  let depositAmount = deposit.virtualTokenTotalSupply.div(
-    deposit.interestRate.plus(ONE_DEC)
+  let depositStruct = poolContract.getDeposit(event.params.depositID);
+  let depositAmount = normalize(depositStruct.virtualTokenTotalSupply, stablecoinDecimals).div(
+    normalize(depositStruct.interestRate).plus(ONE_DEC)
   );
-  deposit.mintMPHAmount = depositAmount
+  vest.totalExpectedMPHAmount = depositAmount
     .times(vest.vestAmountPerStablecoinPerSecond)
-    .times(deposit.depositLength.toBigDecimal());
-  deposit.save();
+    .times(depositStruct.maturationTimestamp.minus(event.block.timestamp).toBigDecimal());
+    vest.save();
 }
 
 export function handleUpdateVest(event: EUpdateVest): void {
@@ -55,8 +53,7 @@ export function handleUpdateVest(event: EUpdateVest): void {
     let vestContract = VestContract.bind(event.address);
     let vestStruct = vestContract.getVest(event.params.vestID);
     let pool = getPool(vestStruct.pool.toHex());
-    let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
-    let stablecoinDecimals: number = stablecoinContract.decimals();
+    let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
 
     vest.lastUpdateTimestamp = event.block.timestamp;
     vest.accumulatedAmount = normalize(vestStruct.accumulatedAmount);
@@ -64,17 +61,15 @@ export function handleUpdateVest(event: EUpdateVest): void {
       vestStruct.vestAmountPerStablecoinPerSecond,
       36 - stablecoinDecimals
     );
-    vest.save();
 
-    // update deposit mintMPHAmount
     let deposit = Deposit.load(vest.deposit);
-    let depositAmount = normalize(
-      event.params.currentDepositAmount.plus(event.params.depositAmount),
-      stablecoinDecimals
-    );
     if (event.block.timestamp.lt(deposit.maturationTimestamp)) {
       // total MPH equals accumulated plus future
-      deposit.mintMPHAmount = vest.accumulatedAmount.plus(
+      let depositAmount = normalize(
+        event.params.currentDepositAmount.plus(event.params.depositAmount),
+        stablecoinDecimals
+      );
+      vest.totalExpectedMPHAmount = vest.accumulatedAmount.plus(
         depositAmount
           .times(vest.vestAmountPerStablecoinPerSecond)
           .times(
@@ -85,10 +80,10 @@ export function handleUpdateVest(event: EUpdateVest): void {
       );
     } else {
       // total MPH is accumulated
-      deposit.mintMPHAmount = vest.accumulatedAmount;
+      vest.totalExpectedMPHAmount = vest.accumulatedAmount;
     }
 
-    deposit.save();
+    vest.save();
   }
 }
 

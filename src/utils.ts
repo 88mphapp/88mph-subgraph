@@ -29,7 +29,7 @@ export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(8804061 + 3000);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(8810000 + 3000);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 export let POOL_ADDRESSES = new Array<string>(0);
@@ -67,8 +67,7 @@ export function getPool(poolAddress: string): DPool {
     pool = new DPool(poolAddress);
     let poolContract = DInterest.bind(Address.fromString(poolAddress));
     let oracleContract = IInterestOracle.bind(poolContract.interestOracle());
-    let stablecoinContract = ERC20.bind(poolContract.stablecoin());
-    let stablecoinDecimals: number = stablecoinContract.decimals();
+    let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
     let mphMinterContract = MPHMinter.bind(poolContract.mphMinter());
     pool.address = poolAddress;
     pool.moneyMarket = poolContract.moneyMarket().toHex();
@@ -156,4 +155,16 @@ export function getFunder(address: Address, pool: DPool): Funder {
     pool.save();
   }
   return user as Funder;
+}
+
+export function getTokenDecimals(address: Address): number {
+  let tokenContract = ERC20.bind(address);
+  let decimals: number;
+  let decimalsResult = tokenContract.try_decimals();
+  if (decimalsResult.reverted) {
+    decimals = 18;
+  } else {
+    decimals = decimalsResult.value;
+  }
+  return decimals;
 }

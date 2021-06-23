@@ -60,7 +60,6 @@ type Deposit @entity {
   averageRecordedIncomeIndex: BigInt!
   fundingInterestPaid: BigDecimal!
   fundingRefundPaid: BigDecimal!
-  mintMPHAmount: BigDecimal!
 }
 
 type Funder @entity {
@@ -97,4 +96,5 @@ type Vest @entity {
   accumulatedAmount: BigDecimal!
   withdrawnAmount: BigDecimal!
   vestAmountPerStablecoinPerSecond: BigDecimal!
+  totalExpectedMPHAmount: BigDecimal!
 }

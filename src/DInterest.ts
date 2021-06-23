@@ -10,7 +10,6 @@ import {
   EPayFundingInterest
 } from "../generated/cDAIPool/DInterest";
 import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
-import { ERC20 } from "../generated/cDAIPool/ERC20";
 import { Deposit, Funding, UserTotalDeposit } from "../generated/schema";
 import {
   POOL_ADDRESSES,
@@ -30,7 +29,8 @@ import {
   keccak256,
   BLOCK_HANDLER_INTERVAL,
   POOL_STABLECOIN_DECIMALS,
-  ULTRA_PRECISION
+  ULTRA_PRECISION,
+  getTokenDecimals
 } from "./utils";
 import { FundingMultitoken } from "../generated/templates/FundingMultitoken/FundingMultitoken";
 
@@ -38,8 +38,7 @@ export function handleEDeposit(event: EDeposit): void {
   let pool = getPool(event.address.toHex());
   let user = getUser(event.params.sender, pool);
   let poolContract = DInterest.bind(Address.fromString(pool.address));
-  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
-  let stablecoinDecimals: number = stablecoinContract.decimals();
+  let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
 
   // Create new Deposit entity
   let deposit = new Deposit(
@@ -64,7 +63,6 @@ export function handleEDeposit(event: EDeposit): void {
   deposit.averageRecordedIncomeIndex = depositStruct.averageRecordedIncomeIndex;
   deposit.fundingInterestPaid = ZERO_DEC;
   deposit.fundingRefundPaid = ZERO_DEC;
-  deposit.mintMPHAmount = ZERO_DEC;
   deposit.save();
 
   // Update DPool statistics
@@ -121,8 +119,7 @@ export function handleETopupDeposit(event: ETopupDeposit): void {
   let pool = getPool(event.address.toHex());
   let user = getUser(event.params.sender, pool);
   let poolContract = DInterest.bind(Address.fromString(pool.address));
-  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
-  let stablecoinDecimals: number = stablecoinContract.decimals();
+  let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
 
   // Update Deposit
   let deposit = Deposit.load(
@@ -172,8 +169,7 @@ export function handleEWithdraw(event: EWithdraw): void {
   let deposit = Deposit.load(
     pool.address + DELIMITER + event.params.depositID.toString()
   );
-  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
-  let stablecoinDecimals: number = stablecoinContract.decimals();
+  let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
 
   // Update UserTotalDeposit
   let userTotalDepositID = user.id + DELIMITER + pool.id;
@@ -231,8 +227,7 @@ export function handleEPayFundingInterest(event: EPayFundingInterest): void {
   let funding = Funding.load(
     pool.address + DELIMITER + event.params.fundingID.toString()
   );
-  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
-  let stablecoinDecimals: number = stablecoinContract.decimals();
+  let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
 
   // Update Funding
   let interestAmount = normalize(
@@ -259,8 +254,7 @@ export function handleEFund(event: EFund): void {
   let pool = getPool(event.address.toHex());
   let poolContract = DInterest.bind(event.address);
   let funder = getFunder(event.params.sender, pool);
-  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
-  let stablecoinDecimals: number = stablecoinContract.decimals();
+  let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
 
   let fundingID = event.params.fundingID;
   let fundingObj = poolContract.getFunding(fundingID);
@@ -331,8 +325,7 @@ export function handleESetParamAddress(event: ESetParamAddress): void {
 
 export function handleESetParamUint(event: ESetParamUint): void {
   let pool = getPool(event.address.toHex());
-  let stablecoinContract = ERC20.bind(Address.fromString(pool.stablecoin));
-  let stablecoinDecimals: number = stablecoinContract.decimals();
+  let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
   let stablecoinPrecision = new BigDecimal(tenPow(stablecoinDecimals));
   let paramName = event.params.paramName;
   if (paramName == keccak256("MaxDepositPeriod")) {
