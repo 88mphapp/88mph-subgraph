@@ -33,16 +33,18 @@ dataSources:
           file: ./abis/FundingMultitoken.json
         - name: MPHMinter
           file: ./abis/MPHMinter.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
       eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint256)
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
           handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint256,uint256,uint256,uint256)
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
           handler: handleETopupDeposit
         - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
           handler: handleEWithdraw
         - event: EPayFundingInterest(indexed uint256,uint256,uint256)
           handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint256,uint256,uint256)
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
           handler: handleEFund
         - event: ESetParamAddress(indexed address,indexed string,address)
           handler: handleESetParamAddress

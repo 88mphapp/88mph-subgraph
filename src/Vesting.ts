@@ -16,7 +16,7 @@ import {
 } from "./utils";
 import { Deposit, Vest } from "../generated/schema";
 import { Vesting02 as VestContract } from "../generated/Vesting/Vesting02";
-import { Address } from "@graphprotocol/graph-ts";
+import { Address, log } from "@graphprotocol/graph-ts";
 
 export function handleCreateVest(event: ECreateVest): void {
   let pool = getPool(event.params.pool.toHex());
@@ -37,14 +37,21 @@ export function handleCreateVest(event: ECreateVest): void {
     event.params.vestAmountPerStablecoinPerSecond,
     36 - stablecoinDecimals
   );
-  let depositStruct = poolContract.getDeposit(event.params.depositID);
-  let depositAmount = normalize(depositStruct.virtualTokenTotalSupply, stablecoinDecimals).div(
-    normalize(depositStruct.interestRate).plus(ONE_DEC)
-  );
-  let depositTime = depositStruct.maturationTimestamp.minus(event.block.timestamp);
-  vest.totalExpectedMPHAmount = depositAmount
-    .times(vest.vestAmountPerStablecoinPerSecond)
-    .times(depositTime.toBigDecimal());
+
+  let depositStructResult = poolContract.try_getDeposit(event.params.depositID);
+  if (depositStructResult.reverted) {
+    vest.totalExpectedMPHAmount = ZERO_DEC;
+  } else {
+    let depositStruct = poolContract.getDeposit(event.params.depositID);
+    let depositAmount = normalize(depositStruct.virtualTokenTotalSupply, stablecoinDecimals).div(
+      normalize(depositStruct.interestRate).plus(ONE_DEC)
+    );
+    let depositTime = depositStruct.maturationTimestamp.minus(event.block.timestamp);
+    vest.totalExpectedMPHAmount = depositAmount
+      .times(vest.vestAmountPerStablecoinPerSecond)
+      .times(depositTime.toBigDecimal());
+  }
+  
   vest.save();
 }
 

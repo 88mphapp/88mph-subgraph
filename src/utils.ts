@@ -67,7 +67,7 @@ export function getPool(poolAddress: string): DPool {
     pool = new DPool(poolAddress);
     let poolContract = DInterest.bind(Address.fromString(poolAddress));
     let oracleContract = IInterestOracle.bind(poolContract.interestOracle());
-    let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
+    let stablecoinDecimals: number = getTokenDecimals(poolContract.stablecoin());
     let mphMinterContract = MPHMinter.bind(poolContract.mphMinter());
     pool.address = poolAddress;
     pool.moneyMarket = poolContract.moneyMarket().toHex();

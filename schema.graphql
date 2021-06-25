@@ -89,7 +89,7 @@ type Funding @entity {
 type Vest @entity {
   id: ID!
   pool: DPool!
-  deposit: Deposit!
+  deposit: Deposit
   nftID: BigInt!
   owner: String!
   lastUpdateTimestamp: BigInt!

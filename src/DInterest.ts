@@ -9,6 +9,7 @@ import {
   ETopupDeposit,
   EPayFundingInterest
 } from "../generated/cDAIPool/DInterest";
+import { MoneyMarket } from "../generated/cDAIPool/MoneyMarket";
 import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
 import { Deposit, Funding, UserTotalDeposit } from "../generated/schema";
 import {
@@ -362,10 +363,8 @@ export function handleBlock(block: ethereum.Block): void {
           surplusResult.value1,
           stablecoinDecimals
         ).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC);
-        let moneyMarketIncomeIndexResult = poolContract.try_moneyMarketIncomeIndex();
-        if (!moneyMarketIncomeIndexResult.reverted) {
-          pool.moneyMarketIncomeIndex = moneyMarketIncomeIndexResult.value;
-        }
+        let moneyMarket = MoneyMarket.bind(Address.fromString(pool.moneyMarket));
+        pool.moneyMarketIncomeIndex = moneyMarket.incomeIndex();
         pool.oracleInterestRate = normalize(
           oracleContract.updateAndQuery().value1
         );
