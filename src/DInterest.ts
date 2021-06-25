@@ -49,7 +49,7 @@ export function handleEDeposit(event: EDeposit): void {
   deposit.nftID = event.params.depositID;
   deposit.user = user.id;
   deposit.pool = pool.id;
-  // deposit.vest and deposit.funding are set when Vest/Funding is created
+  // deposit.funding is set when Funding is created
   deposit.virtualTokenTotalSupply = normalize(
     depositStruct.virtualTokenTotalSupply,
     stablecoinDecimals

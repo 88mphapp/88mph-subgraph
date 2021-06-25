@@ -149,6 +149,8 @@ export function getFunder(address: Address, pool: DPool): Funder {
     user.pools = pools;
     user.numPools = ZERO_INT;
     user.numFundings = ZERO_INT;
+    let fundings = new Array<string>(0);
+    user.fundings = fundings;
     user.save();
 
     pool.numFunders = pool.numFunders.plus(ONE_INT);
