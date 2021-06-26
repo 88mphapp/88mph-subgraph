@@ -56,6 +56,7 @@ export function handleEDeposit(event: EDeposit): void {
   );
   deposit.interestRate = normalize(depositStruct.interestRate);
   deposit.feeRate = normalize(depositStruct.feeRate);
+  deposit.amount = deposit.virtualTokenTotalSupply.div(deposit.interestRate.plus(ONE_DEC));
   deposit.maturationTimestamp = event.params.maturationTimestamp;
   deposit.depositTimestamp = event.block.timestamp;
   deposit.depositLength = deposit.maturationTimestamp.minus(
@@ -133,6 +134,7 @@ export function handleETopupDeposit(event: ETopupDeposit): void {
   );
   deposit.interestRate = normalize(depositStruct.interestRate);
   deposit.feeRate = normalize(depositStruct.feeRate);
+  deposit.amount = deposit.virtualTokenTotalSupply.div(deposit.interestRate.plus(ONE_DEC));
   deposit.averageRecordedIncomeIndex = depositStruct.averageRecordedIncomeIndex;
   deposit.save();
 
@@ -183,7 +185,7 @@ export function handleEWithdraw(event: EWithdraw): void {
     event.params.virtualTokenAmount,
     stablecoinDecimals
   ).minus(depositAmount);
-  let feeAmount = interestAmount.times(deposit.feeRate);
+  let feeAmount = depositAmount.times(deposit.feeRate);
   userTotalDepositEntity.totalDeposit = userTotalDepositEntity.totalDeposit.minus(
     depositAmount
   );
@@ -220,6 +222,7 @@ export function handleEWithdraw(event: EWithdraw): void {
   deposit.virtualTokenTotalSupply = deposit.virtualTokenTotalSupply.minus(
     normalize(event.params.virtualTokenAmount, stablecoinDecimals)
   );
+  deposit.amount = deposit.virtualTokenTotalSupply.div(deposit.interestRate.plus(ONE_DEC));
   deposit.save();
 }
 
@@ -273,6 +276,7 @@ export function handleEFund(event: EFund): void {
     funding.fundedDeficitAmount = ZERO_DEC;
     funding.totalInterestEarned = ZERO_DEC;
     funding.totalRefundEarned = ZERO_DEC;
+    funding.totalMPHEarned = ZERO_DEC;
 
     // Update Deposit
     let deposit = Deposit.load(funding.deposit);

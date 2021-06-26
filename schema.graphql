@@ -51,6 +51,7 @@ type Deposit @entity {
   pool: DPool!
   vest: Vest
   funding: Funding
+  amount: BigDecimal!
   virtualTokenTotalSupply: BigDecimal!
   interestRate: BigDecimal!
   feeRate: BigDecimal!

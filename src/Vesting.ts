@@ -53,6 +53,12 @@ export function handleCreateVest(event: ECreateVest): void {
   }
   
   vest.save();
+
+  let deposit = Deposit.load(depositEntityID);
+  if (deposit != null) {
+    deposit.vest = vest.id;
+    deposit.save();
+  }
 }
 
 export function handleUpdateVest(event: EUpdateVest): void {

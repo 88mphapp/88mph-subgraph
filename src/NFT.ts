@@ -29,11 +29,9 @@ export function handleTransfer(event: ETransfer): void {
   let fromUser = getUser(from, pool);
   let toUser = getUser(to, pool);
   let deposit = Deposit.load(pool.address + DELIMITER + tokenId.toString());
-  let depositAmount = deposit.virtualTokenTotalSupply.div(
-    deposit.interestRate.plus(ONE_DEC)
-  );
-  let interestAmount = deposit.virtualTokenTotalSupply.minus(depositAmount);
-  let feeAmount = interestAmount.times(deposit.feeRate);
+  let depositAmount = deposit.amount;
+  let interestAmount = depositAmount.times(deposit.interestRate);
+  let feeAmount = depositAmount.times(deposit.feeRate);
 
   // update from user
   fromUser.numDeposits = fromUser.numDeposits.minus(ONE_INT);
