@@ -295,6 +295,9 @@ export function handleEFund(event: EFund): void {
       funder.pools = pools;
       funder.numPools = funder.numPools.plus(ONE_INT);
     }
+    let fundings = funder.fundings;
+    fundings.push(funding.id);
+    funder.fundings = fundings;
     funder.numFundings = funder.numFundings.plus(ONE_INT);
     funder.save();
   }
