@@ -99,3 +99,8 @@ type Vest @entity {
   vestAmountPerStablecoinPerSecond: BigDecimal!
   totalExpectedMPHAmount: BigDecimal!
 }
+
+type GlobalStats @entity {
+  id: ID!
+  xMPHRewardDistributed: BigDecimal!
+}

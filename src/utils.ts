@@ -10,9 +10,10 @@ import { DInterest } from "../generated/cDAIPool/DInterest";
 import { ERC20 } from "../generated/cDAIPool/ERC20";
 import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
 import { MPHMinter } from "../generated/cDAIPool/MPHMinter";
-import { DPool, User, Funder } from "../generated/schema";
+import { DPool, User, Funder, GlobalStats } from "../generated/schema";
 import { NFT, FundingMultitoken } from "../generated/templates";
 
+export let GLOBAL_STATS_ID = "0";
 export let ZERO_DEC = BigDecimal.fromString("0");
 export let ONE_DEC = BigDecimal.fromString("1");
 export let NEGONE_DEC = BigDecimal.fromString("-1");
@@ -29,7 +30,7 @@ export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(8916910 + 3000);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(9010169 + 3000);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 export let POOL_ADDRESSES = new Array<string>(0);
@@ -67,7 +68,9 @@ export function getPool(poolAddress: string): DPool {
     pool = new DPool(poolAddress);
     let poolContract = DInterest.bind(Address.fromString(poolAddress));
     let oracleContract = IInterestOracle.bind(poolContract.interestOracle());
-    let stablecoinDecimals: number = getTokenDecimals(poolContract.stablecoin());
+    let stablecoinDecimals: number = getTokenDecimals(
+      poolContract.stablecoin()
+    );
     let mphMinterContract = MPHMinter.bind(poolContract.mphMinter());
     pool.address = poolAddress;
     pool.moneyMarket = poolContract.moneyMarket().toHex();
@@ -157,6 +160,16 @@ export function getFunder(address: Address, pool: DPool): Funder {
     pool.save();
   }
   return user as Funder;
+}
+
+export function getGlobalStats(): GlobalStats {
+  let entity = GlobalStats.load(GLOBAL_STATS_ID);
+  if (entity == null) {
+    entity = new GlobalStats(GLOBAL_STATS_ID);
+    entity.xMPHRewardDistributed = ZERO_DEC;
+    entity.save();
+  }
+  return entity as GlobalStats;
 }
 
 export function getTokenDecimals(address: Address): number {
