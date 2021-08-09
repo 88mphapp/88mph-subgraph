@@ -21,7 +21,9 @@ import { Address, log } from "@graphprotocol/graph-ts";
 export function handleCreateVest(event: ECreateVest): void {
   let pool = getPool(event.params.pool.toHex());
   let poolContract = DInterest.bind(Address.fromString(pool.address));
-  let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
+  let stablecoinDecimals: number = getTokenDecimals(
+    Address.fromString(pool.stablecoin)
+  );
 
   let depositEntityID =
     event.params.pool.toHex() + DELIMITER + event.params.depositID.toString();
@@ -43,15 +45,18 @@ export function handleCreateVest(event: ECreateVest): void {
     vest.totalExpectedMPHAmount = ZERO_DEC;
   } else {
     let depositStruct = poolContract.getDeposit(event.params.depositID);
-    let depositAmount = normalize(depositStruct.virtualTokenTotalSupply, stablecoinDecimals).div(
-      normalize(depositStruct.interestRate).plus(ONE_DEC)
+    let depositAmount = normalize(
+      depositStruct.virtualTokenTotalSupply,
+      stablecoinDecimals
+    ).div(normalize(depositStruct.interestRate).plus(ONE_DEC));
+    let depositTime = depositStruct.maturationTimestamp.minus(
+      event.block.timestamp
     );
-    let depositTime = depositStruct.maturationTimestamp.minus(event.block.timestamp);
     vest.totalExpectedMPHAmount = depositAmount
       .times(vest.vestAmountPerStablecoinPerSecond)
       .times(depositTime.toBigDecimal());
   }
-  
+
   vest.save();
 
   let deposit = Deposit.load(depositEntityID);
@@ -67,7 +72,9 @@ export function handleUpdateVest(event: EUpdateVest): void {
     let vestContract = VestContract.bind(event.address);
     let vestStruct = vestContract.getVest(event.params.vestID);
     let pool = getPool(vestStruct.pool.toHex());
-    let stablecoinDecimals: number = getTokenDecimals(Address.fromString(pool.stablecoin));
+    let stablecoinDecimals: number = getTokenDecimals(
+      Address.fromString(pool.stablecoin)
+    );
 
     vest.lastUpdateTimestamp = event.block.timestamp;
     vest.accumulatedAmount = normalize(vestStruct.accumulatedAmount);

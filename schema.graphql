@@ -102,5 +102,6 @@ type Vest @entity {
 
 type GlobalStats @entity {
   id: ID!
+  blockHandlerStartBlock: BigInt!
   xMPHRewardDistributed: BigDecimal!
 }

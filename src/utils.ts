@@ -167,6 +167,7 @@ export function getGlobalStats(): GlobalStats {
   if (entity == null) {
     entity = new GlobalStats(GLOBAL_STATS_ID);
     entity.xMPHRewardDistributed = ZERO_DEC;
+    entity.blockHandlerStartBlock = BLOCK_HANDLER_START_BLOCK;
     entity.save();
   }
   return entity as GlobalStats;
