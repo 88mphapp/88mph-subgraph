@@ -30,7 +30,7 @@ export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(9010169 + 3000);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(9084412 + 3000);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 export let POOL_ADDRESSES = new Array<string>(0);
