@@ -4,62 +4,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: cDAIPool
-    network: rinkeby
+    network: mainnet
     source:
-      address: "0x71482F8cD0e956051208603709639FA28cBc1F33"
+      address: "0x11b1c87983f881b3686f8b1171628357faa30038"
       abi: DInterest
-      startBlock: 8735259
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: cUSDCPool
-    network: rinkeby
-    source:
-      address: "0x3d59EcA28fC3CA2338951A7C8E0C435a1691550b"
-      abi: DInterest
-      startBlock: 9146305
+      startBlock: 13135260
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -106,11 +55,11 @@ dataSources:
       file: ./src/DInterest.ts
   - kind: ethereum/contract
     name: Vesting
-    network: rinkeby
+    network: mainnet
     source:
-      address: "0xab5bAA840b4C9321aa66144ffB2693E2db1166C7"
+      address: "0xA907C7c3D13248F08A3fb52BeB6D1C079507Eb4B"
       abi: Vesting02
-      startBlock: 8735246
+      startBlock: 13134912
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -140,11 +89,11 @@ dataSources:
       file: ./src/Vesting.ts
   - kind: ethereum/contract
     name: MPHMinter
-    network: rinkeby
+    network: mainnet
     source:
-      address: "0x2534b0a1a49b31f982881F3cb2909eCC6aEc2365"
+      address: "0x01c2fee5d6e76ec26162daaf4e336beed01f2651"
       abi: MPHMinter
-      startBlock: 8735249
+      startBlock: 13134957
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -162,11 +111,11 @@ dataSources:
       file: ./src/MPHMinter.ts
   - kind: ethereum/contract
     name: xMPH
-    network: rinkeby
+    network: mainnet
     source:
-      address: "0x59EE65726f0b886Ec924271B51A3c1e78F52d1FB"
+      address: "0x1702F18c1173b791900F81EbaE59B908Da8F689b"
       abi: xMPH
-      startBlock: 8735249
+      startBlock: 13132358
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -183,7 +132,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: NFT
-    network: rinkeby
+    network: mainnet
     source:
       abi: NFT
     mapping:
@@ -214,7 +163,7 @@ templates:
       file: ./src/NFT.ts
   - kind: ethereum/contract
     name: FundingMultitoken
-    network: rinkeby
+    network: mainnet
     source:
       abi: FundingMultitoken
     mapping:
