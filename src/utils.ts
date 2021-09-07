@@ -30,18 +30,36 @@ export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(13135260);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(13175925);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 // Note: the addresses below must be in lower case
 export let POOL_ADDRESSES = new Array<string>(0);
 POOL_ADDRESSES.push("0x11b1c87983f881b3686f8b1171628357faa30038"); // cDAI
+POOL_ADDRESSES.push("0x5dda04b2bdbbc3fcfb9b60cd9ebfd1b27f1a4fe3"); // cUNI
+POOL_ADDRESSES.push("0x572be575d1aa1ca84d8ac4274067f7bcb578a368"); // cLINK
+POOL_ADDRESSES.push("0x6d97ea6e14d35e10b50df9475e9efaad1982065e"); // aDAI
+POOL_ADDRESSES.push("0x2d3141f4c9872d4f53b587c3fb8b22736feb54b0"); // aUSDC
+POOL_ADDRESSES.push("0xb1b225402b5ec977af8c721f42f21db5518785dc"); // aUSDT
+POOL_ADDRESSES.push("0x5b1a10aaf807d4297048297c30b2504b42c3395f"); // harvestCRVRENWBTC
 
 export let POOL_STABLECOIN_DECIMALS = new Array<i32>(0);
 POOL_STABLECOIN_DECIMALS.push(18); // cDAI
+POOL_STABLECOIN_DECIMALS.push(18); // cUNI
+POOL_STABLECOIN_DECIMALS.push(18); // cLINK
+POOL_STABLECOIN_DECIMALS.push(18); // aDAI
+POOL_STABLECOIN_DECIMALS.push(6); // aUSDC
+POOL_STABLECOIN_DECIMALS.push(6); // aUSDT
+POOL_STABLECOIN_DECIMALS.push(18); // harvestCRVRENWBTC
 
 export let POOL_DEPLOY_BLOCKS = new Array<i32>(0);
 POOL_DEPLOY_BLOCKS.push(13135260); // cDAI
+POOL_DEPLOY_BLOCKS.push(13156898); // cUNI
+POOL_DEPLOY_BLOCKS.push(13157335); // cLINK
+POOL_DEPLOY_BLOCKS.push(13157722); // aDAI
+POOL_DEPLOY_BLOCKS.push(13158219); // aUSDC
+POOL_DEPLOY_BLOCKS.push(13160904); // aUSDT
+POOL_DEPLOY_BLOCKS.push(13163970); // harvestCRVRENWBTC
 
 export function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1);
