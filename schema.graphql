@@ -23,6 +23,7 @@ type DPool @entity {
   oracleInterestRate: BigDecimal!
   poolDepositorRewardMintMultiplier: BigDecimal!
   poolFunderRewardMultiplier: BigDecimal!
+  historicalInterestPaid: BigDecimal!
 }
 
 type User @entity {

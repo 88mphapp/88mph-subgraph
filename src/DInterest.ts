@@ -209,6 +209,11 @@ export function handleEWithdraw(event: EWithdraw): void {
   userTotalDepositEntity.save();
 
   // Update DPool statistics
+  if (!event.params.early) {
+    pool.historicalInterestPaid = pool.historicalInterestPaid.plus(
+      interestAmount
+    );
+  }
   pool.totalDeposit = pool.totalDeposit.minus(depositAmount);
   pool.totalInterestOwed = pool.totalInterestOwed.minus(interestAmount);
   pool.totalFeeOwed = pool.totalFeeOwed.minus(feeAmount);
