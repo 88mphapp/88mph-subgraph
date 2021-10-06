@@ -298,7 +298,6 @@ export function handleEFund(event: EFund): void {
     funding.fundedDeficitAmount = ZERO_DEC;
     funding.totalInterestEarned = ZERO_DEC;
     funding.totalRefundEarned = ZERO_DEC;
-    funding.totalMPHEarned = ZERO_DEC;
 
     // Update Deposit
     let deposit = Deposit.load(funding.deposit);
