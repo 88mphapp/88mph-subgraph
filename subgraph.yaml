@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "0xa78276C04D8d807FeB8271fE123C1f94c08A414d"
       abi: DInterest
-      startBlock: 19889933
+      startBlock: 19921532
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -57,7 +57,7 @@ dataSources:
     source:
       address: "0x4f28Fc2Be45682D1be1d0f155f4a52D4509Db629"
       abi: DInterest
-      startBlock: 19889933
+      startBlock: 19921532
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -106,7 +106,7 @@ dataSources:
     source:
       address: "0x3933bAAc41f04D0FFa0977b0e879Bc56482aD667"
       abi: DInterest
-      startBlock: 19889933
+      startBlock: 19921532
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -155,7 +155,7 @@ dataSources:
     source:
       address: "0xf5eF24a27f35Cbe8A2b0a954ACF81d7064CE6B70"
       abi: DInterest
-      startBlock: 19889933
+      startBlock: 19921532
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -204,7 +204,7 @@ dataSources:
     source:
       address: "0x0E99145166e2982bb67054A1E5d3a902Fc4d2b59"
       abi: DInterest
-      startBlock: 19889933
+      startBlock: 19921532
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -253,7 +253,7 @@ dataSources:
     source:
       address: "0x3B79Eb9675ED29554f57b719dC66A461a4C84970"
       abi: DInterest
-      startBlock: 19889933
+      startBlock: 19921532
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

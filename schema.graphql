@@ -21,6 +21,8 @@ type DPool @entity {
   surplus: BigDecimal!
   moneyMarketIncomeIndex: BigInt!
   oracleInterestRate: BigDecimal!
+  poolDepositorRewardMintMultiplier: BigDecimal!
+  poolFunderRewardMultiplier: BigDecimal!
   historicalInterestPaid: BigDecimal!
 }
 
@@ -48,6 +50,7 @@ type Deposit @entity {
   nftID: BigInt!
   user: User!
   pool: DPool!
+  vest: Vest
   funding: Funding
   amount: BigDecimal!
   virtualTokenTotalSupply: BigDecimal!
@@ -82,9 +85,24 @@ type Funding @entity {
   fundedDeficitAmount: BigDecimal!
   totalInterestEarned: BigDecimal!
   totalRefundEarned: BigDecimal!
+  totalMPHEarned: BigDecimal!
+}
+
+type Vest @entity {
+  id: ID!
+  pool: DPool!
+  deposit: Deposit
+  nftID: BigInt!
+  owner: String!
+  lastUpdateTimestamp: BigInt!
+  accumulatedAmount: BigDecimal!
+  withdrawnAmount: BigDecimal!
+  vestAmountPerStablecoinPerSecond: BigDecimal!
+  totalExpectedMPHAmount: BigDecimal!
 }
 
 type GlobalStats @entity {
   id: ID!
   blockHandlerStartBlock: BigInt!
+  xMPHRewardDistributed: BigDecimal!
 }
