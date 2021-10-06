@@ -26,7 +26,7 @@ export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(19921532);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(19889933);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 // Note: the addresses below must be in lower case
@@ -47,12 +47,12 @@ POOL_STABLECOIN_DECIMALS.push(8); // aave-wbtc
 POOL_STABLECOIN_DECIMALS.push(18); // aave-weth
 
 export let POOL_DEPLOY_BLOCKS = new Array<i32>(0);
-POOL_DEPLOY_BLOCKS.push(19921532); // aave-dai
-POOL_DEPLOY_BLOCKS.push(19921532); // aave-matic
-POOL_DEPLOY_BLOCKS.push(19921532); // aave-usdc
-POOL_DEPLOY_BLOCKS.push(19921532); // aave-usdt
-POOL_DEPLOY_BLOCKS.push(19921532); // aave-wbtc
-POOL_DEPLOY_BLOCKS.push(19921532); // aave-weth
+POOL_DEPLOY_BLOCKS.push(19889933); // aave-dai
+POOL_DEPLOY_BLOCKS.push(19889933); // aave-matic
+POOL_DEPLOY_BLOCKS.push(19889933); // aave-usdc
+POOL_DEPLOY_BLOCKS.push(19889933); // aave-usdt
+POOL_DEPLOY_BLOCKS.push(19889933); // aave-wbtc
+POOL_DEPLOY_BLOCKS.push(19889933); // aave-weth
 
 export function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1);
