@@ -6,9 +6,9 @@ import {
   ByteArray,
   crypto
 } from "@graphprotocol/graph-ts";
-import { DInterest } from "../generated/cDAIPool/DInterest";
-import { ERC20 } from "../generated/cDAIPool/ERC20";
-import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
+import { DInterest } from "../generated/aave-dai/DInterest";
+import { ERC20 } from "../generated/aave-dai/ERC20";
+import { IInterestOracle } from "../generated/aave-dai/IInterestOracle";
 import { DPool, User, Funder, GlobalStats } from "../generated/schema";
 import { NFT } from "../generated/templates";
 
@@ -26,33 +26,51 @@ export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(19889933);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(5358091);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 // Note: the addresses below must be in lower case
 export let POOL_ADDRESSES = new Array<string>(0);
 POOL_ADDRESSES.push("0xa78276c04d8d807feb8271fe123c1f94c08a414d"); // aave-dai
-POOL_ADDRESSES.push("0x4f28fc2be45682d1be1d0f155f4a52d4509db629"); // aave-matic
-POOL_ADDRESSES.push("0x3933baac41f04d0ffa0977b0e879bc56482ad667"); // aave-usdc
-POOL_ADDRESSES.push("0xf5ef24a27f35cbe8a2b0a954acf81d7064ce6b70"); // aave-usdt
-POOL_ADDRESSES.push("0x0e99145166e2982bb67054a1e5d3a902fc4d2b59"); // aave-wbtc
-POOL_ADDRESSES.push("0x3b79eb9675ed29554f57b719dc66a461a4c84970"); // aave-weth
+POOL_ADDRESSES.push("0x4f28fc2be45682d1be1d0f155f4a52d4509db629"); // aave-avax
+POOL_ADDRESSES.push("0xf0ca068be757e61cdfa6314bf59f5243767f1bfd"); // aave-usdc
+POOL_ADDRESSES.push("0x58e65f624c5ecf595824c96b3853ea8da2f9adf1"); // aave-usdt
+POOL_ADDRESSES.push("0xbcd1571761c2f3d8e0ae93651753aa968e357425"); // aave-wbtc
+POOL_ADDRESSES.push("0xd1fea1b2dc4e0be1f5f16bacf1dfeb7fc3434b5f"); // aave-weth
+POOL_ADDRESSES.push("0xd9f46096801799f59f34c95e0b4df0f6a76bfcf3"); // benqi-dai
+POOL_ADDRESSES.push("0xc7cbb403d1722ee3e4ae61f452dc36d71e8800de"); // benqi-usdc
+POOL_ADDRESSES.push("0x747cdec7d885ca961baec11481cda651bf4d1004"); // benqi-usdt
+POOL_ADDRESSES.push("0x336c38657837aa2b5fd21d41ea651b6d792291d9"); // benqi-wbtc
+POOL_ADDRESSES.push("0xeb706249f3b4640839e64211336b2063a3cdfbb9"); // benqi-weth
+POOL_ADDRESSES.push("0x2252185532317932b1883b3429407296a2c69244"); // benqi-link
 
 export let POOL_STABLECOIN_DECIMALS = new Array<i32>(0);
 POOL_STABLECOIN_DECIMALS.push(18); // aave-dai
-POOL_STABLECOIN_DECIMALS.push(18); // aave-matic
+POOL_STABLECOIN_DECIMALS.push(18); // aave-avax
 POOL_STABLECOIN_DECIMALS.push(6); // aave-usdc
 POOL_STABLECOIN_DECIMALS.push(6); // aave-usdt
 POOL_STABLECOIN_DECIMALS.push(8); // aave-wbtc
 POOL_STABLECOIN_DECIMALS.push(18); // aave-weth
+POOL_STABLECOIN_DECIMALS.push(18); // benqi-dai
+POOL_STABLECOIN_DECIMALS.push(6); // benqi-usdc
+POOL_STABLECOIN_DECIMALS.push(6); // benqi-usdt
+POOL_STABLECOIN_DECIMALS.push(8); // benqi-wbtc
+POOL_STABLECOIN_DECIMALS.push(18); // benqi-weth
+POOL_STABLECOIN_DECIMALS.push(18); // benqi-link
 
 export let POOL_DEPLOY_BLOCKS = new Array<i32>(0);
-POOL_DEPLOY_BLOCKS.push(19889933); // aave-dai
-POOL_DEPLOY_BLOCKS.push(19889933); // aave-matic
-POOL_DEPLOY_BLOCKS.push(19889933); // aave-usdc
-POOL_DEPLOY_BLOCKS.push(19889933); // aave-usdt
-POOL_DEPLOY_BLOCKS.push(19889933); // aave-wbtc
-POOL_DEPLOY_BLOCKS.push(19889933); // aave-weth
+POOL_DEPLOY_BLOCKS.push(5358091); // aave-dai
+POOL_DEPLOY_BLOCKS.push(5358091); // aave-avax
+POOL_DEPLOY_BLOCKS.push(5358091); // aave-usdc
+POOL_DEPLOY_BLOCKS.push(5358091); // aave-usdt
+POOL_DEPLOY_BLOCKS.push(5358091); // aave-wbtc
+POOL_DEPLOY_BLOCKS.push(5358091); // aave-weth
+POOL_DEPLOY_BLOCKS.push(5358091); // benqi-dai
+POOL_DEPLOY_BLOCKS.push(5358091); // benqi-usdc
+POOL_DEPLOY_BLOCKS.push(5358091); // benqi-usdt
+POOL_DEPLOY_BLOCKS.push(5358091); // benqi-wbtc
+POOL_DEPLOY_BLOCKS.push(5358091); // benqi-weth
+POOL_DEPLOY_BLOCKS.push(5358091); // benqi-link
 
 export function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1);
