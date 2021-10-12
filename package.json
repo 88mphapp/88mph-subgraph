@@ -4,10 +4,10 @@
   "scripts": {
     "codegen": "npx graph codegen",
     "build": "npx graph build",
-    "deploy": "npx graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ bacon-labs/eighty-eight-mph-v3-avalanche",
-    "create-local": "npx graph create --node http://localhost:8020/ bacon-labs/eighty-eight-mph-v3-avalanche",
-    "remove-local": "npx graph remove --node http://localhost:8020/ bacon-labs/eighty-eight-mph-v3-avalanche",
-    "deploy-local": "npx graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bacon-labs/eighty-eight-mph-v3-avalanche",
+    "deploy": "npx graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ bacon-labs/eighty-eight-mph-v3-fantom",
+    "create-local": "npx graph create --node http://localhost:8020/ bacon-labs/eighty-eight-mph-v3-fantom",
+    "remove-local": "npx graph remove --node http://localhost:8020/ bacon-labs/eighty-eight-mph-v3-fantom",
+    "deploy-local": "npx graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bacon-labs/eighty-eight-mph-v3-fantom",
     "prettier": "npx prettier --write '**/*.json' '**/*.ts' '**/*.yaml' '**/*.graphql'",
     "prepare": "husky install"
   },

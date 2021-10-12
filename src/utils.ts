@@ -26,51 +26,58 @@ export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(5358091);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(18894830);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 // Note: the addresses below must be in lower case
 export let POOL_ADDRESSES = new Array<string>(0);
-POOL_ADDRESSES.push("0xa78276c04d8d807feb8271fe123c1f94c08a414d"); // aave-dai
-POOL_ADDRESSES.push("0x4f28fc2be45682d1be1d0f155f4a52d4509db629"); // aave-avax
-POOL_ADDRESSES.push("0xf0ca068be757e61cdfa6314bf59f5243767f1bfd"); // aave-usdc
-POOL_ADDRESSES.push("0x58e65f624c5ecf595824c96b3853ea8da2f9adf1"); // aave-usdt
-POOL_ADDRESSES.push("0xbcd1571761c2f3d8e0ae93651753aa968e357425"); // aave-wbtc
-POOL_ADDRESSES.push("0xd1fea1b2dc4e0be1f5f16bacf1dfeb7fc3434b5f"); // aave-weth
-POOL_ADDRESSES.push("0xd9f46096801799f59f34c95e0b4df0f6a76bfcf3"); // benqi-dai
-POOL_ADDRESSES.push("0xc7cbb403d1722ee3e4ae61f452dc36d71e8800de"); // benqi-usdc
-POOL_ADDRESSES.push("0x747cdec7d885ca961baec11481cda651bf4d1004"); // benqi-usdt
-POOL_ADDRESSES.push("0x336c38657837aa2b5fd21d41ea651b6d792291d9"); // benqi-wbtc
-POOL_ADDRESSES.push("0xeb706249f3b4640839e64211336b2063a3cdfbb9"); // benqi-weth
-POOL_ADDRESSES.push("0x2252185532317932b1883b3429407296a2c69244"); // benqi-link
-
 export let POOL_STABLECOIN_DECIMALS = new Array<i32>(0);
-POOL_STABLECOIN_DECIMALS.push(18); // aave-dai
-POOL_STABLECOIN_DECIMALS.push(18); // aave-avax
-POOL_STABLECOIN_DECIMALS.push(6); // aave-usdc
-POOL_STABLECOIN_DECIMALS.push(6); // aave-usdt
-POOL_STABLECOIN_DECIMALS.push(8); // aave-wbtc
-POOL_STABLECOIN_DECIMALS.push(18); // aave-weth
-POOL_STABLECOIN_DECIMALS.push(18); // benqi-dai
-POOL_STABLECOIN_DECIMALS.push(6); // benqi-usdc
-POOL_STABLECOIN_DECIMALS.push(6); // benqi-usdt
-POOL_STABLECOIN_DECIMALS.push(8); // benqi-wbtc
-POOL_STABLECOIN_DECIMALS.push(18); // benqi-weth
-POOL_STABLECOIN_DECIMALS.push(18); // benqi-link
-
 export let POOL_DEPLOY_BLOCKS = new Array<i32>(0);
-POOL_DEPLOY_BLOCKS.push(5358091); // aave-dai
-POOL_DEPLOY_BLOCKS.push(5358091); // aave-avax
-POOL_DEPLOY_BLOCKS.push(5358091); // aave-usdc
-POOL_DEPLOY_BLOCKS.push(5358091); // aave-usdt
-POOL_DEPLOY_BLOCKS.push(5358091); // aave-wbtc
-POOL_DEPLOY_BLOCKS.push(5358091); // aave-weth
-POOL_DEPLOY_BLOCKS.push(5358091); // benqi-dai
-POOL_DEPLOY_BLOCKS.push(5358091); // benqi-usdc
-POOL_DEPLOY_BLOCKS.push(5358091); // benqi-usdt
-POOL_DEPLOY_BLOCKS.push(5358091); // benqi-wbtc
-POOL_DEPLOY_BLOCKS.push(5358091); // benqi-weth
-POOL_DEPLOY_BLOCKS.push(5358091); // benqi-link
+
+POOL_ADDRESSES.push("0xa78276c04d8d807feb8271fe123c1f94c08a414d"); // scream-dai
+POOL_ADDRESSES.push("0xf7fb7f095c8d0f4ee8ffbd142fe0b311491b45f3"); // scream-usdc
+POOL_ADDRESSES.push("0x3cab1cb5a9b68350b39ddf7ce23518d609a8bc78"); // scream-usdt
+POOL_ADDRESSES.push("0xa1857578cec558eaed9120739b0c533549bdcb61"); // scream-wbtc
+POOL_ADDRESSES.push("0x2744b79c985ae0c6b81f1da8eed1a4c67eb4b732"); // scream-weth
+POOL_ADDRESSES.push("0xc80cc61910c6f8f47aadc69e40ab8d1b2fa2c4df"); // scream-link
+POOL_ADDRESSES.push("0xc7cbb403d1722ee3e4ae61f452dc36d71e8800de"); // scream-fusd
+POOL_ADDRESSES.push("0xc91c2255525e80630eee710e7c0637bce7d98978"); // scream-wftm
+POOL_ADDRESSES.push("0xc0710b3564fd4768f912150d39d519b66f2952d4"); // geist-dai
+POOL_ADDRESSES.push("0xd62f71937fca1c7c05da08cec4c451f12fc64964"); // geist-usdc
+POOL_ADDRESSES.push("0xbdf43e9c6cf68359deff9292098622643ede5ec3"); // geist-usdt
+POOL_ADDRESSES.push("0xcb29ce2526ff5f80ad1536c6a1b13238d615b4b9"); // geist-wbtc
+POOL_ADDRESSES.push("0x7e4697f650934ea6743b8b0619fc2454db02405a"); // geist-weth
+POOL_ADDRESSES.push("0x23fe5a2ba80ea2251843086ec000911cfc79c864"); // geist-wftm
+
+POOL_STABLECOIN_DECIMALS.push(18); // scream-dai
+POOL_STABLECOIN_DECIMALS.push(6); // scream-usdc
+POOL_STABLECOIN_DECIMALS.push(6); // scream-usdt
+POOL_STABLECOIN_DECIMALS.push(8); // scream-wbtc
+POOL_STABLECOIN_DECIMALS.push(18); // scream-weth
+POOL_STABLECOIN_DECIMALS.push(18); // scream-link
+POOL_STABLECOIN_DECIMALS.push(18); // scream-fusd
+POOL_STABLECOIN_DECIMALS.push(18); // scream-wftm
+POOL_STABLECOIN_DECIMALS.push(18); // geist-dai
+POOL_STABLECOIN_DECIMALS.push(6); // geist-usdc
+POOL_STABLECOIN_DECIMALS.push(6); // geist-usdt
+POOL_STABLECOIN_DECIMALS.push(8); // geist-wbtc
+POOL_STABLECOIN_DECIMALS.push(18); // geist-weth
+POOL_STABLECOIN_DECIMALS.push(18); // geist-wftm
+
+POOL_DEPLOY_BLOCKS.push(18894830); // scream-dai
+POOL_DEPLOY_BLOCKS.push(18894830); // scream-usdc
+POOL_DEPLOY_BLOCKS.push(18894830); // scream-usdt
+POOL_DEPLOY_BLOCKS.push(18894830); // scream-wbtc
+POOL_DEPLOY_BLOCKS.push(18894830); // scream-weth
+POOL_DEPLOY_BLOCKS.push(18894830); // scream-link
+POOL_DEPLOY_BLOCKS.push(18894830); // scream-fusd
+POOL_DEPLOY_BLOCKS.push(18894830); // scream-wftm
+POOL_DEPLOY_BLOCKS.push(18894830); // geist-dai
+POOL_DEPLOY_BLOCKS.push(18894830); // geist-usdc
+POOL_DEPLOY_BLOCKS.push(18894830); // geist-usdt
+POOL_DEPLOY_BLOCKS.push(18894830); // geist-wbtc
+POOL_DEPLOY_BLOCKS.push(18894830); // geist-weth
+POOL_DEPLOY_BLOCKS.push(18894830); // geist-wftm
 
 export function tenPow(exponent: number): BigInt {
   let result = BigInt.fromI32(1);

@@ -3,12 +3,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: aave-dai
-    network: avalanche
+    name: scream-dai
+    network: fantom
     source:
       address: "0xa78276C04D8d807FeB8271fE123C1f94c08A414d"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -52,12 +52,12 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: aave-avax
-    network: avalanche
+    name: scream-usdc
+    network: fantom
     source:
-      address: "0x4f28Fc2Be45682D1be1d0f155f4a52D4509Db629"
+      address: "0xF7fb7F095C8D0F4ee8ffBd142FE0b311491B45F3"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -101,12 +101,12 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: aave-usdc
-    network: avalanche
+    name: scream-usdt
+    network: fantom
     source:
-      address: "0xF0ca068be757e61cdfa6314Bf59F5243767F1bfD"
+      address: "0x3cAB1cb5A9b68350B39DDF7CE23518D609a8bc78"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -150,12 +150,12 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: aave-usdt
-    network: avalanche
+    name: scream-wbtc
+    network: fantom
     source:
-      address: "0x58E65F624C5Ecf595824c96B3853eA8da2f9ADF1"
+      address: "0xa1857578Cec558eAED9120739B0c533549BdcB61"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -199,12 +199,12 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: aave-wbtc
-    network: avalanche
+    name: scream-weth
+    network: fantom
     source:
-      address: "0xBCD1571761C2f3D8e0ae93651753aa968E357425"
+      address: "0x2744b79c985aE0C6b81F1DA8eed1A4C67Eb4B732"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -248,12 +248,12 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: aave-weth
-    network: avalanche
+    name: scream-link
+    network: fantom
     source:
-      address: "0xd1FeA1b2DC4E0be1f5f16bACf1DfEb7FC3434B5F"
+      address: "0xC80cc61910C6F8F47aadC69e40AB8D1b2FA2C4Df"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -297,61 +297,12 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: benqi-dai
-    network: avalanche
-    source:
-      address: "0xd9f46096801799f59f34c95e0b4DF0f6A76bFcF3"
-      abi: DInterest
-      startBlock: 5358091
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.4
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: benqi-usdc
-    network: avalanche
+    name: scream-fusd
+    network: fantom
     source:
       address: "0xC7CbB403D1722EE3E4ae61f452Dc36d71E8800DE"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -395,12 +346,12 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: benqi-usdt
-    network: avalanche
+    name: scream-wftm
+    network: fantom
     source:
-      address: "0x747cDEC7D885cA961Baec11481cda651BF4D1004"
+      address: "0xc91c2255525E80630eEE710e7c0637bCE7D98978"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -444,12 +395,12 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: benqi-wbtc
-    network: avalanche
+    name: geist-dai
+    network: fantom
     source:
-      address: "0x336c38657837AA2b5Fd21d41ea651B6D792291D9"
+      address: "0xC0710B3564FD4768F912150d39d519b66f2952D4"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -493,12 +444,12 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: benqi-weth
-    network: avalanche
+    name: geist-usdc
+    network: fantom
     source:
-      address: "0xeB706249F3B4640839e64211336B2063a3cdFBB9"
+      address: "0xD62F71937FCa1C7c05da08cec4C451f12Fc64964"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -542,12 +493,159 @@ dataSources:
         - handler: handleBlock
       file: ./src/DInterest.ts
   - kind: ethereum/contract
-    name: benqi-link
-    network: avalanche
+    name: geist-usdt
+    network: fantom
     source:
-      address: "0x2252185532317932B1883B3429407296a2C69244"
+      address: "0xBdf43e9C6cf68359deFf9292098622643EDe5EC3"
       abi: DInterest
-      startBlock: 5358091
+      startBlock: 18894830
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPoolList
+        - DPool
+        - User
+        - Deposit
+        - Funder
+        - Funding
+        - UserTotalDeposit
+        - FunderTotalInterest
+      abis:
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/DInterest.ts
+  - kind: ethereum/contract
+    name: geist-wbtc
+    network: fantom
+    source:
+      address: "0xcb29cE2526fF5F80AD1536C6A1B13238D615b4B9"
+      abi: DInterest
+      startBlock: 18894830
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPoolList
+        - DPool
+        - User
+        - Deposit
+        - Funder
+        - Funding
+        - UserTotalDeposit
+        - FunderTotalInterest
+      abis:
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/DInterest.ts
+  - kind: ethereum/contract
+    name: geist-weth
+    network: fantom
+    source:
+      address: "0x7e4697F650934EA6743b8b0619fc2454dB02405A"
+      abi: DInterest
+      startBlock: 18894830
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPoolList
+        - DPool
+        - User
+        - Deposit
+        - Funder
+        - Funding
+        - UserTotalDeposit
+        - FunderTotalInterest
+      abis:
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/DInterest.ts
+  - kind: ethereum/contract
+    name: geist-wftm
+    network: fantom
+    source:
+      address: "0x23fe5a2BA80ea2251843086eC000911CFc79c864"
+      abi: DInterest
+      startBlock: 18894830
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -593,7 +691,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: NFT
-    network: avalanche
+    network: fantom
     source:
       abi: NFT
     mapping:
