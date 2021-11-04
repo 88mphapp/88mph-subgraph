@@ -308,21 +308,24 @@ export function handleEFund(event: EFund): void {
     // Update DPool statistics
     pool.numFundings = pool.numFundings.plus(ONE_INT);
     pool.save();
+  }
 
-    // Update Funder
-    if (!funder.pools.includes(pool.id)) {
-      // Add pool to list of pools
-      let pools = funder.pools;
-      pools.push(pool.id);
-      funder.pools = pools;
-      funder.numPools = funder.numPools.plus(ONE_INT);
-    }
+  // Update Funder
+  if (!funder.pools.includes(pool.id)) {
+    // Add pool to list of pools
+    let pools = funder.pools;
+    pools.push(pool.id);
+    funder.pools = pools;
+    funder.numPools = funder.numPools.plus(ONE_INT);
+  }
+  if (!funder.fundings.includes(funding.id)) {
     let fundings = funder.fundings;
     fundings.push(funding.id);
     funder.fundings = fundings;
     funder.numFundings = funder.numFundings.plus(ONE_INT);
     funder.save();
   }
+
   // Update funding
   funding.active = true;
   funding.recordedMoneyMarketIncomeIndex =
