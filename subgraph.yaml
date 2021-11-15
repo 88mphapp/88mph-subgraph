@@ -772,6 +772,26 @@ dataSources:
         - event: ESetParamUint(indexed address,indexed string,address,uint256)
           handler: handleESetParamUint
       file: ./src/MPHMinter.ts
+  - kind: ethereum/contract
+    name: xMPH
+    network: fantom
+    source:
+      address: "0xC79a56Af51Ec36738E965e88100e4570c5C77A93"
+      abi: xMPH
+      startBlock: 22103417
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - DPool
+      abis:
+        - name: xMPH
+          file: ./abis/xMPH.json
+      eventHandlers:
+        - event: DistributeReward(uint256)
+          handler: handleDistributeReward
+      file: ./src/xMPH.ts
 templates:
   - kind: ethereum/contract
     name: NFT
