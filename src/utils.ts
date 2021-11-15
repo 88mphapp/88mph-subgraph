@@ -6,10 +6,10 @@ import {
   ByteArray,
   crypto
 } from "@graphprotocol/graph-ts";
-import { DInterest } from "../generated/cDAIPool/DInterest";
-import { ERC20 } from "../generated/cDAIPool/ERC20";
-import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
-import { MPHMinter } from "../generated/cDAIPool/MPHMinter";
+import { DInterest } from "../generated/scream-dai/DInterest";
+import { ERC20 } from "../generated/scream-dai/ERC20";
+import { IInterestOracle } from "../generated/scream-dai/IInterestOracle";
+import { MPHMinter } from "../generated/scream-dai/MPHMinter";
 import { DPool, User, Funder, GlobalStats } from "../generated/schema";
 import { NFT, FundingMultitoken } from "../generated/templates";
 
