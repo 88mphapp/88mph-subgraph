@@ -8,9 +8,9 @@ import {
   ESetParamAddress,
   ETopupDeposit,
   EPayFundingInterest
-} from "../generated/cDAIPool/DInterest";
-import { MoneyMarket } from "../generated/cDAIPool/MoneyMarket";
-import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
+} from "../generated/scream-dai/DInterest";
+import { MoneyMarket } from "../generated/scream-dai/MoneyMarket";
+import { IInterestOracle } from "../generated/scream-dai/IInterestOracle";
 import { Deposit, Funding, UserTotalDeposit } from "../generated/schema";
 import {
   POOL_ADDRESSES,
