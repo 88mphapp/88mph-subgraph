@@ -112,7 +112,6 @@ export function getPool(poolAddress: string): DPool {
     let stablecoinDecimals: number = getTokenDecimals(
       poolContract.stablecoin()
     );
-    let mphMinterContract = MPHMinter.bind(poolContract.mphMinter());
     pool.address = poolAddress;
     pool.moneyMarket = poolContract.moneyMarket().toHex();
     pool.stablecoin = poolContract.stablecoin().toHex();
@@ -135,18 +134,8 @@ export function getPool(poolAddress: string): DPool {
     pool.surplus = ZERO_DEC;
     pool.moneyMarketIncomeIndex = ZERO_INT;
     pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1);
-    pool.poolDepositorRewardMintMultiplier = normalize(
-      mphMinterContract.poolDepositorRewardMintMultiplier(
-        Address.fromString(poolAddress)
-      ),
-      36 - stablecoinDecimals
-    );
-    pool.poolFunderRewardMultiplier = normalize(
-      mphMinterContract.poolFunderRewardMultiplier(
-        Address.fromString(poolAddress)
-      ),
-      36 - stablecoinDecimals
-    );
+    pool.poolDepositorRewardMintMultiplier = ZERO_DEC;
+    pool.poolFunderRewardMultiplier = ZERO_DEC;
     pool.historicalInterestPaid = ZERO_DEC;
     pool.save();
 
