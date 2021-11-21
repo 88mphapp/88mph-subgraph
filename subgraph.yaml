@@ -768,6 +768,12 @@ dataSources:
           file: ./abis/ERC20.json
         - name: MPHMinter
           file: ./abis/MPHMinter.json
+        - name: Vesting02
+          file: ./abis/Vesting02.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
       eventHandlers:
         - event: ESetParamUint(indexed address,indexed string,address,uint256)
           handler: handleESetParamUint
