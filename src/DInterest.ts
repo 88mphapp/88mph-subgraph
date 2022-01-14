@@ -8,9 +8,9 @@ import {
   ESetParamAddress,
   ETopupDeposit,
   EPayFundingInterest
-} from "../generated/cDAIPool/DInterest";
-import { MoneyMarket } from "../generated/cDAIPool/MoneyMarket";
-import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
+} from "../generated/aave-dai/DInterest";
+import { MoneyMarket } from "../generated/aave-dai/MoneyMarket";
+import { IInterestOracle } from "../generated/aave-dai/IInterestOracle";
 import {
   Deposit,
   FunderDetails,
