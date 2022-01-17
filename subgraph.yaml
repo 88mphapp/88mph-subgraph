@@ -1807,7 +1807,6 @@ templates:
       entities:
         - Deposit
         - Funding
-        - FunderDetails
         - User
         - Funder
         - UserTotalDeposit
@@ -1839,7 +1838,6 @@ templates:
       entities:
         - Deposit
         - Funding
-        - FunderDetails
         - User
         - Funder
         - UserTotalDeposit
