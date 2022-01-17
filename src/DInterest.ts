@@ -11,7 +11,12 @@ import {
 } from "../generated/cDAIPool/DInterest";
 import { MoneyMarket } from "../generated/cDAIPool/MoneyMarket";
 import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
-import { Deposit, Funding, UserTotalDeposit } from "../generated/schema";
+import {
+  Deposit,
+  FunderDetails,
+  Funding,
+  UserTotalDeposit
+} from "../generated/schema";
 import {
   POOL_ADDRESSES,
   POOL_DEPLOY_BLOCKS,
@@ -294,6 +299,7 @@ export function handleEFund(event: EFund): void {
     funding.totalInterestEarned = ZERO_DEC;
     funding.totalRefundEarned = ZERO_DEC;
     funding.totalMPHEarned = ZERO_DEC;
+    funding.funderDetails = new Array<string>(0);
 
     // Update Deposit
     let deposit = Deposit.load(funding.deposit);
@@ -318,6 +324,31 @@ export function handleEFund(event: EFund): void {
     funder.numFundings = funder.numFundings.plus(ONE_INT);
     funder.save();
   }
+
+  // Update Funder Details
+  let funderDetails = FunderDetails.load(
+    funder.address + DELIMITER + pool.address + DELIMITER + fundingID.toString()
+  );
+  if (funderDetails == null) {
+    funderDetails = new FunderDetails(
+      funder.address +
+        DELIMITER +
+        pool.address +
+        DELIMITER +
+        fundingID.toString()
+    );
+    funderDetails.address = funder.address;
+    funderDetails.fundAmount = ZERO_DEC;
+    funderDetails.balance = ZERO_DEC;
+  }
+  funderDetails.fundAmount = funderDetails.fundAmount.plus(
+    normalize(event.params.fundAmount, stablecoinDecimals)
+  );
+  funderDetails.balance = funderDetails.balance.plus(
+    normalize(event.params.tokenAmount, stablecoinDecimals)
+  );
+  funderDetails.save();
+
   // Update funding
   funding.active = true;
   funding.recordedMoneyMarketIncomeIndex =
@@ -332,6 +363,11 @@ export function handleEFund(event: EFund): void {
   funding.fundedDeficitAmount = funding.fundedDeficitAmount.plus(
     normalize(event.params.fundAmount, stablecoinDecimals)
   );
+  if (!funding.funderDetails.includes(funderDetails.id)) {
+    let details = funding.funderDetails;
+    details.push(funderDetails.id);
+    funding.funderDetails = details;
+  }
   funding.save();
 }
 
