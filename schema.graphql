@@ -73,6 +73,13 @@ type Funder @entity {
   numFundings: BigInt!
 }
 
+type FunderDetails @entity {
+  id: ID!
+  address: String!
+  fundAmount: BigDecimal!
+  balance: BigDecimal!
+}
+
 type Funding @entity {
   id: ID!
   nftID: BigInt!
@@ -86,6 +93,7 @@ type Funding @entity {
   totalInterestEarned: BigDecimal!
   totalRefundEarned: BigDecimal!
   totalMPHEarned: BigDecimal!
+  funderDetails: [FunderDetails!]!
 }
 
 type Vest @entity {
