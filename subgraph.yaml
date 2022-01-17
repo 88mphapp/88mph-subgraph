@@ -19,6 +19,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -70,6 +71,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -121,6 +123,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -172,6 +175,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -223,6 +227,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -274,6 +279,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -325,6 +331,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -376,6 +383,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -427,6 +435,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -478,6 +487,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -529,6 +539,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -580,6 +591,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -631,6 +643,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -682,6 +695,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -733,6 +747,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -784,6 +799,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -835,6 +851,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -886,6 +903,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -937,6 +955,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -988,6 +1007,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1039,6 +1059,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1090,6 +1111,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1141,6 +1163,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1192,6 +1215,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1243,6 +1267,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1294,6 +1319,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1345,6 +1371,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1396,6 +1423,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1447,6 +1475,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1498,6 +1527,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1549,6 +1579,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1600,6 +1631,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1651,6 +1683,7 @@ dataSources:
         - User
         - Deposit
         - Funder
+        - FunderDetails
         - Funding
         - UserTotalDeposit
         - FunderTotalInterest
@@ -1774,6 +1807,7 @@ templates:
       entities:
         - Deposit
         - Funding
+        - FunderDetails
         - User
         - Funder
         - UserTotalDeposit
@@ -1805,6 +1839,7 @@ templates:
       entities:
         - Deposit
         - Funding
+        - FunderDetails
         - User
         - Funder
         - UserTotalDeposit
