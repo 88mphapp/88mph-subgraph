@@ -6,9 +6,9 @@ import {
   ByteArray,
   crypto
 } from "@graphprotocol/graph-ts";
-import { DInterest } from "../generated/cDAIPool/DInterest";
-import { ERC20 } from "../generated/cDAIPool/ERC20";
-import { IInterestOracle } from "../generated/cDAIPool/IInterestOracle";
+import { DInterest } from "../generated/aave-dai/DInterest";
+import { ERC20 } from "../generated/aave-dai/ERC20";
+import { IInterestOracle } from "../generated/aave-dai/IInterestOracle";
 import { DPool, User, Funder, GlobalStats } from "../generated/schema";
 import { NFT } from "../generated/templates";
 
@@ -26,7 +26,7 @@ export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(19889933);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(23724900);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 // Note: the addresses below must be in lower case
