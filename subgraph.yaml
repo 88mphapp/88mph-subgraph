@@ -317,7 +317,6 @@ templates:
         - Funding
         - User
         - Funder
-        - FunderDetails
         - UserTotalDeposit
         - FunderTotalInterest
       abis:
