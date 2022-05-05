@@ -5,7 +5,7 @@ import {
   Funding,
   DPool,
   UserTotalDeposit,
-  FunderTotalInterest,
+  FunderTotalInterest
 } from "../generated/schema";
 import {
   DELIMITER,
@@ -16,7 +16,7 @@ import {
   stringEqual,
   ZERO_ADDR,
   ZERO_DEC,
-  ZERO_INT,
+  ZERO_INT
 } from "./utils";
 
 export function handleTransfer(event: ETransfer): void {
@@ -32,14 +32,14 @@ export function handleTransfer(event: ETransfer): void {
   let from = event.params.from;
   let to = event.params.to;
   let context = dataSource.context();
-  let pool = DPool.load(context.getString("pool")) as DPool;
+  let pool = DPool.load(context.getString("pool"))! as DPool;
   let type = context.getString("type");
   let poolList = getPoolList();
 
   if (stringEqual(type, "deposit")) {
     let fromUser = getUser(from, pool);
     let toUser = getUser(to, pool);
-    let deposit = Deposit.load(pool.address + DELIMITER + tokenId.toString());
+    let deposit = Deposit.load(pool.address + DELIMITER + tokenId.toString())!;
 
     // update from user
     fromUser.numDeposits = fromUser.numDeposits.minus(ONE_INT);
@@ -56,7 +56,7 @@ export function handleTransfer(event: ETransfer): void {
     let fromUserTotalDepositID = fromUser.id + DELIMITER + pool.id;
     let fromUserTotalDepositEntity = UserTotalDeposit.load(
       fromUserTotalDepositID
-    );
+    )!;
     if (deposit.active) {
       fromUserTotalDepositEntity.totalActiveDeposit = fromUserTotalDepositEntity.totalActiveDeposit.minus(
         deposit.amount
@@ -93,7 +93,7 @@ export function handleTransfer(event: ETransfer): void {
     toUser.save();
 
     let toUserTotalDepositID = toUser.id + DELIMITER + pool.id;
-    let toUserTotalDepositEntity = UserTotalDeposit.load(toUserTotalDepositID);
+    let toUserTotalDepositEntity = UserTotalDeposit.load(toUserTotalDepositID)!;
     if (toUserTotalDepositEntity == null) {
       // Initialize UserTotalDeposits entity
       toUserTotalDepositEntity = new UserTotalDeposit(toUserTotalDepositID);
@@ -126,7 +126,7 @@ export function handleTransfer(event: ETransfer): void {
   } else if (stringEqual(type, "funding")) {
     let fromFunder = getFunder(from, pool);
     let toFunder = getFunder(to, pool);
-    let funding = Funding.load(pool.address + DELIMITER + tokenId.toString());
+    let funding = Funding.load(pool.address + DELIMITER + tokenId.toString())!;
 
     // update fromFunder
     fromFunder.numFundings = fromFunder.numFundings.minus(ONE_INT);
@@ -136,7 +136,7 @@ export function handleTransfer(event: ETransfer): void {
     let fromFunderTotalInterestID = fromFunder.id + DELIMITER + pool.id;
     let fromFunderTotalInterestEntity = FunderTotalInterest.load(
       fromFunderTotalInterestID
-    );
+    )!;
     fromFunderTotalInterestEntity.totalDeficitFunded = fromFunderTotalInterestEntity.totalDeficitFunded.minus(
       funding.fundedDeficitAmount
     );
@@ -156,7 +156,7 @@ export function handleTransfer(event: ETransfer): void {
     let toFunderTotalInterestID = toFunder.id + DELIMITER + pool.id;
     let toFunderTotalInterestEntity = FunderTotalInterest.load(
       toFunderTotalInterestID
-    );
+    )!;
     if (toFunderTotalInterestEntity == null) {
       // Initialize UserTotalDeposits entity
       toFunderTotalInterestEntity = new FunderTotalInterest(
