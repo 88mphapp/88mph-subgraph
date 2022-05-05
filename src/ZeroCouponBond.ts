@@ -10,7 +10,7 @@ import { DELIMITER } from "./utils";
 export function handleMint(event: MintEvent): void {
   let fractionalDeposit = FractionalDeposit.load(
     event.params.fractionalDepositAddress.toHex()
-  )!;
+  );
   if (fractionalDeposit == null) {
     // Initialize fractionalDeposit
     fractionalDeposit = new FractionalDeposit(
@@ -43,7 +43,9 @@ export function handleRedeemFractionalDepositShares(
 ): void {
   let fractionalDeposit = FractionalDeposit.load(
     event.params.fractionalDepositAddress.toHex()
-  )!;
-  fractionalDeposit.active = false;
-  fractionalDeposit.save();
+  );
+  if (fractionalDeposit) {
+    fractionalDeposit.active = false;
+    fractionalDeposit.save();
+  }
 }
