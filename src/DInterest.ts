@@ -303,11 +303,27 @@ export function handleBlock(block: ethereum.Block): void {
         let poolContract = DInterest.bind(Address.fromString(pool.address))
         let stablecoinDecimals: number = POOL_STABLECOIN_DECIMALS[i]
         let oracleContract = IInterestOracle.bind(poolContract.interestOracle())
-        pool.oneYearInterestRate = normalize(poolContract.calculateInterestAmount(tenPow(18), YEAR))
-        let surplusResult = poolContract.surplus()
-        pool.surplus = normalize(surplusResult.value1, stablecoinDecimals).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC)
-        pool.moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex()
-        pool.oracleInterestRate = normalize(oracleContract.updateAndQuery().value1)
+
+        let oneYearInterestRate = poolContract.try_calculateInterestAmount(tenPow(18), YEAR)
+        pool.oneYearInterestRate = oneYearInterestRate.reverted
+          ? ZERO_DEC
+          : normalize(oneYearInterestRate.value)
+
+        let surplusResult = poolContract.try_surplus()
+        pool.surplus = surplusResult.reverted
+          ? ZERO_DEC
+          : normalize(surplusResult.value.value1, stablecoinDecimals).times(surplusResult.value.value0 ? NEGONE_DEC : ONE_DEC)
+
+        let moneyMarketIncomeIndex = poolContract.try_moneyMarketIncomeIndex()
+        pool.moneyMarketIncomeIndex = moneyMarketIncomeIndex.reverted
+          ? ZERO_INT
+          : moneyMarketIncomeIndex.value
+
+        let oracleInterestRate = oracleContract.try_updateAndQuery()
+        pool.oracleInterestRate = oracleInterestRate.reverted
+          ? ZERO_DEC
+          : normalize(oracleInterestRate.value.value1)
+
         pool.save()
       }
     }
