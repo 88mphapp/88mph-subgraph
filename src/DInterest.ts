@@ -107,7 +107,7 @@ export function handleEDeposit(event: EDeposit): void {
 
   // Update UserTotalDeposit
   let userTotalDepositID = user.id + DELIMITER + pool.id;
-  let userTotalDepositEntity = UserTotalDeposit.load(userTotalDepositID);
+  let userTotalDepositEntity = UserTotalDeposit.load(userTotalDepositID)!;
   if (userTotalDepositEntity == null) {
     // Initialize UserTotalDeposits entity
     userTotalDepositEntity = new UserTotalDeposit(userTotalDepositID);
@@ -138,170 +138,156 @@ export function handleEWithdraw(event: EWithdraw): void {
   let poolContract = DInterest.bind(event.address);
   let deposit = Deposit.load(
     pool.address + DELIMITER + event.params.depositID.toString()
+  )!;
+  let user = getUser(Address.fromString(deposit.user), pool);
+  let stablecoinContract = ERC20.bind(poolContract.stablecoin());
+  let stablecoinDecimals: number = stablecoinContract.decimals();
+
+  // Set Deposit entity to inactive
+  deposit.active = false;
+  deposit.takeBackMPHAmount = normalize(event.params.takeBackMPHAmount);
+
+  // Update User statistics
+  user.numActiveDeposits = user.numActiveDeposits.minus(ONE_INT);
+  user.totalMPHPaidBack = user.totalMPHPaidBack.plus(deposit.takeBackMPHAmount);
+  user.save();
+
+  // Update UserTotalDeposit
+  let userTotalDepositID = user.id + DELIMITER + pool.id;
+  let userTotalDepositEntity = UserTotalDeposit.load(userTotalDepositID)!;
+  userTotalDepositEntity.totalActiveDeposit = userTotalDepositEntity.totalActiveDeposit.minus(
+    deposit.amount
   );
-  if (deposit) {
-    let user = getUser(Address.fromString(deposit.user), pool);
-    let stablecoinContract = ERC20.bind(poolContract.stablecoin());
-    let stablecoinDecimals: number = stablecoinContract.decimals();
+  userTotalDepositEntity.totalInterestEarned = userTotalDepositEntity.totalInterestEarned.minus(
+    deposit.interestEarned
+  );
+  userTotalDepositEntity.save();
 
-    // Set Deposit entity to inactive
-    deposit.active = false;
-    deposit.takeBackMPHAmount = normalize(event.params.takeBackMPHAmount);
+  // Update DPool statistics
+  if (user.numActiveDeposits.equals(ZERO_INT)) {
+    // User has become inactive
+    let poolList = getPoolList();
+    poolList.numActiveUsers = poolList.numActiveUsers.minus(ONE_INT);
+    poolList.save();
+  }
+  pool.numActiveDeposits = pool.numActiveDeposits.minus(ONE_INT);
+  pool.totalActiveDeposit = pool.totalActiveDeposit.minus(deposit.amount);
+  pool.unfundedDepositAmount = normalize(
+    poolContract.unfundedUserDepositAmount(),
+    stablecoinDecimals
+  );
+  pool.save();
 
-    // Update User statistics
-    user.numActiveDeposits = user.numActiveDeposits.minus(ONE_INT);
-    user.totalMPHPaidBack = user.totalMPHPaidBack.plus(
-      deposit.takeBackMPHAmount
+  let fundingID = event.params.fundingID;
+  let moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex();
+  if (fundingID.notEqual(ZERO_INT)) {
+    // Update Funding
+    let funding = Funding.load(
+      pool.address + DELIMITER + fundingID.toString()
+    )!;
+    let fundingObj = poolContract.getFunding(fundingID);
+    let interestAmount = funding.recordedFundedDepositAmount
+      .times(moneyMarketIncomeIndex.toBigDecimal())
+      .div(funding.recordedMoneyMarketIncomeIndex.toBigDecimal())
+      .minus(funding.recordedFundedDepositAmount);
+    let mintMPHAmount = funding.creationTimestamp.gt(
+      deposit.maturationTimestamp
+    )
+      ? pool.mphFunderRewardMultiplier
+          .times(deposit.amount)
+          .times(
+            deposit.maturationTimestamp
+              .minus(funding.creationTimestamp)
+              .toBigDecimal()
+          )
+      : ZERO_DEC;
+    funding.totalInterestEarned = funding.totalInterestEarned.plus(
+      interestAmount
     );
-    user.save();
-
-    // Update UserTotalDeposit
-    let userTotalDepositID = user.id + DELIMITER + pool.id;
-    let userTotalDepositEntity = UserTotalDeposit.load(userTotalDepositID);
-    if (userTotalDepositEntity) {
-      userTotalDepositEntity.totalActiveDeposit = userTotalDepositEntity.totalActiveDeposit.minus(
-        deposit.amount
-      );
-      userTotalDepositEntity.totalInterestEarned = userTotalDepositEntity.totalInterestEarned.minus(
-        deposit.interestEarned
-      );
-      userTotalDepositEntity.save();
-    }
-
-    // Update DPool statistics
-    if (user.numActiveDeposits.equals(ZERO_INT)) {
-      // User has become inactive
-      let poolList = getPoolList();
-      poolList.numActiveUsers = poolList.numActiveUsers.minus(ONE_INT);
-      poolList.save();
-    }
-    pool.numActiveDeposits = pool.numActiveDeposits.minus(ONE_INT);
-    pool.totalActiveDeposit = pool.totalActiveDeposit.minus(deposit.amount);
-    pool.unfundedDepositAmount = normalize(
-      poolContract.unfundedUserDepositAmount(),
+    funding.recordedFundedDepositAmount = normalize(
+      fundingObj.recordedFundedDepositAmount,
       stablecoinDecimals
     );
-    pool.save();
-
-    let fundingID = event.params.fundingID;
-    let moneyMarketIncomeIndex = poolContract.moneyMarketIncomeIndex();
-    if (fundingID.notEqual(ZERO_INT)) {
-      // Update Funding
-      let funding = Funding.load(
-        pool.address + DELIMITER + fundingID.toString()
-      );
-      if (funding) {
-        let fundingObj = poolContract.getFunding(fundingID);
-        let interestAmount = funding.recordedFundedDepositAmount
-          .times(moneyMarketIncomeIndex.toBigDecimal())
-          .div(funding.recordedMoneyMarketIncomeIndex.toBigDecimal())
-          .minus(funding.recordedFundedDepositAmount);
-        let mintMPHAmount = funding.creationTimestamp.gt(
-          deposit.maturationTimestamp
-        )
-          ? pool.mphFunderRewardMultiplier
-              .times(deposit.amount)
-              .times(
-                deposit.maturationTimestamp
-                  .minus(funding.creationTimestamp)
-                  .toBigDecimal()
-              )
-          : ZERO_DEC;
-        funding.totalInterestEarned = funding.totalInterestEarned.plus(
-          interestAmount
-        );
-        funding.recordedFundedDepositAmount = normalize(
-          fundingObj.recordedFundedDepositAmount,
+    let recordedMoneyMarketIncomeIndex = funding.recordedMoneyMarketIncomeIndex;
+    funding.recordedMoneyMarketIncomeIndex =
+      fundingObj.recordedMoneyMarketIncomeIndex;
+    funding.active = funding.recordedFundedDepositAmount.gt(ZERO_DEC);
+    funding.mphRewardEarned = funding.mphRewardEarned.plus(mintMPHAmount);
+    if (event.params.early) {
+      // Early withdraw, update refund amount
+      let depositSurplusObject = poolContract.surplusOfDeposit(deposit.nftID);
+      let refundAmount = ZERO_DEC;
+      if (depositSurplusObject.value0) {
+        // Surplus is negative, add refund amount
+        refundAmount = normalize(
+          depositSurplusObject.value1,
           stablecoinDecimals
         );
-        let recordedMoneyMarketIncomeIndex =
-          funding.recordedMoneyMarketIncomeIndex;
-        funding.recordedMoneyMarketIncomeIndex =
-          fundingObj.recordedMoneyMarketIncomeIndex;
-        funding.active = funding.recordedFundedDepositAmount.gt(ZERO_DEC);
-        funding.mphRewardEarned = funding.mphRewardEarned.plus(mintMPHAmount);
-        if (event.params.early) {
-          // Early withdraw, update refund amount
-          let depositSurplusObject = poolContract.surplusOfDeposit(
-            deposit.nftID
+      }
+      funding.refundAmount = funding.refundAmount.plus(refundAmount);
+      deposit.fundingRefundAmount = refundAmount;
+    }
+    funding.save();
+
+    // Update funded Deposits
+    for (
+      let id = funding.fromDepositID.plus(ONE_INT);
+      id.le(funding.toDepositID);
+      id = id.plus(ONE_INT)
+    ) {
+      let fundedDeposit = Deposit.load(
+        pool.address + DELIMITER + id.toString()
+      )!;
+      if (fundedDeposit.active) {
+        let fundedDepositInterestGenerated = fundedDeposit.amount
+          .plus(fundedDeposit.interestEarned)
+          .times(
+            moneyMarketIncomeIndex
+              .toBigDecimal()
+              .div(recordedMoneyMarketIncomeIndex.toBigDecimal())
+              .minus(ONE_INT.toBigDecimal())
           );
-          let refundAmount = ZERO_DEC;
-          if (depositSurplusObject.value0) {
-            // Surplus is negative, add refund amount
-            refundAmount = normalize(
-              depositSurplusObject.value1,
-              stablecoinDecimals
-            );
-          }
-          funding.refundAmount = funding.refundAmount.plus(refundAmount);
-          deposit.fundingRefundAmount = refundAmount;
-        }
-        funding.save();
-
-        // Update funded Deposits
-        for (
-          let id = funding.fromDepositID.plus(ONE_INT);
-          id.le(funding.toDepositID);
-          id = id.plus(ONE_INT)
-        ) {
-          let fundedDeposit = Deposit.load(
-            pool.address + DELIMITER + id.toString()
-          );
-          if (fundedDeposit) {
-            if (fundedDeposit.active) {
-              let fundedDepositInterestGenerated = fundedDeposit.amount
-                .plus(fundedDeposit.interestEarned)
-                .times(
-                  moneyMarketIncomeIndex
-                    .toBigDecimal()
-                    .div(recordedMoneyMarketIncomeIndex.toBigDecimal())
-                    .minus(ONE_INT.toBigDecimal())
-                );
-              fundedDeposit.fundingInterestPaid = fundedDeposit.fundingInterestPaid.plus(
-                fundedDepositInterestGenerated
-              );
-              fundedDeposit.save();
-            }
-          }
-        }
-
-        // Update Funder
-        let funder = getFunder(event.params.sender, pool);
-
-        funder.totalMPHEarned = funder.totalMPHEarned.plus(mintMPHAmount);
-        funder.save();
-
-        // Update FunderTotalInterest
-        let funderTotalInterestID = funding.funder + DELIMITER + pool.id;
-        let funderTotalInterestEntity = FunderTotalInterest.load(
-          funderTotalInterestID
+        fundedDeposit.fundingInterestPaid = fundedDeposit.fundingInterestPaid.plus(
+          fundedDepositInterestGenerated
         );
-        if (funderTotalInterestEntity) {
-          if (!funding.active) {
-            funderTotalInterestEntity.totalDeficitFunded = funderTotalInterestEntity.totalDeficitFunded.minus(
-              funding.fundedDeficitAmount
-            );
-            funderTotalInterestEntity.totalInterestEarned = funderTotalInterestEntity.totalInterestEarned.minus(
-              funding.totalInterestEarned
-            );
-          } else {
-            funderTotalInterestEntity.totalInterestEarned = funderTotalInterestEntity.totalInterestEarned.plus(
-              interestAmount
-            );
-            funderTotalInterestEntity.totalHistoricalInterestEarned = funderTotalInterestEntity.totalHistoricalInterestEarned.plus(
-              interestAmount
-            );
-          }
-          funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.minus(
-            deposit.amount
-          );
-          funderTotalInterestEntity.save();
-        }
+        fundedDeposit.save();
       }
     }
 
-    deposit.save();
+    // Update Funder
+    let funder = getFunder(event.params.sender, pool);
+
+    funder.totalMPHEarned = funder.totalMPHEarned.plus(mintMPHAmount);
+    funder.save();
+
+    // Update FunderTotalInterest
+    let funderTotalInterestID = funding.funder + DELIMITER + pool.id;
+    let funderTotalInterestEntity = FunderTotalInterest.load(
+      funderTotalInterestID
+    )!;
+
+    if (!funding.active) {
+      funderTotalInterestEntity.totalDeficitFunded = funderTotalInterestEntity.totalDeficitFunded.minus(
+        funding.fundedDeficitAmount
+      );
+      funderTotalInterestEntity.totalInterestEarned = funderTotalInterestEntity.totalInterestEarned.minus(
+        funding.totalInterestEarned
+      );
+    } else {
+      funderTotalInterestEntity.totalInterestEarned = funderTotalInterestEntity.totalInterestEarned.plus(
+        interestAmount
+      );
+      funderTotalInterestEntity.totalHistoricalInterestEarned = funderTotalInterestEntity.totalHistoricalInterestEarned.plus(
+        interestAmount
+      );
+    }
+    funderTotalInterestEntity.totalRecordedFundedDepositAmount = funderTotalInterestEntity.totalRecordedFundedDepositAmount.minus(
+      deposit.amount
+    );
+    funderTotalInterestEntity.save();
   }
+
+  deposit.save();
 }
 
 export function handleEFund(event: EFund): void {
@@ -366,12 +352,10 @@ export function handleEFund(event: EFund): void {
     id.le(funding.toDepositID);
     id = id.plus(ONE_INT)
   ) {
-    let deposit = Deposit.load(pool.address + DELIMITER + id.toString());
-    if (deposit) {
-      if (deposit.active) {
-        deposit.fundingID = fundingID;
-        deposit.save();
-      }
+    let deposit = Deposit.load(pool.address + DELIMITER + id.toString())!;
+    if (deposit.active) {
+      deposit.fundingID = fundingID;
+      deposit.save();
     }
   }
 
@@ -379,7 +363,7 @@ export function handleEFund(event: EFund): void {
   let funderTotalInterestID = funder.id + DELIMITER + pool.id;
   let funderTotalInterestEntity = FunderTotalInterest.load(
     funderTotalInterestID
-  );
+  )!;
   if (funderTotalInterestEntity == null) {
     // Initialize UserTotalDeposits entity
     funderTotalInterestEntity = new FunderTotalInterest(funderTotalInterestID);
