@@ -11,6 +11,7 @@ import {
 } from "../generated/aave-dai/DInterest";
 import { MoneyMarket } from "../generated/aave-dai/MoneyMarket";
 import { IInterestOracle } from "../generated/aave-dai/IInterestOracle";
+import { FundingMultitoken } from "../generated/aave-dai/FundingMultitoken";
 import {
   Deposit,
   FunderDetails,
@@ -25,6 +26,7 @@ import {
   DELIMITER,
   normalize,
   ZERO_DEC,
+  ZERO_INT,
   ONE_INT,
   getFunder,
   tenPow,
@@ -39,7 +41,6 @@ import {
   getTokenDecimals,
   getGlobalStats
 } from "./utils";
-import { FundingMultitoken } from "../generated/templates/FundingMultitoken/FundingMultitoken";
 
 export function handleEDeposit(event: EDeposit): void {
   let pool = getPool(event.address.toHex());
@@ -424,21 +425,35 @@ export function handleBlock(block: ethereum.Block): void {
         let oracleContract = IInterestOracle.bind(
           poolContract.interestOracle()
         );
-        pool.oneYearInterestRate = normalize(
-          poolContract.calculateInterestAmount(tenPow(18), YEAR)
+
+        let oneYearInterestRate = poolContract.try_calculateInterestAmount(
+          tenPow(18),
+          YEAR
         );
-        let surplusResult = poolContract.surplus();
-        pool.surplus = normalize(
-          surplusResult.value1,
-          stablecoinDecimals
-        ).times(surplusResult.value0 ? NEGONE_DEC : ONE_DEC);
+        pool.oneYearInterestRate = oneYearInterestRate.reverted
+          ? ZERO_DEC
+          : normalize(oneYearInterestRate.value);
+
+        let surplusResult = poolContract.try_surplus();
+        pool.surplus = surplusResult.reverted
+          ? ZERO_DEC
+          : normalize(surplusResult.value.value1, stablecoinDecimals).times(
+              surplusResult.value.value0 ? NEGONE_DEC : ONE_DEC
+            );
+
         let moneyMarket = MoneyMarket.bind(
           Address.fromString(pool.moneyMarket)
         );
-        pool.moneyMarketIncomeIndex = moneyMarket.incomeIndex();
-        pool.oracleInterestRate = normalize(
-          oracleContract.updateAndQuery().value1
-        );
+        let moneyMarketIncomeIndex = moneyMarket.try_incomeIndex();
+        pool.moneyMarketIncomeIndex = moneyMarketIncomeIndex.reverted
+          ? ZERO_INT
+          : moneyMarketIncomeIndex.value;
+
+        let oracleInterestRate = oracleContract.try_updateAndQuery();
+        pool.oracleInterestRate = oracleInterestRate.reverted
+          ? ZERO_DEC
+          : normalize(oracleInterestRate.value.value1);
+
         pool.save();
       }
     }
