@@ -1753,6 +1753,31 @@ dataSources:
           handler: handleTransfer
       file: ./src/Vesting.ts
   - kind: ethereum/contract
+    name: Vesting03
+    network: mainnet
+    source:
+      address: "0x6A5aD7216e11157eB0Fb26174196B06AbB3859f4"
+      abi: Vesting03
+      startBlock: 15183416
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Vest
+        - Deposit
+      abis:
+        - name: Vesting03
+          file: ./abis/Vesting03.json
+      eventHandlers:
+        - event: Staked(indexed uint64,uint256)
+          handler: handleStaked
+        - event: RewardPaid(indexed uint64,uint256)
+          handler: handleRewardPaid
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/Vesting03.ts
+  - kind: ethereum/contract
     name: MPHMinter
     network: mainnet
     source:
