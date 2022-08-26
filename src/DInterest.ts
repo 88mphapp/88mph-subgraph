@@ -141,17 +141,20 @@ export function handleETopupDeposit(event: ETopupDeposit): void {
     pool.address + DELIMITER + event.params.depositID.toString()
   );
   let depositStruct = poolContract.getDeposit(event.params.depositID);
-  deposit.virtualTokenTotalSupply = normalize(
-    depositStruct.virtualTokenTotalSupply,
-    stablecoinDecimals
-  );
-  deposit.interestRate = normalize(depositStruct.interestRate);
-  deposit.feeRate = normalize(depositStruct.feeRate);
-  deposit.amount = deposit.virtualTokenTotalSupply.div(
-    deposit.interestRate.plus(ONE_DEC)
-  );
-  deposit.averageRecordedIncomeIndex = depositStruct.averageRecordedIncomeIndex;
-  deposit.save();
+  if (deposit !== null) {
+    deposit.virtualTokenTotalSupply = normalize(
+      depositStruct.virtualTokenTotalSupply,
+      stablecoinDecimals
+    );
+    deposit.interestRate = normalize(depositStruct.interestRate);
+    deposit.feeRate = normalize(depositStruct.feeRate);
+    deposit.amount = deposit.virtualTokenTotalSupply.div(
+      deposit.interestRate.plus(ONE_DEC)
+    );
+    deposit.averageRecordedIncomeIndex =
+      depositStruct.averageRecordedIncomeIndex;
+    deposit.save();
+  }
 
   // Update DPool statistics
   let depositAmount = normalize(event.params.depositAmount, stablecoinDecimals);
@@ -168,16 +171,18 @@ export function handleETopupDeposit(event: ETopupDeposit): void {
   // Update UserTotalDeposit
   let userTotalDepositID = user.id + DELIMITER + pool.id;
   let userTotalDepositEntity = UserTotalDeposit.load(userTotalDepositID);
-  userTotalDepositEntity.totalDeposit = userTotalDepositEntity.totalDeposit.plus(
-    depositAmount
-  );
-  userTotalDepositEntity.totalInterestOwed = userTotalDepositEntity.totalInterestOwed.plus(
-    interestAmount
-  );
-  userTotalDepositEntity.totalFeeOwed = userTotalDepositEntity.totalFeeOwed.plus(
-    feeAmount
-  );
-  userTotalDepositEntity.save();
+  if (userTotalDepositEntity !== null) {
+    userTotalDepositEntity.totalDeposit = userTotalDepositEntity.totalDeposit.plus(
+      depositAmount
+    );
+    userTotalDepositEntity.totalInterestOwed = userTotalDepositEntity.totalInterestOwed.plus(
+      interestAmount
+    );
+    userTotalDepositEntity.totalFeeOwed = userTotalDepositEntity.totalFeeOwed.plus(
+      feeAmount
+    );
+    userTotalDepositEntity.save();
+  }
 }
 
 export function handleEWithdraw(event: EWithdraw): void {
@@ -194,60 +199,68 @@ export function handleEWithdraw(event: EWithdraw): void {
   // Update UserTotalDeposit
   let userTotalDepositID = user.id + DELIMITER + pool.id;
   let userTotalDepositEntity = UserTotalDeposit.load(userTotalDepositID);
-  let depositAmount = normalize(
-    event.params.virtualTokenAmount,
-    stablecoinDecimals
-  ).div(deposit.interestRate.plus(ONE_DEC));
-  let interestAmount = normalize(
-    event.params.virtualTokenAmount,
-    stablecoinDecimals
-  ).minus(depositAmount);
-  let feeAmount = depositAmount.times(deposit.feeRate);
-  userTotalDepositEntity.totalDeposit = userTotalDepositEntity.totalDeposit.minus(
-    depositAmount
-  );
-  userTotalDepositEntity.totalInterestOwed = userTotalDepositEntity.totalInterestOwed.minus(
-    interestAmount
-  );
-  userTotalDepositEntity.totalFeeOwed = userTotalDepositEntity.totalFeeOwed.minus(
-    feeAmount
-  );
-  userTotalDepositEntity.save();
 
-  // Update DPool statistics
-  if (!event.params.early) {
-    pool.historicalInterestPaid = pool.historicalInterestPaid.plus(
-      interestAmount
+  if (deposit !== null) {
+    let depositAmount = normalize(
+      event.params.virtualTokenAmount,
+      stablecoinDecimals
+    ).div(deposit.interestRate.plus(ONE_DEC));
+    let interestAmount = normalize(
+      event.params.virtualTokenAmount,
+      stablecoinDecimals
+    ).minus(depositAmount);
+    let feeAmount = depositAmount.times(deposit.feeRate);
+    if (userTotalDepositEntity !== null) {
+      userTotalDepositEntity.totalDeposit = userTotalDepositEntity.totalDeposit.minus(
+        depositAmount
+      );
+      userTotalDepositEntity.totalInterestOwed = userTotalDepositEntity.totalInterestOwed.minus(
+        interestAmount
+      );
+      userTotalDepositEntity.totalFeeOwed = userTotalDepositEntity.totalFeeOwed.minus(
+        feeAmount
+      );
+      userTotalDepositEntity.save();
+    }
+
+    // Update DPool statistics
+    if (!event.params.early) {
+      pool.historicalInterestPaid = pool.historicalInterestPaid.plus(
+        interestAmount
+      );
+    }
+    pool.totalDeposit = pool.totalDeposit.minus(depositAmount);
+    pool.totalInterestOwed = pool.totalInterestOwed.minus(interestAmount);
+    pool.totalFeeOwed = pool.totalFeeOwed.minus(feeAmount);
+    pool.save();
+
+    let depositFunding = deposit.funding;
+    if (depositFunding !== null) {
+      // Update Funding
+      let funding = Funding.load(depositFunding);
+      if (funding !== null) {
+        let fundingID = funding.nftID;
+        let fundingObj = poolContract.getFunding(fundingID);
+        funding.principalPerToken = fundingObj.principalPerToken.divDecimal(
+          ULTRA_PRECISION
+        );
+        funding.recordedMoneyMarketIncomeIndex =
+          fundingObj.recordedMoneyMarketIncomeIndex;
+        funding.active = funding.principalPerToken.gt(ZERO_DEC);
+
+        funding.save();
+      }
+    }
+
+    // Update Deposit
+    deposit.virtualTokenTotalSupply = deposit.virtualTokenTotalSupply.minus(
+      normalize(event.params.virtualTokenAmount, stablecoinDecimals)
     );
-  }
-  pool.totalDeposit = pool.totalDeposit.minus(depositAmount);
-  pool.totalInterestOwed = pool.totalInterestOwed.minus(interestAmount);
-  pool.totalFeeOwed = pool.totalFeeOwed.minus(feeAmount);
-  pool.save();
-
-  if (deposit.funding != null) {
-    // Update Funding
-    let funding = Funding.load(deposit.funding);
-    let fundingID = funding.nftID;
-    let fundingObj = poolContract.getFunding(fundingID);
-    funding.principalPerToken = fundingObj.principalPerToken.divDecimal(
-      ULTRA_PRECISION
+    deposit.amount = deposit.virtualTokenTotalSupply.div(
+      deposit.interestRate.plus(ONE_DEC)
     );
-    funding.recordedMoneyMarketIncomeIndex =
-      fundingObj.recordedMoneyMarketIncomeIndex;
-    funding.active = funding.principalPerToken.gt(ZERO_DEC);
-
-    funding.save();
+    deposit.save();
   }
-
-  // Update Deposit
-  deposit.virtualTokenTotalSupply = deposit.virtualTokenTotalSupply.minus(
-    normalize(event.params.virtualTokenAmount, stablecoinDecimals)
-  );
-  deposit.amount = deposit.virtualTokenTotalSupply.div(
-    deposit.interestRate.plus(ONE_DEC)
-  );
-  deposit.save();
 }
 
 export function handleEPayFundingInterest(event: EPayFundingInterest): void {
@@ -260,24 +273,28 @@ export function handleEPayFundingInterest(event: EPayFundingInterest): void {
   );
 
   // Update Funding
-  let interestAmount = normalize(
-    event.params.interestAmount,
-    stablecoinDecimals
-  );
-  let refundAmount = normalize(event.params.refundAmount, stablecoinDecimals);
-  funding.totalInterestEarned = funding.totalInterestEarned.plus(
-    interestAmount
-  );
-  funding.totalRefundEarned = funding.totalRefundEarned.plus(refundAmount);
-  funding.save();
+  if (funding !== null) {
+    let interestAmount = normalize(
+      event.params.interestAmount,
+      stablecoinDecimals
+    );
+    let refundAmount = normalize(event.params.refundAmount, stablecoinDecimals);
+    funding.totalInterestEarned = funding.totalInterestEarned.plus(
+      interestAmount
+    );
+    funding.totalRefundEarned = funding.totalRefundEarned.plus(refundAmount);
+    funding.save();
 
-  // Update Deposit
-  let deposit = Deposit.load(funding.deposit);
-  deposit.fundingInterestPaid = deposit.fundingInterestPaid.plus(
-    interestAmount
-  );
-  deposit.fundingRefundPaid = deposit.fundingRefundPaid.plus(refundAmount);
-  deposit.save();
+    // Update Deposit
+    let deposit = Deposit.load(funding.deposit);
+    if (deposit !== null) {
+      deposit.fundingInterestPaid = deposit.fundingInterestPaid.plus(
+        interestAmount
+      );
+      deposit.fundingRefundPaid = deposit.fundingRefundPaid.plus(refundAmount);
+      deposit.save();
+    }
+  }
 }
 
 export function handleEFund(event: EFund): void {
@@ -309,8 +326,10 @@ export function handleEFund(event: EFund): void {
 
     // Update Deposit
     let deposit = Deposit.load(funding.deposit);
-    deposit.funding = funding.id;
-    deposit.save();
+    if (deposit !== null) {
+      deposit.funding = funding.id;
+      deposit.save();
+    }
 
     // Update DPool statistics
     pool.numFundings = pool.numFundings.plus(ONE_INT);

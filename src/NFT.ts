@@ -29,67 +29,71 @@ export function handleTransfer(event: ETransfer): void {
   let fromUser = getUser(from, pool);
   let toUser = getUser(to, pool);
   let deposit = Deposit.load(pool.address + DELIMITER + tokenId.toString());
-  let depositAmount = deposit.amount;
-  let interestAmount = depositAmount.times(deposit.interestRate);
-  let feeAmount = depositAmount.times(deposit.feeRate);
+  if (deposit !== null) {
+    let depositAmount = deposit.amount;
+    let interestAmount = depositAmount.times(deposit.interestRate);
+    let feeAmount = depositAmount.times(deposit.feeRate);
 
-  // update from user
-  fromUser.numDeposits = fromUser.numDeposits.minus(ONE_INT);
-  fromUser.save();
+    // update from user
+    fromUser.numDeposits = fromUser.numDeposits.minus(ONE_INT);
+    fromUser.save();
 
-  // update from user total deposits
-  let fromUserTotalDepositID = fromUser.id + DELIMITER + pool.id;
-  let fromUserTotalDepositEntity = UserTotalDeposit.load(
-    fromUserTotalDepositID
-  );
-  fromUserTotalDepositEntity.totalDeposit = fromUserTotalDepositEntity.totalDeposit.plus(
-    depositAmount
-  );
-  fromUserTotalDepositEntity.totalInterestOwed = fromUserTotalDepositEntity.totalInterestOwed.plus(
-    interestAmount
-  );
-  fromUserTotalDepositEntity.totalFeeOwed = fromUserTotalDepositEntity.totalFeeOwed.plus(
-    feeAmount
-  );
-  fromUserTotalDepositEntity.save();
+    // update from user total deposits
+    let fromUserTotalDepositID = fromUser.id + DELIMITER + pool.id;
+    let fromUserTotalDepositEntity = UserTotalDeposit.load(
+      fromUserTotalDepositID
+    );
+    if (fromUserTotalDepositEntity !== null) {
+      fromUserTotalDepositEntity.totalDeposit = fromUserTotalDepositEntity.totalDeposit.plus(
+        depositAmount
+      );
+      fromUserTotalDepositEntity.totalInterestOwed = fromUserTotalDepositEntity.totalInterestOwed.plus(
+        interestAmount
+      );
+      fromUserTotalDepositEntity.totalFeeOwed = fromUserTotalDepositEntity.totalFeeOwed.plus(
+        feeAmount
+      );
+      fromUserTotalDepositEntity.save();
+    }
 
-  // update to user
-  toUser.numDeposits = toUser.numDeposits.plus(ONE_INT);
-  if (!toUser.pools.includes(pool.id)) {
-    // Add pool to list of pools
-    let pools = toUser.pools;
-    pools.push(pool.id);
-    toUser.pools = pools;
-    toUser.numPools = toUser.numPools.plus(ONE_INT);
-    pool.numUsers = pool.numUsers.plus(ONE_INT);
+    // update to user
+    toUser.numDeposits = toUser.numDeposits.plus(ONE_INT);
+    if (!toUser.pools.includes(pool.id)) {
+      // Add pool to list of pools
+      let pools = toUser.pools;
+      pools.push(pool.id);
+      toUser.pools = pools;
+      toUser.numPools = toUser.numPools.plus(ONE_INT);
+      pool.numUsers = pool.numUsers.plus(ONE_INT);
+    }
+    toUser.save();
+
+    let toUserTotalDepositID = toUser.id + DELIMITER + pool.id;
+    let toUserTotalDepositEntity = UserTotalDeposit.load(toUserTotalDepositID);
+    if (toUserTotalDepositEntity == null) {
+      // Initialize UserTotalDeposits entity
+      toUserTotalDepositEntity = new UserTotalDeposit(toUserTotalDepositID);
+      toUserTotalDepositEntity.user = toUser.id;
+      toUserTotalDepositEntity.pool = pool.id;
+      toUserTotalDepositEntity.totalDeposit = ZERO_DEC;
+      toUserTotalDepositEntity.totalInterestOwed = ZERO_DEC;
+      toUserTotalDepositEntity.totalFeeOwed = ZERO_DEC;
+    }
+    toUserTotalDepositEntity.totalDeposit = toUserTotalDepositEntity.totalDeposit.plus(
+      depositAmount
+    );
+    toUserTotalDepositEntity.totalInterestOwed = toUserTotalDepositEntity.totalInterestOwed.plus(
+      interestAmount
+    );
+    toUserTotalDepositEntity.totalFeeOwed = toUserTotalDepositEntity.totalFeeOwed.plus(
+      feeAmount
+    );
+    toUserTotalDepositEntity.save();
+
+    // update deposit
+    deposit.user = toUser.id;
+    deposit.save();
+
+    pool.save();
   }
-  toUser.save();
-
-  let toUserTotalDepositID = toUser.id + DELIMITER + pool.id;
-  let toUserTotalDepositEntity = UserTotalDeposit.load(toUserTotalDepositID);
-  if (toUserTotalDepositEntity == null) {
-    // Initialize UserTotalDeposits entity
-    toUserTotalDepositEntity = new UserTotalDeposit(toUserTotalDepositID);
-    toUserTotalDepositEntity.user = toUser.id;
-    toUserTotalDepositEntity.pool = pool.id;
-    toUserTotalDepositEntity.totalDeposit = ZERO_DEC;
-    toUserTotalDepositEntity.totalInterestOwed = ZERO_DEC;
-    toUserTotalDepositEntity.totalFeeOwed = ZERO_DEC;
-  }
-  toUserTotalDepositEntity.totalDeposit = toUserTotalDepositEntity.totalDeposit.plus(
-    depositAmount
-  );
-  toUserTotalDepositEntity.totalInterestOwed = toUserTotalDepositEntity.totalInterestOwed.plus(
-    interestAmount
-  );
-  toUserTotalDepositEntity.totalFeeOwed = toUserTotalDepositEntity.totalFeeOwed.plus(
-    feeAmount
-  );
-  toUserTotalDepositEntity.save();
-
-  // update deposit
-  deposit.user = toUser.id;
-  deposit.save();
-
-  pool.save();
 }

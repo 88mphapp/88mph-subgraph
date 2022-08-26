@@ -11,7 +11,7 @@ dataSources:
       startBlock: 13135260
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -63,7 +63,7 @@ dataSources:
       startBlock: 13156898
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -115,7 +115,7 @@ dataSources:
       startBlock: 13157335
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -167,7 +167,7 @@ dataSources:
       startBlock: 13157722
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -219,7 +219,7 @@ dataSources:
       startBlock: 13158219
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -271,7 +271,7 @@ dataSources:
       startBlock: 13160904
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -323,7 +323,7 @@ dataSources:
       startBlock: 13163970
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -375,7 +375,7 @@ dataSources:
       startBlock: 13279052
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -427,7 +427,7 @@ dataSources:
       startBlock: 13296905
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -479,7 +479,7 @@ dataSources:
       startBlock: 13297218
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -531,7 +531,7 @@ dataSources:
       startBlock: 13279338
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -583,7 +583,7 @@ dataSources:
       startBlock: 13304573
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -635,7 +635,7 @@ dataSources:
       startBlock: 13305708
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -687,7 +687,7 @@ dataSources:
       startBlock: 13279808
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -739,7 +739,7 @@ dataSources:
       startBlock: 13279959
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -791,7 +791,7 @@ dataSources:
       startBlock: 13280551
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -843,7 +843,7 @@ dataSources:
       startBlock: 13280877
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -895,7 +895,7 @@ dataSources:
       startBlock: 13281099
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -947,7 +947,7 @@ dataSources:
       startBlock: 13283471
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -999,7 +999,7 @@ dataSources:
       startBlock: 13283844
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1051,7 +1051,7 @@ dataSources:
       startBlock: 13297656
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1103,7 +1103,7 @@ dataSources:
       startBlock: 13304799
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1155,7 +1155,7 @@ dataSources:
       startBlock: 13298003
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1207,7 +1207,7 @@ dataSources:
       startBlock: 13305854
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1259,7 +1259,7 @@ dataSources:
       startBlock: 13284197
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1311,7 +1311,7 @@ dataSources:
       startBlock: 13305237
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1363,7 +1363,7 @@ dataSources:
       startBlock: 13298259
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1415,7 +1415,7 @@ dataSources:
       startBlock: 13305995
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1467,7 +1467,7 @@ dataSources:
       startBlock: 13284462
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1519,7 +1519,7 @@ dataSources:
       startBlock: 13298887
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1571,7 +1571,7 @@ dataSources:
       startBlock: 13284713
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1623,7 +1623,7 @@ dataSources:
       startBlock: 13285014
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1675,7 +1675,7 @@ dataSources:
       startBlock: 13299460
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPoolList
@@ -1727,7 +1727,7 @@ dataSources:
       startBlock: 13134912
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - Vest
@@ -1761,7 +1761,7 @@ dataSources:
       startBlock: 13134957
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPool
@@ -1783,7 +1783,7 @@ dataSources:
       startBlock: 13132358
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - DPool
@@ -1802,7 +1802,7 @@ templates:
       abi: NFT
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - Deposit
@@ -1833,7 +1833,7 @@ templates:
       abi: FundingMultitoken
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - Deposit

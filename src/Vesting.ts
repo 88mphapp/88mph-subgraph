@@ -83,25 +83,30 @@ export function handleUpdateVest(event: EUpdateVest): void {
       36 - stablecoinDecimals
     );
 
-    let deposit = Deposit.load(vest.deposit);
-    if (event.block.timestamp.lt(deposit.maturationTimestamp)) {
-      // total MPH equals accumulated plus future
-      let depositAmount = normalize(
-        event.params.currentDepositAmount.plus(event.params.depositAmount),
-        stablecoinDecimals
-      );
-      vest.totalExpectedMPHAmount = vest.accumulatedAmount.plus(
-        depositAmount
-          .times(vest.vestAmountPerStablecoinPerSecond)
-          .times(
-            deposit.maturationTimestamp
-              .minus(event.block.timestamp)
-              .toBigDecimal()
-          )
-      );
-    } else {
-      // total MPH is accumulated
-      vest.totalExpectedMPHAmount = vest.accumulatedAmount;
+    let vestDeposit = vest.deposit;
+    if (vestDeposit !== null) {
+      let deposit = Deposit.load(vestDeposit);
+      if (deposit !== null) {
+        if (event.block.timestamp.lt(deposit.maturationTimestamp)) {
+          // total MPH equals accumulated plus future
+          let depositAmount = normalize(
+            event.params.currentDepositAmount.plus(event.params.depositAmount),
+            stablecoinDecimals
+          );
+          vest.totalExpectedMPHAmount = vest.accumulatedAmount.plus(
+            depositAmount
+              .times(vest.vestAmountPerStablecoinPerSecond)
+              .times(
+                deposit.maturationTimestamp
+                  .minus(event.block.timestamp)
+                  .toBigDecimal()
+              )
+          );
+        } else {
+          // total MPH is accumulated
+          vest.totalExpectedMPHAmount = vest.accumulatedAmount;
+        }
+      }
     }
 
     vest.save();
