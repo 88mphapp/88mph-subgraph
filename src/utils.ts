@@ -30,7 +30,7 @@ export let ULTRA_PRECISION = BigInt.fromI32(2)
   .pow(128)
   .toBigDecimal();
 export let DELIMITER = "---";
-export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(13552474 + 500);
+export let BLOCK_HANDLER_START_BLOCK = BigInt.fromI32(15183416);
 export let BLOCK_HANDLER_INTERVAL = BigInt.fromI32(20); // call block handler every 20 blocks
 
 // Note: the addresses below must be in lower case
@@ -69,7 +69,6 @@ POOL_ADDRESSES.push("0x1821aadb9ac1b7e4d56c728afdadc7541a785cd2"); // aYFIPool
 POOL_ADDRESSES.push("0x0f834c3601088d1b060c47737a2f5ce4ffa5ac1d"); // cZRXPool
 POOL_ADDRESSES.push("0x5b1a10aaf807d4297048297c30b2504b42c3395f"); // harvestCRVRENWBTC
 
-
 export let POOL_STABLECOIN_DECIMALS = new Array<i32>(0);
 POOL_STABLECOIN_DECIMALS.push(18); // cDAI
 POOL_STABLECOIN_DECIMALS.push(18); // cUNI
@@ -104,7 +103,6 @@ POOL_STABLECOIN_DECIMALS.push(18); // aWETHPool
 POOL_STABLECOIN_DECIMALS.push(18); // aYFIPool
 POOL_STABLECOIN_DECIMALS.push(18); // cZRXPool
 POOL_STABLECOIN_DECIMALS.push(18); // harvestCRVRENWBTC
-
 
 export let POOL_DEPLOY_BLOCKS = new Array<i32>(0);
 POOL_DEPLOY_BLOCKS.push(13135260); // cDAI
