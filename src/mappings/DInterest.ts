@@ -1,13 +1,13 @@
 import { BigDecimal, BigInt, Address, crypto, ethereum, dataSource } from "@graphprotocol/graph-ts";
-import { EDeposit, ETopupDeposit, EWithdraw, EFund, EPayFundingInterest, ESetParamAddress, ESetParamUint } from "../../generated/gDAIPool/DInterest";
-import { DInterest } from '../../generated/gDAIPool/DInterest';
-import { MoneyMarket } from '../../generated/gDAIPool/MoneyMarket';
-import { YearnPriceOracle } from '../../generated/gDAIPool/YearnPriceOracle';
-import { IInterestOracle } from "../../generated/gDAIPool/IInterestOracle";
-import { FundingMultitoken } from "../../generated/gDAIPool/FundingMultitoken";
+import { EDeposit, ETopupDeposit, EWithdraw, EFund, EPayFundingInterest, ESetParamAddress, ESetParamUint } from "../../generated/aDAIPool/DInterest";
+import { DInterest } from '../../generated/aDAIPool/DInterest';
+import { MoneyMarket } from '../../generated/aDAIPool/MoneyMarket';
+import { ChainlinkPriceOracle } from '../../generated/aDAIPool/ChainlinkPriceOracle';
+import { IInterestOracle } from "../../generated/aDAIPool/IInterestOracle";
+import { FundingMultitoken } from "../../generated/aDAIPool/FundingMultitoken";
 import { Deposit, Funding, FunderDetails } from "../../generated/schema";
 
-import { YEAR, YEARN_PRICE_ORACLE, BLOCK_HANDLER_INTERVAL, DELIMITER, ULTRA_PRECISION } from "../utils/constants";
+import { YEAR, CHAINLINK_PRICE_ORACLE, BLOCK_HANDLER_INTERVAL, DELIMITER, ULTRA_PRECISION } from "../utils/constants";
 import { ZERO_BD, ONE_BD, NEGONE_BD, ZERO_INT, ONE_INT } from "../utils/constants";
 import { getProtocol, getPool, getUser, getFunderDetails } from '../utils/entities';
 import { tenPow, normalize } from '../utils/math';
@@ -21,7 +21,6 @@ export function handleEDeposit(event: EDeposit): void {
 
   // load contracts
   let poolContract = DInterest.bind(event.address);
-  let priceOracleContract = YearnPriceOracle.bind(YEARN_PRICE_ORACLE);
 
   // load storage
   let oldDepositUSD = pool.totalDepositUSD;
@@ -34,9 +33,14 @@ export function handleEDeposit(event: EDeposit): void {
   let feeAmount = normalize(event.params.feeAmount, pool.stablecoinDecimals.toI32());
 
   // update stablecoin price in USD
-  let stablecoinPriceUSD = priceOracleContract.try_getPriceUsdcRecommended(Address.fromString(pool.stablecoin));
-  if (!stablecoinPriceUSD.reverted) {
-    pool.stablecoinPriceUSD = normalize(stablecoinPriceUSD.value, 6);
+  if (CHAINLINK_PRICE_ORACLE.has(pool.stablecoin)) {
+    let oracleAddress = CHAINLINK_PRICE_ORACLE.get(pool.stablecoin);
+    let priceOracle = ChainlinkPriceOracle.bind(Address.fromString(oracleAddress));
+
+    let stablecoinPriceUSD = priceOracle.try_latestAnswer();
+    if (!stablecoinPriceUSD.reverted) {
+      pool.stablecoinPriceUSD = normalize(stablecoinPriceUSD.value, 8);
+    }
   }
 
   // update Deposit
@@ -98,7 +102,6 @@ export function handleETopupDeposit(event: ETopupDeposit): void {
 
   // load contracts
   let poolContract = DInterest.bind(event.address);
-  let priceOracleContract = YearnPriceOracle.bind(YEARN_PRICE_ORACLE);
 
   // load storage
   let oldDepositUSD = pool.totalDepositUSD;
@@ -111,9 +114,14 @@ export function handleETopupDeposit(event: ETopupDeposit): void {
   let feeAmount = normalize(event.params.feeAmount, pool.stablecoinDecimals.toI32());
 
   // update stablecoin price in USD
-  let stablecoinPriceUSD = priceOracleContract.try_getPriceUsdcRecommended(Address.fromString(pool.stablecoin));
-  if (!stablecoinPriceUSD.reverted) {
-    pool.stablecoinPriceUSD = normalize(stablecoinPriceUSD.value, 6);
+  if (CHAINLINK_PRICE_ORACLE.has(pool.stablecoin)) {
+    let oracleAddress = CHAINLINK_PRICE_ORACLE.get(pool.stablecoin);
+    let priceOracle = ChainlinkPriceOracle.bind(Address.fromString(oracleAddress));
+
+    let stablecoinPriceUSD = priceOracle.try_latestAnswer();
+    if (!stablecoinPriceUSD.reverted) {
+      pool.stablecoinPriceUSD = normalize(stablecoinPriceUSD.value, 8);
+    }
   }
 
   // update Deposit
@@ -154,7 +162,6 @@ export function handleEWithdraw(event: EWithdraw): void {
 
   // load contracts
   let poolContract = DInterest.bind(event.address);
-  let priceOracleContract = YearnPriceOracle.bind(YEARN_PRICE_ORACLE);
 
   // load storage
   let oldDepositUSD = pool.totalDepositUSD;
@@ -165,9 +172,14 @@ export function handleEWithdraw(event: EWithdraw): void {
   let oldFundedAmountUSD = pool.totalFundedAmountUSD;
 
   // update stablecoin price in USD
-  let stablecoinPriceUSD = priceOracleContract.try_getPriceUsdcRecommended(Address.fromString(pool.stablecoin));
-  if (!stablecoinPriceUSD.reverted) {
-    pool.stablecoinPriceUSD = normalize(stablecoinPriceUSD.value, 6);
+  if (CHAINLINK_PRICE_ORACLE.has(pool.stablecoin)) {
+    let oracleAddress = CHAINLINK_PRICE_ORACLE.get(pool.stablecoin);
+    let priceOracle = ChainlinkPriceOracle.bind(Address.fromString(oracleAddress));
+
+    let stablecoinPriceUSD = priceOracle.try_latestAnswer();
+    if (!stablecoinPriceUSD.reverted) {
+      pool.stablecoinPriceUSD = normalize(stablecoinPriceUSD.value, 8);
+    }
   }
 
   // update Deposit
@@ -258,15 +270,19 @@ export function handleEFund(event: EFund): void {
   // load contracts
   let poolContract = DInterest.bind(event.address);
   let fundingMultitoken = FundingMultitoken.bind(Address.fromString(pool.fundingMultitoken));
-  let priceOracleContract = YearnPriceOracle.bind(YEARN_PRICE_ORACLE);
 
   // load storage
   let oldFundedAmountUSD = pool.totalFundedAmountUSD;
 
   // update stablecoin price in USD
-  let stablecoinPriceUSD = priceOracleContract.try_getPriceUsdcRecommended(Address.fromString(pool.stablecoin));
-  if (!stablecoinPriceUSD.reverted) {
-    pool.stablecoinPriceUSD = normalize(stablecoinPriceUSD.value, 6);
+  if (CHAINLINK_PRICE_ORACLE.has(pool.stablecoin)) {
+    let oracleAddress = CHAINLINK_PRICE_ORACLE.get(pool.stablecoin);
+    let priceOracle = ChainlinkPriceOracle.bind(Address.fromString(oracleAddress));
+
+    let stablecoinPriceUSD = priceOracle.try_latestAnswer();
+    if (!stablecoinPriceUSD.reverted) {
+      pool.stablecoinPriceUSD = normalize(stablecoinPriceUSD.value, 8);
+    }
   }
 
   // calculate amounts
@@ -441,7 +457,6 @@ export function handleBlock(block: ethereum.Block): void {
     let poolContract = DInterest.bind(dataSource.address());
     let moneyMarketContract = MoneyMarket.bind(Address.fromString(pool.moneyMarket));
     let poolOracleContract = IInterestOracle.bind(Address.fromString(pool.interestOracle));
-    let priceOracleContract = YearnPriceOracle.bind(YEARN_PRICE_ORACLE);
 
     // load storage
     let oldDepositUSD = pool.totalDepositUSD;
@@ -451,9 +466,14 @@ export function handleBlock(block: ethereum.Block): void {
     let oldFundedAmountUSD = pool.totalFundedAmountUSD;
 
     // update stablecoin price in USD
-    let stablecoinPriceUSD = priceOracleContract.try_getPriceUsdcRecommended(Address.fromString(pool.stablecoin));
-    if (!stablecoinPriceUSD.reverted) {
-      pool.stablecoinPriceUSD = normalize(stablecoinPriceUSD.value, 6);
+    if (CHAINLINK_PRICE_ORACLE.has(pool.stablecoin)) {
+      let oracleAddress = CHAINLINK_PRICE_ORACLE.get(pool.stablecoin);
+      let priceOracle = ChainlinkPriceOracle.bind(Address.fromString(oracleAddress));
+
+      let stablecoinPriceUSD = priceOracle.try_latestAnswer();
+      if (!stablecoinPriceUSD.reverted) {
+        pool.stablecoinPriceUSD = normalize(stablecoinPriceUSD.value, 8);
+      }
     }
 
     // update pool surplus

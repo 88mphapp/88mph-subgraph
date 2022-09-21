@@ -1,7 +1,6 @@
 import { Address, BigInt, DataSourceContext } from "@graphprotocol/graph-ts";
-import { ERC20 } from "../../generated/gDAIPool/ERC20";
-import { DInterest } from "../../generated/gDAIPool/DInterest";
-import { Vesting02 } from "../../generated/Vesting02/Vesting02";
+import { ERC20 } from "../../generated/aDAIPool/ERC20";
+import { DInterest } from "../../generated/aDAIPool/DInterest";
 import { Protocol, User, DPool, Deposit, Vest, FunderDetails } from "../../generated/schema";
 import { ERC721 } from "../../generated/templates";
 
@@ -119,27 +118,4 @@ export function getFunderDetails(funder: Address, pool: Address, fundingID: BigI
   }
 
   return funderDetails as FunderDetails;
-}
-
-export function getVest(address: Address, vestID: BigInt): Vest {
-  let vest = Vest.load(vestID.toString());
-
-  if (vest === null) {
-    let vestContract = Vesting02.bind(address);
-    let vestStruct = vestContract.getVest(vestID);
-
-    vest = new Vest(vestID.toString());
-    vest.nftID = vestID;
-    vest.owner = ZERO_ADDR.toHex();
-    vest.pool = vestStruct.pool.toHex();
-    vest.deposit = vestStruct.pool.toHex() + DELIMITER + vestStruct.depositID.toString();
-    vest.lastUpdateTimestamp = ZERO_INT;
-    vest.vestAmountPerStablecoinPerSecond = ZERO_BD;
-    vest.totalExpectedMPHAmount = ZERO_BD;
-    vest.accumulatedAmount = ZERO_BD;
-    vest.withdrawnAmount = ZERO_BD;
-    vest.save();
-  }
-
-  return vest as Vest;
 }
