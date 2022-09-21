@@ -2,17 +2,6 @@
   {
     "inputs": [
       {
-        "internalType": "contract Forwarder",
-        "name": "forwarderTemplate_",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "prod1",
         "type": "uint256"
@@ -35,36 +24,6 @@
       }
     ],
     "name": "PRBMath__MulDivOverflow",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Vesting03__AmountTooLarge",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Vesting03__ForwarderNotDeployed",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Vesting03__NotMinter",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Vesting03__NotRewardDistributor",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Vesting03__NotVestOwner",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Vesting03__Overflow",
     "type": "error"
   },
   {
@@ -279,82 +238,6 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "pool",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "reward",
-        "type": "uint256"
-      }
-    ],
-    "name": "RewardAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint64",
-        "name": "vestID",
-        "type": "uint64"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "reward",
-        "type": "uint256"
-      }
-    ],
-    "name": "RewardPaid",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "bool",
-        "name": "isDistributor",
-        "type": "bool"
-      }
-    ],
-    "name": "SetRewardDistributor",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint64",
-        "name": "vestID",
-        "type": "uint64"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "Staked",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
         "name": "from",
         "type": "address"
       },
@@ -373,51 +256,6 @@
     ],
     "name": "Transfer",
     "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint64",
-        "name": "newDuration",
-        "type": "uint64"
-      }
-    ],
-    "name": "UpdateDuration",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint64",
-        "name": "vestID",
-        "type": "uint64"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "Withdrawn",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "DURATION",
-    "outputs": [
-      {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
   },
   {
     "inputs": [
@@ -513,7 +351,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "vestAmountPerStablecoinPerSecond",
         "type": "uint256"
       }
     ],
@@ -525,19 +363,6 @@
         "type": "uint64"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "pool",
-        "type": "address"
-      }
-    ],
-    "name": "deployForwarderOfPool",
-    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -560,38 +385,6 @@
         "internalType": "uint64",
         "name": "",
         "type": "uint64"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "pool",
-        "type": "address"
-      }
-    ],
-    "name": "forwarderOfPool",
-    "outputs": [
-      {
-        "internalType": "contract Forwarder",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "forwarderTemplate",
-    "outputs": [
-      {
-        "internalType": "contract Forwarder",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -659,7 +452,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct Vesting02.Vest",
+        "internalType": "struct Vesting02Fantom.Vest",
         "name": "",
         "type": "tuple"
       }
@@ -734,44 +527,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "isRewardDistributor",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "pool",
-        "type": "address"
-      }
-    ],
-    "name": "lastTimeRewardApplicable",
-    "outputs": [
-      {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "mphMinter",
     "outputs": [
@@ -808,24 +563,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "pool",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "reward",
-        "type": "uint256"
-      }
-    ],
-    "name": "notifyRewardAmount",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -881,106 +618,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "periodInfo",
-    "outputs": [
-      {
-        "internalType": "uint64",
-        "name": "lastUpdateTime",
-        "type": "uint64"
-      },
-      {
-        "internalType": "uint64",
-        "name": "periodFinish",
-        "type": "uint64"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "pool",
-        "type": "address"
-      }
-    ],
-    "name": "rewardPerToken",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "rewardPerTokenStored",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "rewardRate",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
-      }
-    ],
-    "name": "rewards",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1097,24 +734,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "rewardDistributor",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "isRewardDistributor_",
-        "type": "bool"
-      }
-    ],
-    "name": "setRewardDistributor",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -1198,44 +817,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "totalDepositStored",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "totalSupply",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "from",
         "type": "address"
       },
@@ -1281,21 +862,8 @@
   {
     "inputs": [
       {
-        "internalType": "uint64",
-        "name": "duration_",
-        "type": "uint64"
-      }
-    ],
-    "name": "updateDuration",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
-        "name": "pool",
+        "name": "poolAddress",
         "type": "address"
       },
       {
@@ -1362,25 +930,6 @@
       {
         "internalType": "uint256",
         "name": "vestAmountPerStablecoinPerSecond",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint64",
-        "name": "",
-        "type": "uint64"
-      }
-    ],
-    "name": "vestRewardPerTokenPaid",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
         "type": "uint256"
       }
     ],

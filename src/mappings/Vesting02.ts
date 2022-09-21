@@ -1,6 +1,6 @@
 import { Address } from "@graphprotocol/graph-ts";
-import { Vesting03, ECreateVest, EUpdateVest, EWithdraw, Transfer, Staked, RewardPaid } from "../../generated/Vesting03/Vesting03";
-import { DInterest } from '../../generated/Vesting03/DInterest';
+import { Vesting02, ECreateVest, EUpdateVest, EWithdraw, Transfer } from "../../generated/Vesting02/Vesting02";
+import { DInterest } from '../../generated/Vesting02/DInterest';
 import { Deposit } from "../../generated/schema";
 
 import { DELIMITER, ZERO_ADDR, ZERO_BD, ONE_BD } from "../utils/constants";
@@ -14,7 +14,7 @@ export function handleCreateVest(event: ECreateVest): void {
 
   // load contracts
   let poolContract = DInterest.bind(Address.fromString(pool.id));
-  let vestContract = Vesting03.bind(event.address);
+  let vestContract = Vesting02.bind(event.address);
 
   // load structs
   let vestStruct = vestContract.getVest(event.params.vestID);
@@ -37,14 +37,14 @@ export function handleCreateVest(event: ECreateVest): void {
   // update Deposit
   let deposit = Deposit.load(vest.deposit);
   if (deposit !== null) {
-    deposit.vest = vest.id;
+    deposit.vest = vest.id
     deposit.save();
   }
 }
 
 export function handleUpdateVest(event: EUpdateVest): void {
   let vest = getVest(event.address, event.params.vestID);
-  let vestContract = Vesting03.bind(event.address);
+  let vestContract = Vesting02.bind(event.address);
   let vestStruct = vestContract.getVest(event.params.vestID);
 
   let pool = getPool(vestStruct.pool.toHex());
@@ -69,25 +69,6 @@ export function handleWithdraw(event: EWithdraw): void {
   let vest = getVest(event.address, event.params.vestID);
 
   let amount = normalize(event.params.withdrawnAmount);
-  vest.withdrawnAmount = vest.withdrawnAmount.plus(amount);
-  vest.save();
-}
-
-export function handleStaked(event: Staked): void {
-  let vest = getVest(event.address, event.params.vestID);
-
-  // update Deposit
-  let deposit = Deposit.load(vest.deposit);
-  if (deposit !== null) {
-    deposit.vest = vest.id;
-    deposit.save();
-  }
-}
-
-export function handleRewardPaid(event: RewardPaid): void {
-  let vest = getVest(event.address, event.params.vestID);
-
-  let amount = normalize(event.params.reward);
   vest.withdrawnAmount = vest.withdrawnAmount.plus(amount);
   vest.save();
 }

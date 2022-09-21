@@ -1,10 +1,10 @@
 import { BigDecimal, BigInt, Address, crypto, ethereum, dataSource } from "@graphprotocol/graph-ts";
-import { EDeposit, ETopupDeposit, EWithdraw, EFund, EPayFundingInterest, ESetParamAddress, ESetParamUint } from "../../generated/cDAIPool/DInterest";
-import { DInterest } from '../../generated/cDAIPool/DInterest';
-import { MoneyMarket } from '../../generated/cDAIPool/MoneyMarket';
-import { YearnPriceOracle } from '../../generated/cDAIPool/YearnPriceOracle';
-import { IInterestOracle } from "../../generated/cDAIPool/IInterestOracle";
-import { FundingMultitoken } from "../../generated/cDAIPool/FundingMultitoken";
+import { EDeposit, ETopupDeposit, EWithdraw, EFund, EPayFundingInterest, ESetParamAddress, ESetParamUint } from "../../generated/gDAIPool/DInterest";
+import { DInterest } from '../../generated/gDAIPool/DInterest';
+import { MoneyMarket } from '../../generated/gDAIPool/MoneyMarket';
+import { YearnPriceOracle } from '../../generated/gDAIPool/YearnPriceOracle';
+import { IInterestOracle } from "../../generated/gDAIPool/IInterestOracle";
+import { FundingMultitoken } from "../../generated/gDAIPool/FundingMultitoken";
 import { Deposit, Funding, FunderDetails } from "../../generated/schema";
 
 import { YEAR, YEARN_PRICE_ORACLE, BLOCK_HANDLER_INTERVAL, DELIMITER, ULTRA_PRECISION } from "../utils/constants";

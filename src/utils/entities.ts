@@ -1,11 +1,11 @@
 import { Address, BigInt, DataSourceContext } from "@graphprotocol/graph-ts";
-import { ERC20 } from "../../generated/cDAIPool/ERC20";
-import { DInterest } from "../../generated/cDAIPool/DInterest";
-import { Vesting03 } from "../../generated/Vesting03/Vesting03";
-import { Protocol, User, DPool, Deposit, Vest, MPH, xMPH, veMPH, VotingLock, Gauge, GaugeVote, FunderDetails } from "../../generated/schema";
-import { ERC721, FundingMultitoken } from "../../generated/templates";
+import { ERC20 } from "../../generated/gDAIPool/ERC20";
+import { DInterest } from "../../generated/gDAIPool/DInterest";
+import { Vesting02 } from "../../generated/Vesting02/Vesting02";
+import { Protocol, User, DPool, Deposit, Vest, FunderDetails } from "../../generated/schema";
+import { ERC721 } from "../../generated/templates";
 
-import { ZERO_BD, ZERO_INT, PROTOCOL_ID, MPH_ID, XMPH_ID, VEMPH_ID, DELIMITER, ZERO_ADDR, VEMPH_ADDR } from "./constants";
+import { ZERO_BD, ZERO_INT, PROTOCOL_ID, DELIMITER, ZERO_ADDR } from "./constants";
 import { normalize } from "./math";
 
 export function getProtocol(): Protocol {
@@ -74,11 +74,6 @@ export function getPool(poolAddress: string): DPool {
     let depositNFTContext = new DataSourceContext();
     depositNFTContext.setString("pool", poolAddress);
     ERC721.createWithContext(poolContract.depositNFT(), depositNFTContext);
-
-    // init FundingMultitoken
-    let fundingMultitokenContext = new DataSourceContext();
-    fundingMultitokenContext.setString("pool", poolAddress);
-    FundingMultitoken.createWithContext(poolContract.fundingMultitoken(), fundingMultitokenContext);
   }
 
   return pool as DPool;
@@ -94,8 +89,6 @@ export function getUser(address: Address): User | null {
   if (user === null) {
     user = new User(address.toHex());
     user.address = address.toHex();
-    user.mphBalance = ZERO_BD;
-    user.xmphBalance = ZERO_BD;
 
     user.numDeposits = ZERO_INT;
     user.depositPools = new Array<string>(0);
@@ -132,7 +125,7 @@ export function getVest(address: Address, vestID: BigInt): Vest {
   let vest = Vest.load(vestID.toString());
 
   if (vest === null) {
-    let vestContract = Vesting03.bind(address);
+    let vestContract = Vesting02.bind(address);
     let vestStruct = vestContract.getVest(vestID);
 
     vest = new Vest(vestID.toString());
@@ -149,92 +142,4 @@ export function getVest(address: Address, vestID: BigInt): Vest {
   }
 
   return vest as Vest;
-}
-
-export function getMPH(): MPH {
-  let mph = MPH.load(MPH_ID);
-
-  if (mph === null) {
-    mph = new MPH(MPH_ID);
-    mph.totalSupply = ZERO_BD;
-    mph.totalRewardDistributed = ZERO_BD;
-    mph.totalRewardDistributedUSD = ZERO_BD;
-    mph.save();
-  }
-
-  return mph as MPH;
-}
-
-export function getXMPH(): xMPH {
-  let xmph = xMPH.load(XMPH_ID);
-
-  if (xmph === null) {
-    xmph = new xMPH(XMPH_ID);
-    xmph.totalSupply = ZERO_BD;
-    xmph.pricePerFullShare = ZERO_BD;
-    xmph.totalRewardDistributed = ZERO_BD;
-    xmph.totalRewardDistributedUSD = ZERO_BD;
-    xmph.currentUnlockEndTimestamp = ZERO_INT;
-    xmph.lastRewardTimestamp = ZERO_INT;
-    xmph.lastRewardAmount = ZERO_BD;
-    xmph.save();
-  }
-
-  return xmph as xMPH;
-}
-
-export function getVEMPH(): veMPH {
-  let vemph = veMPH.load(VEMPH_ID);
-
-  if (vemph === null) {
-    vemph = new veMPH(VEMPH_ID);
-    vemph.lockedBPT = ZERO_BD;
-    vemph.save();
-  }
-
-  return vemph as veMPH;
-}
-
-export function getVotingLock(address: Address): VotingLock {
-  let votingLock = VotingLock.load(address.toHex());
-
-  if (votingLock === null) {
-    votingLock = new VotingLock(address.toHex());
-    votingLock.user = ZERO_ADDR.toHex();
-    votingLock.escrow = VEMPH_ADDR.toHex();
-    votingLock.lockedBPT = ZERO_BD;
-    votingLock.unlockTimestamp = ZERO_INT;
-    votingLock.save();
-  }
-
-  return votingLock as VotingLock;
-}
-
-export function getGauge(address: Address): Gauge {
-  let gauge = Gauge.load(address.toHex());
-
-  if (gauge === null) {
-    gauge = new Gauge(address.toHex());
-    gauge.type = ZERO_INT;
-    gauge.address = address.toHex();
-    gauge.totalRewardDistributed = ZERO_BD;
-    gauge.save();
-  }
-
-  return gauge as Gauge;
-}
-
-export function getGaugeVote(userAddress: Address, gaugeAddress: Address): GaugeVote {
-  let vote = GaugeVote.load(userAddress.toHex() + DELIMITER + gaugeAddress.toHex());
-
-  if (vote === null) {
-    vote = new GaugeVote(userAddress.toHex() + DELIMITER + gaugeAddress.toHex());
-    vote.user = ZERO_ADDR.toHex();
-    vote.gauge = gaugeAddress.toHex();
-    vote.weight = ZERO_INT;
-    vote.timestamp = ZERO_INT;
-    vote.save();
-  }
-
-  return vote as GaugeVote;
 }

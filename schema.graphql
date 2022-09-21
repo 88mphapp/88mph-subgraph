@@ -12,8 +12,6 @@ type Protocol @entity {
 type User @entity {
   id: ID!                                                     #
   address: String!                                            # user address
-  mphBalance: BigDecimal!                                     # amount of MPH owned by the user
-  xmphBalance: BigDecimal!                                    # amount of xMPH owned by the user
 
   deposits: [Deposit!]! @derivedFrom(field: "user")           # user Deposit list
   numDeposits: BigInt!                                        # number of user Deposits
@@ -26,32 +24,6 @@ type User @entity {
   numFundingPools: BigInt!                                    # number of DPools the user has funded deposits for ***EDIT***
 
   vests: [Vest!]! @derivedFrom(field: "owner")                # user Vest list
-  votingLock: VotingLock @derivedFrom(field: "user")          # user VotingLock
-  gaugeVotes: [GaugeVote!]! @derivedFrom(field: "user")       # user GaugeVote list
-}
-
-type MPH @entity {
-  id: ID!                                                     # MPH address
-  totalSupply: BigDecimal!                                    # total supply of MPH
-  totalRewardDistributed: BigDecimal!                         # total amount of DAI rewards distributed to MPH stakers
-  totalRewardDistributedUSD: BigDecimal!                      # total amount of DAI rewards distributed to MPH stakers derived in USD
-}
-
-type xMPH @entity {
-  id: ID!                                                     # xMPH address
-  totalSupply: BigDecimal!                                    # total supply of xMPH
-  pricePerFullShare: BigDecimal!                              # amount of MPH that can be withdrawn by burning 1 xMPH
-  totalRewardDistributed: BigDecimal!                         # total amount of MPH rewards distributed to xMPH holders
-  totalRewardDistributedUSD: BigDecimal!                      # total amount of MPH rewards distributed to xMPH holders derived in USD
-  currentUnlockEndTimestamp: BigInt!                          # timestamp in seconds when the current reward period ends
-  lastRewardTimestamp: BigInt!                                # timestamp in seconds when the last reward was distributed
-  lastRewardAmount: BigDecimal!                               # last reward amount distributed
-}
-
-type veMPH @entity {
-  id: ID!                                                     # veMPH address
-  lockedBPT: BigDecimal!                                      # the amount of BPT locked in the voting escrow
-  votingLocks: [VotingLock!]! @derivedFrom(field: "escrow")   # list of VotingLocks
 }
 
 type DPool @entity {
@@ -164,27 +136,4 @@ type FunderDetails @entity {
   fundAmount: BigDecimal!                                     # amount of debt paid by the funder
   refundEarned: BigDecimal!                                   # amount of refund earned by the funder
   interestEarned: BigDecimal!                                 # amount of interest earned by the funder
-}
-
-type VotingLock @entity {
-  id: ID!                                                     #
-  user: User!                                                 # owner of the lock
-  escrow: veMPH!                                              # voting escrow (veMPH)
-  lockedBPT: BigDecimal!                                      # amount of BPT locked in the voting escrow
-  unlockTimestamp: BigInt!                                    # timestamp in seconds when the lock expires
-}
-
-type Gauge @entity {
-  id: ID!                                                     #
-  type: BigInt!                                               # gauge type
-  address: String!                                            # gauge address
-  totalRewardDistributed: BigDecimal!                         # total amount of MPH distributed to the gauge
-}
-
-type GaugeVote @entity {
-  id: ID!                                                     #
-  user: User!                                                 # voter
-  gauge: Gauge!                                               # gauge voted for
-  weight: BigInt!                                             # user voting weight allocated to the gauge
-  timestamp: BigInt!                                          # timestamp in seconds when vote was cast
 }
