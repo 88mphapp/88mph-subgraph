@@ -1,1804 +1,30 @@
-specVersion: 0.0.2
+specVersion: 0.0.6
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: cDAIPool
+    name: MPH
     network: mainnet
     source:
-      address: "0x11b1c87983f881b3686f8b1171628357faa30038"
-      abi: DInterest
-      startBlock: 13135260
+      address: "0x8888801aF4d980682e47f1A9036e589479e835C5"
+      abi: MPH
+      startBlock: 11289991
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - DPoolList
-        - DPool
+        - MPH
         - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
       abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
+        - name: MPH
+          file: ./abis/MPH.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
       eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: cUNIPool
-    network: mainnet
-    source:
-      address: "0x5dda04b2bdbbc3fcfb9b60cd9ebfd1b27f1a4fe3"
-      abi: DInterest
-      startBlock: 13156898
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: cLINKPool
-    network: mainnet
-    source:
-      address: "0x572be575d1aa1ca84d8ac4274067f7bcb578a368"
-      abi: DInterest
-      startBlock: 13157335
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aDAIPool
-    network: mainnet
-    source:
-      address: "0x6d97ea6e14d35e10b50df9475e9efaad1982065e"
-      abi: DInterest
-      startBlock: 13157722
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aUSDCPool
-    network: mainnet
-    source:
-      address: "0x2d3141f4c9872d4f53b587c3fb8b22736feb54b0"
-      abi: DInterest
-      startBlock: 13158219
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aUSDTPool
-    network: mainnet
-    source:
-      address: "0xb1b225402b5ec977af8c721f42f21db5518785dc"
-      abi: DInterest
-      startBlock: 13160904
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: harvestCRVRENWBTCPool
-    network: mainnet
-    source:
-      address: "0x5b1a10aaf807d4297048297c30b2504b42c3395f"
-      abi: DInterest
-      startBlock: 13163970
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aBALPool
-    network: mainnet
-    source:
-      address: "0x24867F5665414D93f7b3d195f848917D57D5BE27"
-      abi: DInterest
-      startBlock: 13279052
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: cBATPool
-    network: mainnet
-    source:
-      address: "0x6BF909CE507e94608F0fCbAb2CFdd499e0150a21"
-      abi: DInterest
-      startBlock: 13296905
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: cCOMPPool
-    network: mainnet
-    source:
-      address: "0xc1F147DB2b6a9c9FbF322fAC3D1Fbf8B8aAEec10"
-      abi: DInterest
-      startBlock: 13297218
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aCRVPool
-    network: mainnet
-    source:
-      address: "0x8eb1b3AC29E0DcbD7F519c86F1Eb76a3AEa41b76"
-      abi: DInterest
-      startBlock: 13279338
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: bDAIPool
-    network: mainnet
-    source:
-      address: "0x4B4626c1265d22B71ded11920795A3c6127A0559"
-      abi: DInterest
-      startBlock: 13304573
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: crFTTPool
-    network: mainnet
-    source:
-      address: "0x46603A1cca20e7AE18f1a069125369609d9D4153"
-      abi: DInterest
-      startBlock: 13305708
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aGUSDPool
-    network: mainnet
-    source:
-      address: "0xbFDB51ec0ADc6D5bF2ebBA54248D40f81796E12B"
-      abi: DInterest
-      startBlock: 13279808
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aLINKPool
-    network: mainnet
-    source:
-      address: "0x6e6002a4Bd704a3C8E24A70b0Be670f1C2B4d35c"
-      abi: DInterest
-      startBlock: 13279959
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aRAIPool
-    network: mainnet
-    source:
-      address: "0x2A74f09a8E4899115529ec8808C5FC1DE62c2fe4"
-      abi: DInterest
-      startBlock: 13280551
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aRENPool
-    network: mainnet
-    source:
-      address: "0x4D794db79C4a85DC763d08A7c440A92A2D153Ffd"
-      abi: DInterest
-      startBlock: 13280877
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aSNXPool
-    network: mainnet
-    source:
-      address: "0x60F0f24b0fBf066e877C3A89014c2e4E98C33678"
-      abi: DInterest
-      startBlock: 13281099
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aSUSDPool
-    network: mainnet
-    source:
-      address: "0xafdD82D73f5dae907f86aD37F346221081Dc917b"
-      abi: DInterest
-      startBlock: 13283471
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aTUSDPool
-    network: mainnet
-    source:
-      address: "0x10e8Bd414eee26d82E88D6e308FD81ef37D03155"
-      abi: DInterest
-      startBlock: 13283844
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: cTUSDPool
-    network: mainnet
-    source:
-      address: "0x085d70Ca0DADE4683D0f59d5a5b7D3298011b4De"
-      abi: DInterest
-      startBlock: 13297656
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: bUSDCPool
-    network: mainnet
-    source:
-      address: "0x4f7EC502cA0Be8Ef1f984AB1f164022a15ff5561"
-      abi: DInterest
-      startBlock: 13304799
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: cUSDCPool
-    network: mainnet
-    source:
-      address: "0x7DC14d047D6d8bb03539f92B9E2cA1f1648A5717"
-      abi: DInterest
-      startBlock: 13298003
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: crUSDCPool
-    network: mainnet
-    source:
-      address: "0xF61681b8Cbf87615F30f96F491FA28a2Ff39947a"
-      abi: DInterest
-      startBlock: 13305854
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aUSDPPool
-    network: mainnet
-    source:
-      address: "0xF50eF673ee810e6aCb725F941a53Bf92586a39Ad"
-      abi: DInterest
-      startBlock: 13284197
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: bUSDTPool
-    network: mainnet
-    source:
-      address: "0x062214FbE3F15D217512DEb14572eb01FACE0392"
-      abi: DInterest
-      startBlock: 13305237
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: cUSDTPool
-    network: mainnet
-    source:
-      address: "0x7f10134c32A4544e4CDC0fD57F5c820Bff3070E9"
-      abi: DInterest
-      startBlock: 13298259
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: crUSDTPool
-    network: mainnet
-    source:
-      address: "0x3816579C8Cb62500a45AE29A33040A3DEA4160de"
-      abi: DInterest
-      startBlock: 13305995
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aWBTCPool
-    network: mainnet
-    source:
-      address: "0x0fd585328666923A3a772dd5C37e2Dc065C7B137"
-      abi: DInterest
-      startBlock: 13284462
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: cWBTCPool
-    network: mainnet
-    source:
-      address: "0xA0E78812E9cD3E754a83bbd74A3F1579b50436E8"
-      abi: DInterest
-      startBlock: 13298887
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aWETHPool
-    network: mainnet
-    source:
-      address: "0xaE5ddE7EA5c44b38c0bCcfb985c40006ED744EA6"
-      abi: DInterest
-      startBlock: 13284713
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: aYFIPool
-    network: mainnet
-    source:
-      address: "0x1821aadB9AC1b7E4D56C728aFDaDc7541a785Cd2"
-      abi: DInterest
-      startBlock: 13285014
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: cZRXPool
-    network: mainnet
-    source:
-      address: "0x0F834C3601088d1B060c47737A2F5Ce4FFA5AC1D"
-      abi: DInterest
-      startBlock: 13299460
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPoolList
-        - DPool
-        - User
-        - Deposit
-        - Funder
-        - FunderDetails
-        - Funding
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: FundingMultitoken
-          file: ./abis/FundingMultitoken.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: MoneyMarket
-          file: ./abis/MoneyMarket.json
-      eventHandlers:
-        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
-          handler: handleEDeposit
-        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
-          handler: handleETopupDeposit
-        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
-          handler: handleEWithdraw
-        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
-          handler: handleEPayFundingInterest
-        - event: EFund(indexed address,indexed uint64,uint256,uint256)
-          handler: handleEFund
-        - event: ESetParamAddress(indexed address,indexed string,address)
-          handler: handleESetParamAddress
-        - event: ESetParamUint(indexed address,indexed string,uint256)
-          handler: handleESetParamUint
-      blockHandlers:
-        - handler: handleBlock
-      file: ./src/DInterest.ts
-  - kind: ethereum/contract
-    name: Vesting
-    network: mainnet
-    source:
-      address: "0xA907C7c3D13248F08A3fb52BeB6D1C079507Eb4B"
-      abi: Vesting02
-      startBlock: 13134912
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - Vest
-      abis:
-        - name: Vesting02
-          file: ./abis/Vesting02.json
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-      eventHandlers:
-        - event: ECreateVest(indexed address,indexed address,uint64,uint64,uint256)
-          handler: handleCreateVest
-        - event: EUpdateVest(indexed uint64,address,uint64,uint256,uint256,uint256)
-          handler: handleUpdateVest
-        - event: EWithdraw(indexed address,indexed uint64,uint256)
-          handler: handleWithdraw
-        - event: Transfer(indexed address,indexed address,indexed uint256)
+        - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
-      file: ./src/Vesting.ts
-  - kind: ethereum/contract
-    name: Vesting03
-    network: mainnet
-    source:
-      address: "0x6A5aD7216e11157eB0Fb26174196B06AbB3859f4"
-      abi: Vesting03
-      startBlock: 15183416
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - Vest
-        - Deposit
-      abis:
-        - name: Vesting03
-          file: ./abis/Vesting03.json
-      eventHandlers:
-        - event: Staked(indexed uint64,uint256)
-          handler: handleStaked
-        - event: RewardPaid(indexed uint64,uint256)
-          handler: handleRewardPaid
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-      file: ./src/Vesting03.ts
-  - kind: ethereum/contract
-    name: MPHMinter
-    network: mainnet
-    source:
-      address: "0x01c2fee5d6e76ec26162daaf4e336beed01f2651"
-      abi: MPHMinter
-      startBlock: 13134957
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - DPool
-      abis:
-        - name: ERC20
-          file: ./abis/ERC20.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-      eventHandlers:
-        - event: ESetParamUint(indexed address,indexed string,address,uint256)
-          handler: handleESetParamUint
-      file: ./src/MPHMinter.ts
+      file: ./src/mappings/MPH.ts
   - kind: ethereum/contract
     name: xMPH
     network: mainnet
@@ -1808,49 +34,1659 @@ dataSources:
       startBlock: 13132358
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - xMPH
+        - User
+      abis:
+        - name: xMPH
+          file: ./abis/xMPH.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: DistributeReward(uint256)
+          handler: handleDistributeReward
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/xMPH.ts
+  - kind: ethereum/contract
+    name: veMPH
+    network: mainnet
+    source:
+      address: "0xf183287df9cB613c16989C16BF60537592fA736c"
+      abi: veMPH
+      startBlock: 15253177
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - veMPH
+        - VotingLock
+        - User
+      abis:
+        - name: veMPH
+          file: ./abis/veMPH.json
+      eventHandlers:
+        - event: Deposit(indexed address,uint256,indexed uint256,int128,uint256)
+          handler: handleDeposit
+        - event: Withdraw(indexed address,uint256,uint256)
+          handler: handleWithdraw
+        - event: Supply(uint256,uint256)
+          handler: handleSupply
+      file: ./src/mappings/veMPH.ts
+  - kind: ethereum/contract
+    name: Rewards
+    network: mainnet
+    source:
+      address: "0x98df8D9E56b51e4Ea8AA9b57F8A5Df7A044234e1"
+      abi: Rewards
+      startBlock: 11312541
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MPH
+      abis:
+        - name: Rewards
+          file: ./abis/Rewards.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+      eventHandlers:
+        - event: RewardAdded(uint256)
+          handler: handleRewardAdded
+      file: ./src/mappings/MPH.ts
+  - kind: ethereum/contract
+    name: MPHMinter
+    network: mainnet
+    source:
+      address: "0x01c2fee5d6e76ec26162daaf4e336beed01f2651"
+      abi: MPHMinter
+      startBlock: 13134957
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - DPool
       abis:
-        - name: xMPH
-          file: ./abis/xMPH.json
-      eventHandlers:
-        - event: DistributeReward(uint256)
-          handler: handleDistributeReward
-      file: ./src/xMPH.ts
-templates:
-  - kind: ethereum/contract
-    name: NFT
-    network: mainnet
-    source:
-      abi: NFT
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - Deposit
-        - Funding
-        - User
-        - Funder
-        - UserTotalDeposit
-        - FunderTotalInterest
-      abis:
-        - name: NFT
-          file: ./abis/NFT.json
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
         - name: MPHMinter
           file: ./abis/MPHMinter.json
+      eventHandlers:
+        - event: ESetParamUint(indexed address,indexed string,address,uint256)
+          handler: handleESetParamUint
+      file: ./src/mappings/MPH.ts
+  - kind: ethereum/contract
+    name: GaugeController
+    network: mainnet
+    source:
+      address: "0x16dff045De4421E836A42FC2e98d4Ec9015bd470"
+      abi: GaugeController
+      startBlock: 15253228
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+        - GaugeVote
+      abis:
+        - name: GaugeController
+          file: ./abis/GaugeController.json
+      eventHandlers:
+        - event: VoteForGauge(uint256,address,address,uint256)
+          handler: handleVoteForGauge
+        - event: NewGauge(address,int128,uint256)
+          handler: handleNewGauge
+      file: ./src/mappings/Gauge.ts
+  - kind: ethereum/contract
+    name: GaugeRewardDistributor
+    network: mainnet
+    source:
+      address: "0x362A1844be1209073Fa31561c5c1d6D893255B42"
+      abi: GaugeRewardDistributor
+      startBlock: 15260922
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Gauge
+      abis:
+        - name: GaugeRewardDistributor
+          file: ./abis/GaugeRewardDistributor.json
+      eventHandlers:
+        - event: RewardDistributed(indexed address,uint256)
+          handler: handleRewardDistributed
+      file: ./src/mappings/Gauge.ts
+  - kind: ethereum/contract
+    name: cDAIPool
+    network: mainnet
+    source:
+      address: "0x11B1c87983F881B3686F8b1171628357FAA30038"
+      abi: DInterest
+      startBlock: 13135260
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
         - name: ERC20
           file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: cUNIPool
+    network: mainnet
+    source:
+      address: "0x5dda04b2BDBBc3FcFb9B60cd9eBFd1b27f1A4fE3"
+      abi: DInterest
+      startBlock: 13156898
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: cLINKPool
+    network: mainnet
+    source:
+      address: "0x572bE575D1aA1Ca84d8Ac4274067f7bCB578a368"
+      abi: DInterest
+      startBlock: 13157335
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: cBATPool
+    network: mainnet
+    source:
+      address: "0x6BF909CE507e94608F0fCbAb2CFdd499e0150a21"
+      abi: DInterest
+      startBlock: 13296905
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: cCOMPPool
+    network: mainnet
+    source:
+      address: "0xc1F147DB2b6a9c9FbF322fAC3D1Fbf8B8aAEec10"
+      abi: DInterest
+      startBlock: 13297218
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: cUSDTPool
+    network: mainnet
+    source:
+      address: "0x7f10134c32A4544e4CDC0fD57F5c820Bff3070E9"
+      abi: DInterest
+      startBlock: 13298259
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: cWBTCPool
+    network: mainnet
+    source:
+      address: "0xA0E78812E9cD3E754a83bbd74A3F1579b50436E8"
+      abi: DInterest
+      startBlock: 13298887
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: cZRXPool
+    network: mainnet
+    source:
+      address: "0x0F834C3601088d1B060c47737A2F5Ce4FFA5AC1D"
+      abi: DInterest
+      startBlock: 13299460
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: cTUSDPool
+    network: mainnet
+    source:
+      address: "0x085d70Ca0DADE4683D0f59d5a5b7D3298011b4De"
+      abi: DInterest
+      startBlock: 13297656
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: cUSDCPool
+    network: mainnet
+    source:
+      address: "0x7DC14d047D6d8bb03539f92B9E2cA1f1648A5717"
+      abi: DInterest
+      startBlock: 13298003
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aDAIPool
+    network: mainnet
+    source:
+      address: "0x6D97eA6e14D35e10b50df9475e9EFaAd1982065E"
+      abi: DInterest
+      startBlock: 13157722
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aUSDCPool
+    network: mainnet
+    source:
+      address: "0x2d3141f4C9872d4F53B587C3fB8b22736FeB54b0"
+      abi: DInterest
+      startBlock: 13158219
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aUSDTPool
+    network: mainnet
+    source:
+      address: "0xb1b225402b5eC977AF8c721f42F21Db5518785dc"
+      abi: DInterest
+      startBlock: 13160904
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aBALPool
+    network: mainnet
+    source:
+      address: "0x24867F5665414D93f7b3d195f848917D57D5BE27"
+      abi: DInterest
+      startBlock: 13279052
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aCRVPool
+    network: mainnet
+    source:
+      address: "0x8eb1b3AC29E0DcbD7F519c86F1Eb76a3AEa41b76"
+      abi: DInterest
+      startBlock: 13279338
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aGUSDPool
+    network: mainnet
+    source:
+      address: "0xbFDB51ec0ADc6D5bF2ebBA54248D40f81796E12B"
+      abi: DInterest
+      startBlock: 13279808
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aLINKPool
+    network: mainnet
+    source:
+      address: "0x6e6002a4Bd704a3C8E24A70b0Be670f1C2B4d35c"
+      abi: DInterest
+      startBlock: 13279959
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aRAIPool
+    network: mainnet
+    source:
+      address: "0x2A74f09a8E4899115529ec8808C5FC1DE62c2fe4"
+      abi: DInterest
+      startBlock: 13280551
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aRENPool
+    network: mainnet
+    source:
+      address: "0x4D794db79C4a85DC763d08A7c440A92A2D153Ffd"
+      abi: DInterest
+      startBlock: 13280877
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aSNXPool
+    network: mainnet
+    source:
+      address: "0x60F0f24b0fBf066e877C3A89014c2e4E98C33678"
+      abi: DInterest
+      startBlock: 13281099
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aTUSDPool
+    network: mainnet
+    source:
+      address: "0x10e8Bd414eee26d82E88D6e308FD81ef37D03155"
+      abi: DInterest
+      startBlock: 13283844
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aUSDPPool
+    network: mainnet
+    source:
+      address: "0xF50eF673ee810e6aCb725F941a53Bf92586a39Ad"
+      abi: DInterest
+      startBlock: 13284197
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aWBTCPool
+    network: mainnet
+    source:
+      address: "0x0fd585328666923A3a772dd5C37e2Dc065C7B137"
+      abi: DInterest
+      startBlock: 13284462
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aWETHPool
+    network: mainnet
+    source:
+      address: "0xaE5ddE7EA5c44b38c0bCcfb985c40006ED744EA6"
+      abi: DInterest
+      startBlock: 13284713
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aYFIPool
+    network: mainnet
+    source:
+      address: "0x1821aadB9AC1b7E4D56C728aFDaDc7541a785Cd2"
+      abi: DInterest
+      startBlock: 13285014
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: aSUSDPool
+    network: mainnet
+    source:
+      address: "0xafdD82D73f5dae907f86aD37F346221081Dc917b"
+      abi: DInterest
+      startBlock: 13283471
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: harvestCRVRENWBTCPool
+    network: mainnet
+    source:
+      address: "0x5b1a10aAF807d4297048297c30B2504b42C3395F"
+      abi: DInterest
+      startBlock: 13163970
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: bDAIPool
+    network: mainnet
+    source:
+      address: "0x4B4626c1265d22B71ded11920795A3c6127A0559"
+      abi: DInterest
+      startBlock: 13304573
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: bUSDCPool
+    network: mainnet
+    source:
+      address: "0x4f7EC502cA0Be8Ef1f984AB1f164022a15ff5561"
+      abi: DInterest
+      startBlock: 13304799
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: bUSDTPool
+    network: mainnet
+    source:
+      address: "0x062214FbE3F15D217512DEb14572eb01FACE0392"
+      abi: DInterest
+      startBlock: 13305237
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Protocol
+        - DPool
+        - Deposit
+        - Funding
+        - FunderDetails
+        - User
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+        - name: MoneyMarket
+          file: ./abis/MoneyMarket.json
+        - name: YearnPriceOracle
+          file: ./abis/YearnPriceOracle.json
+        - name: IInterestOracle
+          file: ./abis/IInterestOracle.json
+        - name: FundingMultitoken
+          file: ./abis/FundingMultitoken.json
+      eventHandlers:
+        - event: EDeposit(indexed address,indexed uint256,uint256,uint256,uint256,uint64)
+          handler: handleEDeposit
+        - event: ETopupDeposit(indexed address,indexed uint64,uint256,uint256,uint256)
+          handler: handleETopupDeposit
+        - event: EWithdraw(indexed address,indexed uint256,indexed bool,uint256,uint256)
+          handler: handleEWithdraw
+        - event: EFund(indexed address,indexed uint64,uint256,uint256)
+          handler: handleEFund
+        - event: EPayFundingInterest(indexed uint256,uint256,uint256)
+          handler: handleEPayFundingInterest
+        - event: ESetParamAddress(indexed address,indexed string,address)
+          handler: handleESetParamAddress
+        - event: ESetParamUint(indexed address,indexed string,uint256)
+          handler: handleESetParamUint
+      blockHandlers:
+        - handler: handleBlock
+      file: ./src/mappings/DInterest.ts
+  - kind: ethereum/contract
+    name: Vesting03
+    network: mainnet
+    source:
+      address: "0xA907C7c3D13248F08A3fb52BeB6D1C079507Eb4B"
+      abi: Vesting03
+      startBlock: 13134912
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Vest
+        - Deposit
+      abis:
+        - name: Vesting03
+          file: ./abis/Vesting03.json
+        - name: DInterest
+          file: ./abis/DInterest.json
+      eventHandlers:
+        - event: ECreateVest(indexed address,indexed address,uint64,uint64,uint256)
+          handler: handleCreateVest
+        - event: EUpdateVest(indexed uint64,address,uint64,uint256,uint256,uint256)
+          handler: handleUpdateVest
+        - event: EWithdraw(indexed address,indexed uint64,uint256)
+          handler: handleWithdraw
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: Staked(indexed uint64,uint256)
+          handler: handleStaked
+        - event: RewardPaid(indexed uint64,uint256)
+          handler: handleRewardPaid
+      file: ./src/mappings/Vesting03.ts
+templates:
+  - kind: ethereum/contract
+    name: ERC721
+    network: mainnet
+    source:
+      abi: ERC721
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DPool
+        - Deposit
+        - User
+      abis:
+        - name: ERC721
+          file: ./abis/ERC721.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/NFT.ts
+      file: ./src/mappings/ERC721.ts
   - kind: ethereum/contract
     name: FundingMultitoken
     network: mainnet
@@ -1858,27 +1694,14 @@ templates:
       abi: FundingMultitoken
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Deposit
         - Funding
-        - User
-        - Funder
-        - UserTotalDeposit
-        - FunderTotalInterest
       abis:
         - name: FundingMultitoken
           file: ./abis/FundingMultitoken.json
-        - name: DInterest
-          file: ./abis/DInterest.json
-        - name: IInterestOracle
-          file: ./abis/IInterestOracle.json
-        - name: MPHMinter
-          file: ./abis/MPHMinter.json
-        - name: ERC20
-          file: ./abis/ERC20.json
       eventHandlers:
         - event: DividendsDistributed(indexed uint256,indexed address,indexed address,uint256)
           handler: handleDividendsDistributed
-      file: ./src/FundingMultitoken.ts
+      file: ./src/mappings/FundingMultitoken.ts

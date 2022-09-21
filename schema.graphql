@@ -1,116 +1,190 @@
-type DPool @entity {
-  id: ID!
-  address: String!
-  moneyMarket: String!
-  stablecoin: String!
-  interestModel: String!
-  users: [User!]! @derivedFrom(field: "pools")
-  numUsers: BigInt!
-  deposits: [Deposit!]! @derivedFrom(field: "pool")
-  numDeposits: BigInt!
-  totalDeposit: BigDecimal!
-  totalInterestOwed: BigDecimal!
-  totalFeeOwed: BigDecimal!
-  funders: [Funder!]! @derivedFrom(field: "pools")
-  numFunders: BigInt!
-  fundings: [Funding!]! @derivedFrom(field: "pool")
-  numFundings: BigInt!
-  MaxDepositPeriod: BigInt!
-  MinDepositAmount: BigDecimal!
-  oneYearInterestRate: BigDecimal!
-  surplus: BigDecimal!
-  moneyMarketIncomeIndex: BigInt!
-  oracleInterestRate: BigDecimal!
-  poolDepositorRewardMintMultiplier: BigDecimal!
-  poolFunderRewardMultiplier: BigDecimal!
-  historicalInterestPaid: BigDecimal!
+type Protocol @entity {
+  id: ID!                                                     #
+  totalDepositUSD: BigDecimal!                                # total value deposited derived in USD
+  totalInterestOwedUSD: BigDecimal!                           # total interest owed to depositors derived in USD
+  totalFeeOwedUSD: BigDecimal!                                # total fee owed to protocol derived in USD
+  totalFundedAmountUSD: BigDecimal!                           # total deficit funded derived in USD
+  totalSurplusUSD: BigDecimal!                                # total pool surplus derived in USD
+  historicalInterestPaidUSD: BigDecimal!                      # total interest paid to depositors derived in USD
+  historicalFeePaidUSD: BigDecimal!                           # total fee paid to protocol derived in USD
 }
 
 type User @entity {
-  id: ID!
-  address: String!
-  pools: [DPool!]!
-  numPools: BigInt!
-  deposits: [Deposit!]! @derivedFrom(field: "user")
-  numDeposits: BigInt!
-  totalDepositByPool: [UserTotalDeposit!]! @derivedFrom(field: "user")
+  id: ID!                                                     #
+  address: String!                                            # user address
+  mphBalance: BigDecimal!                                     # amount of MPH owned by the user
+  xmphBalance: BigDecimal!                                    # amount of xMPH owned by the user
+
+  deposits: [Deposit!]! @derivedFrom(field: "user")           # user Deposit list
+  numDeposits: BigInt!                                        # number of user Deposits
+  depositPools: [DPool!]!                                     # list of DPools the user has made deposits to ***EDIT***
+  numDepositPools: BigInt!                                    # number of DPools the user has made deposits to ***EDIT***
+
+  fundings: [Funding!]!                                       # user Funding list
+  numFundings: BigInt!                                        # number of user Fundings
+  fundingPools: [DPool!]!                                     # list of DPools the user has funded deposits for ***EDIT***
+  numFundingPools: BigInt!                                    # number of DPools the user has funded deposits for ***EDIT***
+
+  vests: [Vest!]! @derivedFrom(field: "owner")                # user Vest list
+  votingLock: VotingLock @derivedFrom(field: "user")          # user VotingLock
+  gaugeVotes: [GaugeVote!]! @derivedFrom(field: "user")       # user GaugeVote list
 }
 
-type UserTotalDeposit @entity {
-  id: ID!
-  user: User!
-  pool: DPool!
-  totalDeposit: BigDecimal!
-  totalInterestOwed: BigDecimal!
-  totalFeeOwed: BigDecimal!
+type MPH @entity {
+  id: ID!                                                     # MPH address
+  totalSupply: BigDecimal!                                    # total supply of MPH
+  totalRewardDistributed: BigDecimal!                         # total amount of DAI rewards distributed to MPH stakers
+  totalRewardDistributedUSD: BigDecimal!                      # total amount of DAI rewards distributed to MPH stakers derived in USD
+}
+
+type xMPH @entity {
+  id: ID!                                                     # xMPH address
+  totalSupply: BigDecimal!                                    # total supply of xMPH
+  pricePerFullShare: BigDecimal!                              # amount of MPH that can be withdrawn by burning 1 xMPH
+  totalRewardDistributed: BigDecimal!                         # total amount of MPH rewards distributed to xMPH holders
+  totalRewardDistributedUSD: BigDecimal!                      # total amount of MPH rewards distributed to xMPH holders derived in USD
+  currentUnlockEndTimestamp: BigInt!                          # timestamp in seconds when the current reward period ends
+  lastRewardTimestamp: BigInt!                                # timestamp in seconds when the last reward was distributed
+  lastRewardAmount: BigDecimal!                               # last reward amount distributed
+}
+
+type veMPH @entity {
+  id: ID!                                                     # veMPH address
+  lockedBPT: BigDecimal!                                      # the amount of BPT locked in the voting escrow
+  votingLocks: [VotingLock!]! @derivedFrom(field: "escrow")   # list of VotingLocks
+}
+
+type DPool @entity {
+  id: ID!                                                     #
+  address: String!                                            # pool address
+  moneyMarket: String!                                        # pool money market address
+  feeModel: String!                                           # pool fee model address
+  interestModel: String!                                      # pool interest model address
+  interestOracle: String!                                     # pool interest oracle address
+  fundingMultitoken: String!                                  # pool funding multitoken address
+  MaxDepositPeriod: BigInt!                                   # maximum deposit period in seconds
+  MinDepositAmount: BigDecimal!                               # minimum deposit amount derived in Token
+  GlobalDepositCap: BigDecimal!                               # maximum total deposit amount derived in Token
+
+  stablecoin: String!                                         # pool token address
+  stablecoinDecimals: BigInt!                                 # pool token decimals
+  stablecoinPriceUSD: BigDecimal!                             # pool token price in USD
+
+  users: [User!]! @derivedFrom(field: "depositPools")         # pool depositors
+  numUsers: BigInt!                                           # number of pool depositors
+  deposits: [Deposit!]! @derivedFrom(field: "pool")           # pool deposits
+  numDeposits: BigInt!                                        # number of pool deposits
+
+  funders: [User!]! @derivedFrom(field: "fundingPools")       # pool funders
+  numFunders: BigInt!                                         # number of pool funders
+  fundings: [Funding!]! @derivedFrom(field: "pool")           # pool fundings
+  numFundings: BigInt!                                        # number of pool fundings
+
+  totalDeposit: BigDecimal!                                   # pool deposits derived in Token
+  totalDepositUSD: BigDecimal!                                # pool deposits derived in USD
+  totalInterestOwed: BigDecimal!                              # pool interest owed derived in Token
+  totalInterestOwedUSD: BigDecimal!                           # pool interest owed derived in USD
+  totalFeeOwed: BigDecimal!                                   # pool fee owed derived in Token
+  totalFeeOwedUSD: BigDecimal!                                # pool fee owed derived in USD
+  surplus: BigDecimal!                                        # pool surplus derived in Token
+  surplusUSD: BigDecimal!                                     # pool surplus derived in USD
+
+  totalFundedAmount: BigDecimal!                              #
+  totalFundedAmountUSD: BigDecimal!                           #
+
+  moneyMarketIncomeIndex: BigInt!                             # pool money market income index
+  oneYearInterestRate: BigDecimal!                            # pool interest rate for a one year deposit ***EDIT***
+  oracleInterestRate: BigDecimal!                             # pool oracle interest rate ***EDIT***
+
+  historicalInterestPaid: BigDecimal!                         # total interest paid to depositors derived in Token
+  historicalInterestPaidUSD: BigDecimal!                      # total interest paid to depositors derived in USD
+  historicalFeePaid: BigDecimal!                              # total fee paid to protocol derived in Token
+  historicalFeePaidUSD: BigDecimal!                           # total fee paid to protocol derived in USD
+
+  poolDepositorRewardMintMultiplier: BigDecimal!              # multiplier applied when minting MPH for a pool's depositor reward (DEPRECIATED)
+  poolFunderRewardMultiplier: BigDecimal!                     # multiplier applied when minting MPH for a pool's funder reward (DEPRECIATED)
 }
 
 type Deposit @entity {
-  id: ID!
-  nftID: BigInt!
-  user: User!
-  pool: DPool!
-  vest: Vest
-  funding: Funding
-  amount: BigDecimal!
-  virtualTokenTotalSupply: BigDecimal!
-  interestRate: BigDecimal!
-  feeRate: BigDecimal!
-  maturationTimestamp: BigInt!
-  depositTimestamp: BigInt!
-  depositLength: BigInt!
-  averageRecordedIncomeIndex: BigInt!
-  fundingInterestPaid: BigDecimal!
-  fundingRefundPaid: BigDecimal!
-}
-
-type Funder @entity {
-  id: ID!
-  address: String!
-  pools: [DPool!]!
-  numPools: BigInt!
-  fundings: [Funding!]!
-  numFundings: BigInt!
-}
-
-type FunderDetails @entity {
-  id: ID!
-  address: String!
-  fundAmount: BigDecimal!
-  balance: BigDecimal!
-}
-
-type Funding @entity {
-  id: ID!
-  nftID: BigInt!
-  pool: DPool!
-  deposit: Deposit!
-  active: Boolean!
-  recordedMoneyMarketIncomeIndex: BigInt!
-  principalPerToken: BigDecimal!
-  totalSupply: BigDecimal!
-  fundedDeficitAmount: BigDecimal!
-  totalInterestEarned: BigDecimal!
-  totalRefundEarned: BigDecimal!
-  totalMPHEarned: BigDecimal!
-  funderDetails: [FunderDetails!]!
+  id: ID!                                                     #
+  nftID: BigInt!                                              # deposit NFT ID
+  user: User!                                                 # owner of the Deposit
+  pool: DPool!                                                # DPool of the Deposit
+  vest: Vest                                                  # Vest of the Deposit
+  funding: Funding                                            # Funding of the Deposit
+  interestRate: BigDecimal!                                   # interestAmount / depositAmount
+  feeRate: BigDecimal!                                        # feeAmount / depositAmount
+  virtualTokenTotalSupply: BigDecimal!                        # depositAmount + interestAmount
+  interestOwed: BigDecimal!                                   # interest owed derived in Token
+  feeOwed: BigDecimal!                                        # fee owed derived in Token
+  amount: BigDecimal!                                         # principal amount derived in Token
+  maturationTimestamp: BigInt!                                # timestamp in seconds when the deposit matures
+  depositTimestamp: BigInt!                                   # timestamp in seconds when the deposit was made
+  depositLength: BigInt!                                      # length of the deposit in seconds
+  averageRecordedIncomeIndex: BigInt!                         # average income index at time of deposit (used for computing surplus of deposit)
+  fundingInterestPaid: BigDecimal!                            # interest paid to Funders derived in Token
+  fundingRefundPaid: BigDecimal!                              # refund paid to Funders derived in Token
+  fundedAmount: BigDecimal!                                   # amount of debt (interest + fee) paid by the Funders
 }
 
 type Vest @entity {
-  id: ID!
-  pool: DPool!
-  deposit: Deposit
-  nftID: BigInt!
-  owner: String!
-  lastUpdateTimestamp: BigInt!
-  accumulatedAmount: BigDecimal!
-  withdrawnAmount: BigDecimal!
-  vestAmountPerStablecoinPerSecond: BigDecimal!
-  totalExpectedMPHAmount: BigDecimal!
+  id: ID!                                                     #
+  nftID: BigInt!                                              # vest NFT ID
+  owner: User!                                                # owner of the Vest
+  pool: DPool!                                                # DPool of the Vest
+  deposit: Deposit!                                           # Deposit of the Vest
+  lastUpdateTimestamp: BigInt!                                # timestamp in seconds when the vest was last updated (Vesting02)
+  vestAmountPerStablecoinPerSecond: BigDecimal!               # amount of MPH earned per second per deposit token (Vesting02)
+  totalExpectedMPHAmount: BigDecimal!                         # total amount of MPH reward expected (Vesting02)
+  accumulatedAmount: BigDecimal!                              # amount of MPH that can be or has already been withdrawn (Vesting02)
+  withdrawnAmount: BigDecimal!                                # amount of MPH withdrawn from the Vest
 }
 
-type GlobalStats @entity {
-  id: ID!
-  blockHandlerStartBlock: BigInt!
-  xMPHRewardDistributed: BigDecimal!
+type Funding @entity {
+  id: ID!                                                     #
+  nftID: BigInt!                                              # funding NFT ID
+  active: Boolean!                                            #
+  pool: DPool!                                                # DPool of the Funding
+  deposit: Deposit!                                           # Deposit of the Funding
+  recordedMoneyMarketIncomeIndex: BigInt!                     # the income index at the last update (creation or withdrawal)
+  fundedDeficitAmount: BigDecimal!                            # amount of debt (interest + fee) paid by the Funders
+  principalPerToken: BigDecimal!                              # amount of stablecoins earning interest per funding multitoken
+  totalSupply: BigDecimal!                                    # the total amount of funding multitokens for the Funding
+  totalMPHEarned: BigDecimal!                                 # total amount of MPH earned by the funders (DEPRECIATED)
+  totalRefundEarned: BigDecimal!                              # total amount of refund earned by the funders
+  totalInterestEarned: BigDecimal!                            # total amount of interest earned by the funders
+  numFunders: BigInt!                                         # number of users who have funded the deposit
+  funderDetails: [FunderDetails!]!                            # details about each funder
+}
+
+type FunderDetails @entity {
+  id: ID!                                                     #
+  funder: User!                                               # user who funded the deposit
+  balance: BigDecimal!                                        # amount of fundingMultitokens owned by the funder
+  fundAmount: BigDecimal!                                     # amount of debt paid by the funder
+  refundEarned: BigDecimal!                                   # amount of refund earned by the funder
+  interestEarned: BigDecimal!                                 # amount of interest earned by the funder
+}
+
+type VotingLock @entity {
+  id: ID!                                                     #
+  user: User!                                                 # owner of the lock
+  escrow: veMPH!                                              # voting escrow (veMPH)
+  lockedBPT: BigDecimal!                                      # amount of BPT locked in the voting escrow
+  unlockTimestamp: BigInt!                                    # timestamp in seconds when the lock expires
+}
+
+type Gauge @entity {
+  id: ID!                                                     #
+  type: BigInt!                                               # gauge type
+  address: String!                                            # gauge address
+  totalRewardDistributed: BigDecimal!                         # total amount of MPH distributed to the gauge
+}
+
+type GaugeVote @entity {
+  id: ID!                                                     #
+  user: User!                                                 # voter
+  gauge: Gauge!                                               # gauge voted for
+  weight: BigInt!                                             # user voting weight allocated to the gauge
+  timestamp: BigInt!                                          # timestamp in seconds when vote was cast
 }
